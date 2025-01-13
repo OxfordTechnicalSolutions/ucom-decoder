@@ -1,0 +1,3 @@
+[submodule "ucom_decoder/json"]
+	path = ucom_decoder/json
+	url = https://github.com/nlohmann/json.git
