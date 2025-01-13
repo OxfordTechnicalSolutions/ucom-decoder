@@ -18,8 +18,8 @@ int get_data(Socket &socket, uint8_t* buffer, int max_len)
 {
     struct sockaddr_in clientAddr;
     socklen_t addrLen = sizeof(clientAddr);
-
-    int recvLen = socket.recv(buffer, max_len);
+    int error = 0;
+    int recvLen = socket.recv((char *)buffer, max_len, error);
     if (recvLen < 0) {
         std::cerr << "Error receiving data" << std::endl;
         return -1;
@@ -260,7 +260,8 @@ int main(int argc, char* argv[])
         }
     }
 
-    Socket socket("0.0.0.0", "127.0.0.1", 50487);
+    std::vector<std::string> errors;
+    Socket socket("0.0.0.0", 50487, "127.0.0.1", 50487, errors);
 
     if (!socket.is_initialised())
         return -1;

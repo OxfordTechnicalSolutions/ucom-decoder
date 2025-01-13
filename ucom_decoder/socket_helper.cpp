@@ -1,36 +1,48 @@
 #include "socket_helper.hpp"
 #ifdef __linux__
-
+#include <errno.h>
+#define SOCKLEN_T_PTR socklen_t *
 #elif _WIN32
-
+#define SOCKLEN_T_PTR int *
 #endif
 
 
-Socket::Socket(const std::string &local_ip, std::string dest_ip, int port) :
-	_dest{0,0,0,0},
-	_local{0,0,0,0},
-	_initialised{false},
-	_socket{0}
+Socket::Socket(std::string local_ip, int local_port, std::string remote_ip, int remote_port, std::vector<std::string>& errors) :
+    _local_ip(local_ip),
+    _remote_ip(remote_ip),
+    _local_port(local_port),
+    _remote_port(remote_port)
 {
+    bool success = false;
 #ifdef _WIN32
-	// Initialise WinSock
-	WSAData wsa;
-	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
-		return;
+    // For Windows, set up WSA
+    WSAData data;
+    int wsa_result = WSAStartup(MAKEWORD(2, 2), &data);
+    if (wsa_result != NO_ERROR) {
+        errors.push_back(std::string("WSAStartup failed with error ").append(std::to_string(wsa_result)));
+        return;
+    }
+
 #endif
-	_local.sin_family = AF_INET;
-	_local.sin_port = htons(port);
-	inet_pton(AF_INET, local_ip.c_str(), &_local.sin_addr.s_addr);
+    _local.sin_family = AF_INET;
+    if (local_ip.compare("0.0.0.0") == 0)
+        _local.sin_addr.s_addr = INADDR_ANY;
+    else
+        inet_pton(AF_INET, local_ip.c_str(), &_local.sin_addr.s_addr);
+    _local.sin_port = htons(local_port);
 
-	_dest.sin_family = AF_INET;
-	_dest.sin_port = htons(port);
-	inet_pton(AF_INET, dest_ip.c_str(), &_dest.sin_addr.s_addr);
+    _remote.sin_family = AF_INET;
+    inet_pton(AF_INET, remote_ip.c_str(), &_remote.sin_addr.s_addr);
+    _remote.sin_port = htons(remote_port);
 
-	_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-	if (bind(_socket, (sockaddr*)&_local, sizeof(_local)) != 0)
-		return;
+    _socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    // shutdown(_socket, 1); // read-only
+    // shutdown(_socket, 0); // write-only
 
-	_initialised = true;
+    // Bind (for incoming data / server  - associates socket with local IP address / port)
+    success = bind(_socket, (sockaddr*)&_local, sizeof(_local)) == 0;
+
+    _initialised = success;
 }
 
 Socket::~Socket()
@@ -43,22 +55,35 @@ Socket::~Socket()
 #endif
 }
 
-int Socket::send(std::string buffer)
+int Socket::send(const char* buffer, int len, int& error)
 {
-	if (!is_initialised())
-		return 0;
+    _remote.sin_family = AF_INET;
+    inet_pton(AF_INET, _remote_ip.c_str(), &_remote.sin_addr.s_addr);
+    _remote.sin_port = htons(_remote_port);
 
-	return sendto(_socket, buffer.c_str(), buffer.size(), 0, (sockaddr*)&_dest, sizeof(_dest));
+    int result = sendto(_socket, buffer, len, 0, (sockaddr*)&_remote, sizeof(_remote));
+
+    if (result < 0)
+#ifdef __linux__
+        error = errno;
+#elif _WIN32
+        error = WSAGetLastError();
+#endif
+    return result;
 }
 
-int Socket::recv(uint8_t* buffer, int max_len)
+int Socket::recv(char* buffer, int len, int& error)
 {
-	if (!is_initialised())
-		return 0;
+    int addr_len = sizeof(_remote);
+    int result = recvfrom(_socket, buffer, len, 0, (sockaddr*)&_remote, (SOCKLEN_T_PTR) &addr_len);
 
-	struct sockaddr_in clientAddr;
-	socklen_t addrLen = sizeof(clientAddr);
-	return recvfrom(_socket, (char*)buffer, max_len, 0, (struct sockaddr*)&clientAddr, &addrLen);
+    
+#ifdef __linux__
+    if (result < 0)
+        error = errno;
+#elif _WIN32
+    if (result == SOCKET_ERROR)
+        error = WSAGetLastError();
+#endif
+    return result;
 }
-
-

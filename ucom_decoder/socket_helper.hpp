@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 #ifdef __linux__
 #include <sys/socket.h>
@@ -15,7 +16,11 @@
 class Socket {
 private:
 	sockaddr_in _local;
-	sockaddr_in _dest;
+	sockaddr_in _remote;
+	std::string _local_ip;
+	std::string _remote_ip;
+	int _local_port;
+	int _remote_port;
 	bool _initialised;
 #ifdef __linux__
 	int _socket;
@@ -23,9 +28,9 @@ private:
 	SOCKET _socket;
 #endif
 public:
-	Socket(const std::string &local_ip, std::string dest_ip, int port);
+	Socket(std::string local_ip, int local_port, std::string remote_ip, int remote_port, std::vector<std::string>& errors);
 	~Socket();
-	int send(std::string buffer);
-	int recv(uint8_t* buffer, int max_len);
+	int send(const char* buffer, int len, int& error);
+	int recv(char* buffer, int max_len, int& error);
 	bool is_initialised() { return _initialised; }
 };
