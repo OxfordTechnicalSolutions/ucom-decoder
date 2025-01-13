@@ -215,18 +215,24 @@ int main(int argc, char* argv[])
     std::cout << "UCOM decoder" << std::endl;
     Args args{argc, argv};
 
+    /* Command-line arguments
+    */
+
+    // .dbu filename
+    std::string dbu;
+
     // The number of packets to capture (zero means capture indefinitely)
     int max_packets = -1;
 
     // Get data only from this IP address
     std::string filter_ip;
 
+    // Get data only from these message IDs
+    std::list<uint16_t> message_ids;
+
     std::map<int, UcomMessage> ucom;
     std::map<int, std::vector<std::string>> all_data;
 
-
-    
-    std::string dbu;
     if (args.size() > 0) {
         for (auto arg : args)
             std::cout << arg.first << " : " << arg.second << std::endl;
@@ -257,6 +263,30 @@ int main(int argc, char* argv[])
         {   
             std::cout << "Source IP filter: " << filter_ip << std::endl;
         }
+
+        std::string ids;
+        // Message IDs
+        if (args.get_arg("-m", ids))
+        {
+            std::cout << "Message IDs:";
+            
+            std::string id;
+            std::istringstream is(ids);
+            while (std::getline(is, id, ' '))
+            {
+                try {
+                    int value = std::stoi(id);
+                    std::cout << " " << value;
+                    message_ids.push_back(value);
+                }
+                catch (...) {
+                    // Failed to convert string to int
+                    std::cout << std::endl << "Error parsing message ID: " << id << std::endl;
+                    return -1;
+                }
+            }
+            std::cout << std::endl;
+        }
     }
 
 
@@ -272,9 +302,6 @@ int main(int argc, char* argv[])
         return -1;
 
     uint8_t buffer[4096];
-
-    // Get data only from these message IDs
-    const std::list<uint16_t>& message_ids = { 0,1,2,3 };
     
     int skipped_packets = 0;
     int packet_count = 0;
