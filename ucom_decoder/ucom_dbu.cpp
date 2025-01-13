@@ -31,6 +31,17 @@ UcomDbu::UcomDbu(std::string filename)
     }
 }
 
+// Check if message_id exists in the available messages
+bool UcomDbu::message_id_exists(uint16_t message_id)
+{
+    return _messages.contains(message_id);
+}
+
+std::map<uint16_t, UcomMessage>& UcomDbu::get_messages()
+{
+    return _messages;
+}
+
 const std::vector<ucom_signal_ptr_t> &UcomDbu::get_signals(uint16_t message_id)
 {
     if (_messages.find(message_id) != _messages.end())

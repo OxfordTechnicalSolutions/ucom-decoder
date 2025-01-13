@@ -9,6 +9,7 @@
 #elif _WIN32
 #include <WinSock2.h>
 #include <ws2tcpip.h>
+#define in_addr_t uint32_t
 #endif
 /// <summary>
 /// Abstracts socket creation to provide a simple interface for sending data

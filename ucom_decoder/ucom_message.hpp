@@ -13,11 +13,11 @@ class UcomMessage : public json {
     std::string create_header();
     std::vector<ucom_signal_ptr_t> _signals;
     //! \brief Message schema version.
-    uint16_t _schema_version;
+    uint16_t _schema_version = -1;
     //! \brief Message ID.
     uint16_t _message_id = -1;
     //! \brief Message version.
-    uint16_t _message_version;
+    uint16_t _message_version = -1;
     //! \brief Message name.
     std::string	_name;
     //! \brief Description

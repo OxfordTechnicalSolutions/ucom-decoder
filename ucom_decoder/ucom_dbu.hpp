@@ -20,6 +20,8 @@ private:
 public:
     UcomDbu(std::string filename);
     bool get_valid() { return _valid; }
+    bool message_id_exists(uint16_t message_id);
+    std::map<uint16_t, UcomMessage>& get_messages();
     const std::vector<ucom_signal_ptr_t> &get_signals(uint16_t message_id);
     static OxTS::Enum::BASIC_TYPE get_data_type(const std::string& data_type);
 };
