@@ -31,6 +31,8 @@ public:
 	Socket(std::string local_ip, int local_port, std::string remote_ip, int remote_port, std::vector<std::string>& errors);
 	~Socket();
 	int send(const char* buffer, int len, int& error);
-	int recv(char* buffer, int max_len, int& error);
+	int recv(char* buffer, int max_len, std::string& source_ip, uint32_t &ip_in, int& error);
 	bool is_initialised() { return _initialised; }
+
+	static const std::string get_ip(const in_addr_t *ip);
 };

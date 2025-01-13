@@ -72,11 +72,12 @@ int Socket::send(const char* buffer, int len, int& error)
     return result;
 }
 
-int Socket::recv(char* buffer, int len, int& error)
+int Socket::recv(char* buffer, int len, std::string &source_ip, uint32_t &ip_in, int& error)
 {
     int addr_len = sizeof(_remote);
+    
     int result = recvfrom(_socket, buffer, len, 0, (sockaddr*)&_remote, (SOCKLEN_T_PTR) &addr_len);
-
+    in_addr_t in_ip = _remote.sin_addr.s_addr;
     
 #ifdef __linux__
     if (result < 0)
@@ -85,5 +86,21 @@ int Socket::recv(char* buffer, int len, int& error)
     if (result == SOCKET_ERROR)
         error = WSAGetLastError();
 #endif
+
+    if (error == 0)
+    {
+        // Update ip_in
+        ip_in = _remote.sin_addr.s_addr;
+        // Obtain remote IP address as a std::string
+        source_ip = std::move(get_ip(&ip_in));
+    }
     return result;
+}
+
+// Convert a binary IP address (AF_INET) to a string
+const std::string Socket::get_ip(const in_addr_t *ip)
+{
+    char ip_str[INET_ADDRSTRLEN] = { '\0' };
+    inet_ntop(AF_INET, ip, ip_str, INET_ADDRSTRLEN);
+    return std::string(ip_str);
 }

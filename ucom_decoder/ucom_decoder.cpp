@@ -14,12 +14,13 @@
 
 #define PORT 50487
 
-int get_data(Socket &socket, uint8_t* buffer, int max_len)
+int get_data(Socket &socket, uint8_t* buffer, int max_len, std::string &source_ip)
 {
     struct sockaddr_in clientAddr;
     socklen_t addrLen = sizeof(clientAddr);
     int error = 0;
-    int recvLen = socket.recv((char *)buffer, max_len, error);
+    uint32_t in_ip;
+    int recvLen = socket.recv((char *)buffer, max_len, source_ip, in_ip, error);
     if (recvLen < 0) {
         std::cerr << "Error receiving data" << std::endl;
         return -1;
@@ -260,6 +261,10 @@ int main(int argc, char* argv[])
         }
     }
 
+
+    // Extract message / signal info from the .dbu file
+    UcomDbu the_dbu(dbu);
+
     std::vector<std::string> errors;
     Socket socket("0.0.0.0", 50487, "127.0.0.1", 50487, errors);
 
@@ -268,13 +273,20 @@ int main(int argc, char* argv[])
 
     uint8_t buffer[4096];
 
+    const std::string filter_ip("127.0.0.1");
+
     int len = 0;
     while(len > -1)
     {
-        len = get_data(socket, buffer, 4096);
+        std::string source_ip;
+        len = get_data(socket, buffer, 4096, source_ip);
+        if (source_ip.compare(filter_ip) != 0)
+        {
+            std::cout << "Filter IP mismatch: " << source_ip << std::endl;
+            continue;
+        }
         //uint16_t* id_ptr = (uint16_t*)&buffer[2];
-        UcomDbu the_dbu(dbu);
-
+        
         // TODO - Need to check if the_dbu is valid (i.e. did we parse signals correctly) 
         // TEST - no .dbu file
         for (auto signal : the_dbu.get_signals(0))
