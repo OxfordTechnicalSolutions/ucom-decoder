@@ -1,7 +1,4 @@
 #include <iostream>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <unistd.h>
 #include <algorithm> // for find_if
 #include <map>
 #include "string_helpers.hpp" // for trim, ltrim, rtrim
@@ -10,48 +7,19 @@
 #include <fstream> // for ifstream
 #include "ucom_message.hpp"
 #include "crc.hpp"
-#include "ucom_dbs.hpp"
 #include "ucom_dbu.hpp"
+#include "socket_helper.hpp"
 
-using json = nlohmann::json;
+//using json = nlohmann::json;
 
 #define PORT 50487
 
-int create_socket()
-{
-    int sockfd;
-    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
-        std::cout << "socket() => -1, errno=" << errno << std::endl;
-        return -1;
-    }
-
-    int reuseaddr = 1;
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(int)) == -1) {
-        std::cout << "setsockopt() => -1, errno=" << errno << std::endl;
-        return -1;
-    }
-
-    struct sockaddr_in servaddr = {0, 0, 0, 0};
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = INADDR_ANY;
-    servaddr.sin_port = htons(PORT);
-
-    // binding to socket that will listen for new connections
-    if (bind(sockfd, (const struct sockaddr*)&servaddr, sizeof(servaddr)) == -1) {
-        std::cout << "bind() => -1, errno=" << errno << std::endl;
-        close(sockfd);
-        return -1;
-    }
-
-    return sockfd;
-}
-
-int get_data(int sockfd, uint8_t* buffer, int max_len)
+int get_data(Socket &socket, uint8_t* buffer, int max_len)
 {
     struct sockaddr_in clientAddr;
     socklen_t addrLen = sizeof(clientAddr);
 
-    int recvLen = recvfrom(sockfd, buffer, max_len, 0, (struct sockaddr*)&clientAddr, &addrLen);
+    int recvLen = socket.recv(buffer, max_len);
     if (recvLen < 0) {
         std::cerr << "Error receiving data" << std::endl;
         return -1;
@@ -252,24 +220,30 @@ int main(int argc, char* argv[])
     std::map<int, UcomMessage> ucom;
     std::map<int, std::vector<std::string>> all_data;
     
-    // Create dbs object from file
-    UcomDbs dbs("mobile.dbs");
     std::string dbu;
     if (args.size() > 0) {
         for (auto arg : args)
             std::cout << arg.first << " : " << arg.second << std::endl;
-        
-        std::string s;
-        args.get_arg(std::string("-z"), s);
-        std::cout << "Value: " << s << std::endl;
-
         
         if (args.get_arg(std::string("-u"), dbu))
         {
             std::cout << "Using .dbu file: " << dbu << std::endl;
 
             std::ifstream f(dbu);
-            json data = json::parse(f);
+            if (!f.is_open())
+            {
+                std::cerr << "Unable to open file: " << dbu << std::endl;
+
+                return -1;
+            }
+
+            json data;
+            try {
+                data = json::parse(f);
+            }
+            catch (std::exception& e) {
+                std::cerr << e.what() << std::endl;
+            }
             std::cout << "Available messages: " << std::endl;
 
             for (auto message : data["Messages"]) {
@@ -286,9 +260,9 @@ int main(int argc, char* argv[])
         }
     }
 
-    int sockfd = create_socket();
+    Socket socket("0.0.0.0", "127.0.0.1", 50487);
 
-    if (sockfd == -1)
+    if (!socket.is_initialised())
         return -1;
 
     uint8_t buffer[4096];
@@ -296,9 +270,12 @@ int main(int argc, char* argv[])
     int len = 0;
     while(len > -1)
     {
-        len = get_data(sockfd, buffer, 4096);
+        len = get_data(socket, buffer, 4096);
         //uint16_t* id_ptr = (uint16_t*)&buffer[2];
         UcomDbu the_dbu(dbu);
+
+        // TODO - Need to check if the_dbu is valid (i.e. did we parse signals correctly) 
+        // TEST - no .dbu file
         for (auto signal : the_dbu.get_signals(0))
                 std::cout << signal->get_signal_id() << std::endl;
 

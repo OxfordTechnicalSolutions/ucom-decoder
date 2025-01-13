@@ -20,7 +20,8 @@ UcomDbu::UcomDbu(std::string filename)
             
             for (auto message : data["Messages"])
             {
-                _messages.push_back(UcomMessage(message));
+                uint16_t message_id = message["MessageID"];
+                _messages.insert({ message_id, UcomMessage(message) });
             }
             _valid = true;
         }
@@ -32,7 +33,10 @@ UcomDbu::UcomDbu(std::string filename)
 
 const std::vector<ucom_signal_ptr_t> &UcomDbu::get_signals(uint16_t message_id)
 {
-    return _messages[message_id].get_signals();
+    if (_messages.find(message_id) != _messages.end())
+        return _messages[message_id].get_signals();
+    else
+        return std::vector<ucom_signal_ptr_t>();
 }
 
 OxTS::Enum::BASIC_TYPE UcomDbu::get_data_type(const std::string& data_type)

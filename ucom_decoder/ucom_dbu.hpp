@@ -9,7 +9,7 @@ using json = nlohmann::json;
 class UcomDbu : public json {
 private:
     bool _valid;
-    std::vector<UcomMessage> _messages;
+    std::map<uint16_t, UcomMessage> _messages;
     std::string _schema; 
     int _schema_version;
     std::string _dbu_id;
