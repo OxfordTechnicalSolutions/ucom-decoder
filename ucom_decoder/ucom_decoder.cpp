@@ -218,6 +218,9 @@ int main(int argc, char* argv[])
     // The number of packets to capture (zero means capture indefinitely)
     int max_packets = -1;
 
+    // Get data only from this IP address
+    std::string filter_ip;
+
     std::map<int, UcomMessage> ucom;
     std::map<int, std::vector<std::string>> all_data;
 
@@ -246,7 +249,13 @@ int main(int argc, char* argv[])
         if (args.get_arg("-c", packets))
         {
             max_packets = std::atoi(packets.c_str());
-            std::cout << "Capturing " << max_packets << "packets";
+            std::cout << "Capturing " << max_packets << " packets" << std::endl;
+        }
+
+        // Source IP filtering
+        if (args.get_arg("-i", filter_ip))
+        {   
+            std::cout << "Source IP filter: " << filter_ip << std::endl;
         }
     }
 
@@ -263,9 +272,6 @@ int main(int argc, char* argv[])
         return -1;
 
     uint8_t buffer[4096];
-
-    // Get data only from this IP address
-    const std::string filter_ip("195.0.0.84");
 
     // Get data only from these message IDs
     const std::list<uint16_t>& message_ids = { 0,1,2,3 };
