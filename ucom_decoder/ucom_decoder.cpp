@@ -9,6 +9,7 @@
 #include "crc.hpp"
 #include "ucom_dbu.hpp"
 #include "socket_helper.hpp"
+#include <list>
 
 //using json = nlohmann::json;
 
@@ -77,6 +78,8 @@ class UCOMData {
         _time_frame = data[5];
         _arbitrary_time = get_data<int64_t>(data, 6);
         _payload_length = get_data<uint16_t>(data, 14);
+
+
 
         // Check that we have a full packet
         if ((_payload_length + 20) > size)
@@ -264,6 +267,8 @@ int main(int argc, char* argv[])
 
     // Extract message / signal info from the .dbu file
     UcomDbu the_dbu(dbu);
+    if (!the_dbu.get_valid())
+        std::cout << "Failed to parse " << dbu << std::endl;
 
     std::vector<std::string> errors;
     Socket socket("0.0.0.0", 50487, "127.0.0.1", 50487, errors);
@@ -273,7 +278,11 @@ int main(int argc, char* argv[])
 
     uint8_t buffer[4096];
 
+    // Get data only from this IP address
     const std::string filter_ip("127.0.0.1");
+
+    // Get data only from these message IDs
+    const std::list<uint16_t>& message_ids = { 1,2 };
 
     int len = 0;
     while(len > -1)
@@ -285,14 +294,20 @@ int main(int argc, char* argv[])
             std::cout << "Filter IP mismatch: " << source_ip << std::endl;
             continue;
         }
+
+        
         //uint16_t* id_ptr = (uint16_t*)&buffer[2];
         
         // TODO - Need to check if the_dbu is valid (i.e. did we parse signals correctly) 
         // TEST - no .dbu file
-        for (auto signal : the_dbu.get_signals(0))
-                std::cout << signal->get_signal_id() << std::endl;
+        //for (auto signal : the_dbu.get_signals(0))
+        //        std::cout << signal->get_signal_id() << std::endl;
 
         UCOMData data{buffer, len, the_dbu};
+
+        if (std::find(message_ids.begin(), message_ids.end(), data.get_message_id()) == message_ids.end())
+            std::cout << "Skipping message ID: " << data.get_message_id() << std::endl;
+
         if (data.IsValid()) {
             std::cout << "Message: " << " ID: " << data.get_message_id() 
             << " Version: " << data.get_message_version()

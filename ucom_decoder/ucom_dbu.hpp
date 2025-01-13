@@ -19,6 +19,7 @@ private:
     std::string get_value(json json_data, std::string key);
 public:
     UcomDbu(std::string filename);
+    bool get_valid() { return _valid; }
     const std::vector<ucom_signal_ptr_t> &get_signals(uint16_t message_id);
     static OxTS::Enum::BASIC_TYPE get_data_type(const std::string& data_type);
 };
