@@ -249,6 +249,11 @@ int main(int argc, char* argv[])
                 return -1;
             }
         }
+        else
+        {
+            std::cout << "Please specify .dbu file to use [ -u <filename> ]" << std::endl;
+            return -1;
+        }
 
         // Retrieve x packets
         std::string packets;
@@ -287,6 +292,11 @@ int main(int argc, char* argv[])
             }
             std::cout << std::endl;
         }
+    }
+    else
+    {
+        std::cout << "Failed to process command-line arguments" << std::endl;
+        return -1;
     }
 
 
