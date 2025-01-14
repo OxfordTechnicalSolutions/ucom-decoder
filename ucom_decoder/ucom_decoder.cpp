@@ -49,13 +49,13 @@ class UCOMData {
         return *ptr;
     }
     template <typename T>
-    T get_data(const uint8_t* data, int offset) {
+    static T get_data(const uint8_t* data, int offset) {
         T *ptr = (T*)&data[offset];
         return *ptr;
     }
 
     template <typename T>
-    T get_data_update_offset(const uint8_t* data, int &offset) {
+    static T get_data_update_offset(const uint8_t* data, int &offset) {
         T *ptr = (T*)&data[offset];
         offset += sizeof(T);
         return *ptr;
@@ -108,9 +108,32 @@ class UCOMData {
                 case OxTS::Enum::BASIC_TYPE::BASIC_TYPE_double:
                     value = get_data_update_offset<double>(data, i);
                     break;
+                default:
+                    value = nan("");
             }
             _values.push_back(value);
         }
+    }
+
+    static const int peek(const uint8_t* data, int max_size)
+    {
+        bool valid = false;
+        // Check that we at least have a header
+        if (max_size < 16)
+            return -1;
+
+        // Check the sync bytes are correct
+        if ((data[0] != 'U') || (data[1] != 'M'))
+            return -1;
+
+        // Extract data from header
+        uint16_t payload_length = get_data<uint16_t>(data, 14);
+
+        // Check that we have a full packet
+        if ((payload_length + 20) > max_size)
+            return -1;
+
+        return payload_length + 20;
     }
 
     uint16_t get_message_id() {
@@ -155,6 +178,13 @@ class UCOMData {
         ss << _arbitrary_time;
         for (double value : _values)
             ss << "," << std::fixed << value;
+        return ss.str();
+    }
+
+    std::string to_string()
+    {
+        std::stringstream ss;
+        ss << "ID: " << get_message_id() << " Version: " << get_message_version() << " Payload length: " << get_payload_length();
         return ss.str();
     }
 
@@ -209,6 +239,38 @@ void write_csv(std::map<int, std::vector<std::string>> &all_data, UcomDbu &dbu)
     write_csv(all_data, dbu.get_messages());
 }
 
+bool get_file_data(std::string filename, std::vector<char>& data, int64_t &left)
+{
+    std::ifstream f(filename, std::ios::binary);
+    f.seekg(0, f.end);
+    std::streampos size = f.tellg();
+    f.seekg(0, f.beg);
+    if (f.good())
+    {
+        std::cout << "Size before file read: " << data.size() << '\n';
+        std::cout << "Vector capacity: " << data.capacity() << '\n';
+        data.resize(data.capacity());
+        f.read(& data[0], data.capacity());
+        int read = f.gcount();
+        
+        if (f.eof())
+        {
+            // End-of-file
+            left = 0;
+        }
+        else
+            left = size - f.tellg();
+
+        // Resize vector to match data read
+        data.resize(read);
+
+        std::cout << "Size after file read: " << data.size() << std::endl;
+        return true;
+    }
+    else
+        return false;
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -230,6 +292,11 @@ int main(int argc, char* argv[])
     // Get data only from these message IDs
     std::list<uint16_t> message_ids;
 
+    // Process a file rather than UDP stream (default)
+    // -f <filename>
+    std::string filename;
+    bool process_file = false;
+
     std::map<int, UcomMessage> ucom;
     std::map<int, std::vector<std::string>> all_data;
 
@@ -237,16 +304,18 @@ int main(int argc, char* argv[])
         for (auto arg : args)
             std::cout << arg.first << " : " << arg.second << std::endl;
         
-        if (args.get_arg(std::string("-u"), dbu))
+        if (args.get_arg("-u", dbu))
         {
-            std::cout << "Using .dbu file: " << dbu << std::endl;
-
             std::ifstream f(dbu);
             if (!f.is_open())
             {
                 std::cerr << "Unable to open file: " << dbu << std::endl;
-
                 return -1;
+            }
+            else
+            {
+                std::cout << "Using .dbu file: " << dbu << std::endl;
+                f.close();
             }
         }
         else
@@ -254,6 +323,69 @@ int main(int argc, char* argv[])
             std::cout << "Please specify .dbu file to use [ -u <filename> ]" << std::endl;
             return -1;
         }
+
+        if (args.get_arg("-f", filename))
+        {
+            std::fstream f(filename);
+            if (!f.is_open())
+            {
+                std::cerr << "Unable to open file: " << filename << std::endl;
+                return -1;
+            }
+            else
+            {
+                process_file = true;
+                std::cout << "Processing file: " << filename << std::endl;
+                f.close();
+
+                
+            }
+        }
+        UcomDbu a_dbu(dbu);
+        if (process_file)
+        {
+            std::vector<char> data;
+            data.reserve(8388608);
+            int64_t left = 0;
+            get_file_data(filename, data, left);
+            int pkt_count = 0;
+
+            std::stringstream output_filename;
+            output_filename << "output_" << std::setfill('0') << std::setw(3) << "file" << ".csv";
+            std::cout << "Creating output file: " << output_filename.str() << std::endl;
+            std::fstream f(output_filename.str(), std::ios_base::trunc | std::ios_base::out);
+            if (!f.is_open())
+                std::cout << "Failed to open file" << std::endl;
+
+
+            for (auto it = data.begin(); it <= data.end();)
+            {
+                int length = UCOMData::peek(reinterpret_cast<uint8_t*>(&(*it)), data.end() - it);
+                if (length >= 20)
+                {
+                    // Found a candidate for a valid packet - try to extract the data
+                    UCOMData d(reinterpret_cast<uint8_t*>(&(*it)), length, a_dbu);
+                    if (d.IsValid())
+                    {
+                        it += length;
+                        pkt_count++;
+                        f << d.get_csv() << '\n';
+                        //std::cout << d.to_string() << ", Data left: " << data.end() - it <<  std::endl;
+                    }
+                    else
+                        it++;
+                }
+                else
+                {
+                    it++;
+                }
+            }
+
+            std::cout << "Read " << pkt_count << " packets" << std::endl;
+            f.close();
+        }
+
+
 
         // Retrieve x packets
         std::string packets;

@@ -18,6 +18,11 @@ add_custom_command(TARGET ucom_decoder POST_BUILD
                        ${CMAKE_SOURCE_DIR}/oxts.dbu
                        ${CMAKE_CURRENT_BINARY_DIR}/oxts.dbu)
 
+add_custom_command(TARGET ucom_decoder POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy
+                       ${CMAKE_SOURCE_DIR}/UCOM_241120_SN62084/241120_SN62084_1.ucom
+                       ${CMAKE_CURRENT_BINARY_DIR}/input.ucom)
+
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ucom_decoder PROPERTY CXX_STANDARD 20)
 endif()
