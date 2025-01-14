@@ -34,7 +34,7 @@ int get_data(Socket &socket, uint8_t* buffer, int max_len, std::string &source_i
 }
 
 class UCOMData {
-    private:
+private:
     uint16_t _message_id; // Bytes 2-3
     uint8_t _message_version; // Byte 4
     uint8_t _time_frame; // Byte 5
@@ -45,22 +45,22 @@ class UCOMData {
     bool _valid;
     std::vector<double> _values; // collection for signal values
     double get_double(uint8_t* data, int offset) {
-        double *ptr = (double*)&data[offset];
+        double* ptr = (double*)&data[offset];
         return *ptr;
     }
     template <typename T>
     static T get_data(const uint8_t* data, int offset) {
-        T *ptr = (T*)&data[offset];
+        T* ptr = (T*)&data[offset];
         return *ptr;
     }
 
     template <typename T>
-    static T get_data_update_offset(const uint8_t* data, int &offset) {
-        T *ptr = (T*)&data[offset];
+    static T get_data_update_offset(const uint8_t* data, int& offset) {
+        T* ptr = (T*)&data[offset];
         offset += sizeof(T);
         return *ptr;
     }
-    public:
+public:
     UCOMData(const uint8_t* data, int size, UcomDbu& dbu)
     {
         _valid = false;
@@ -91,8 +91,6 @@ class UCOMData {
         if (crc != _calc_crc)
             return;
 
-        _valid = true;
-        
         int i = 16;
         // Step through the signals and decode according to their type
         _values.clear();
@@ -140,7 +138,11 @@ class UCOMData {
             }
             _values.push_back(value);
         }
-    }
+
+        int signal_count = dbu.get_message(_message_id).get_signal_count();
+        int value_count = _values.size();
+        _valid = value_count == signal_count;
+    }    
 
     static const int peek(const uint8_t* data, int max_size)
     {
@@ -266,7 +268,7 @@ void write_csv(std::map<int, std::vector<std::string>> &all_data, UcomDbu &dbu)
     write_csv(all_data, dbu.get_messages());
 }
 
-bool get_file_data(std::string filename, std::vector<char>& data, int64_t &left)
+bool get_file_data(std::string filename, std::vector<char>& data, int64_t& left)
 {
     std::ifstream f(filename, std::ios::binary);
     f.seekg(0, f.end);

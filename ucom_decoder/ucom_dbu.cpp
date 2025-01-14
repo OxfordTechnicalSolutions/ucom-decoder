@@ -42,6 +42,14 @@ std::map<uint16_t, UcomMessage>& UcomDbu::get_messages()
     return _messages;
 }
 
+const UcomMessage& UcomDbu::get_message(int id)
+{
+    if (message_id_exists(id))
+        return _messages[id];
+    else
+        return _empty_message;
+}
+
 const std::vector<ucom_signal_ptr_t> &UcomDbu::get_signals(uint16_t message_id)
 {
     if (_messages.find(message_id) != _messages.end())

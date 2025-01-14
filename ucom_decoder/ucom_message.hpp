@@ -31,6 +31,6 @@ class UcomMessage : public json {
     bool is_valid() { return _message_id >= 0; }
     int get_id() { return _message_id; }
     std::string get_header() { return _header; }
-    int get_signal_count() { return _signal_count; }
+    int get_signal_count() const { return _signals.size(); } 
     const std::vector<ucom_signal_ptr_t> &get_signals();
 };
