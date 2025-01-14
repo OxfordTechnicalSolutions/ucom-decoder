@@ -102,14 +102,41 @@ class UCOMData {
             OxTS::Enum::BASIC_TYPE type = signal->get_data_type();
             switch (type)
             {
-                case OxTS::Enum::BASIC_TYPE::BASIC_TYPE_int64_t:
-                    value = get_data_update_offset<int64_t>(data, i);
-                    break;
-                case OxTS::Enum::BASIC_TYPE::BASIC_TYPE_double:
-                    value = get_data_update_offset<double>(data, i);
-                    break;
-                default:
-                    value = nan("");
+            case OxTS::Enum::BASIC_TYPE_bool:
+                value = get_data_update_offset<bool>(data, i);
+                break;
+            case OxTS::Enum::BASIC_TYPE_int8_t:
+                value = get_data_update_offset<int8_t>(data, i);
+                break;
+            case OxTS::Enum::BASIC_TYPE_uint8_t:
+                value = get_data_update_offset<uint8_t>(data, i);
+                break;
+            case OxTS::Enum::BASIC_TYPE_int16_t:
+                value = get_data_update_offset<int16_t>(data, i);
+                break;
+            case OxTS::Enum::BASIC_TYPE_uint16_t:
+                value = get_data_update_offset<uint16_t>(data, i);
+                break;
+            case OxTS::Enum::BASIC_TYPE_int32_t:
+                value = get_data_update_offset<int32_t>(data, i);
+                break;
+            case OxTS::Enum::BASIC_TYPE_uint32_t:
+                value = get_data_update_offset<uint32_t>(data, i);
+                break;
+            case OxTS::Enum::BASIC_TYPE::BASIC_TYPE_int64_t:
+                value = get_data_update_offset<int64_t>(data, i);
+                break;
+            case OxTS::Enum::BASIC_TYPE::BASIC_TYPE_uint64_t:
+                value = get_data_update_offset<uint64_t>(data, i);
+                break;
+            case OxTS::Enum::BASIC_TYPE::BASIC_TYPE_float:
+                value = get_data_update_offset<float>(data, i);
+                break;
+            case OxTS::Enum::BASIC_TYPE::BASIC_TYPE_double:
+                value = get_data_update_offset<double>(data, i);
+                break;
+            default:
+                value = nan("");
             }
             _values.push_back(value);
         }
