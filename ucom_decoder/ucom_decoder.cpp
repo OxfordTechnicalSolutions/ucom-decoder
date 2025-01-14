@@ -10,6 +10,7 @@
 #include "ucom_dbu.hpp"
 #include "socket_helper.hpp"
 #include <list>
+#include "input_file.hpp"
 
 //using json = nlohmann::json;
 
@@ -144,7 +145,7 @@ public:
         _valid = value_count == signal_count;
     }    
 
-    static const int peek(const uint8_t* data, int max_size)
+    static const int peek(const uint8_t* data, int max_size, bool &need_more_data)
     {
         bool valid = false;
         // Check that we at least have a header
@@ -160,7 +161,11 @@ public:
 
         // Check that we have a full packet
         if ((payload_length + 20) > max_size)
+        {
+            // Insufficient data available for a full packet
+            need_more_data = true;
             return -1;
+        }
 
         return payload_length + 20;
     }
@@ -373,12 +378,21 @@ int main(int argc, char* argv[])
         UcomDbu a_dbu(dbu);
         if (process_file)
         {
+            InputFile input(filename);
+            bool data_available;
+            int64_t left = input.get_file_size();
+            
+            /*
             std::vector<char> data;
             data.reserve(8388608);
-            int64_t left = 0;
-            get_file_data(filename, data, left);
-            int pkt_count = 0;
+            int64_t bytes_left = 0;
+            get_file_data(filename, data, bytes_left);
+            
+            */
 
+            int pkt_count = 0;
+            int total_bytes = 0;
+            int skipped_pkts = 0;
             std::stringstream output_filename;
             output_filename << "output_" << std::setfill('0') << std::setw(3) << "file" << ".csv";
             std::cout << "Creating output file: " << output_filename.str() << std::endl;
@@ -386,32 +400,65 @@ int main(int argc, char* argv[])
             if (!f.is_open())
                 std::cout << "Failed to open file" << std::endl;
 
-
-            for (auto it = data.begin(); it <= data.end();)
+            int consumed = 0;
+            int available = 0;
+            int offset = 0;
+            int it_offset = 0;
+            bool need_more_data = false;
+            std::vector<char> data;
+            while (left > 0)
             {
-                int length = UCOMData::peek(reinterpret_cast<uint8_t*>(&(*it)), data.end() - it);
-                if (length >= 20)
+                offset = consumed - available;
+                std::cout << "Getting data, offset = " << offset << std::endl;
+                data = input.get_data(data_available, left, offset);
+                consumed = 0;
+                available = data.size();
+                for (auto it = data.begin(); it <= data.end();)
                 {
-                    // Found a candidate for a valid packet - try to extract the data
-                    UCOMData d(reinterpret_cast<uint8_t*>(&(*it)), length, a_dbu);
-                    if (d.IsValid())
+                    need_more_data = false;
+                    int length = UCOMData::peek(reinterpret_cast<uint8_t*>(&(*it)), data.end() - it, need_more_data);
+                    if (length >= 20)
                     {
-                        it += length;
-                        pkt_count++;
-                        f << d.get_csv() << '\n';
-                        //std::cout << d.to_string() << ", Data left: " << data.end() - it <<  std::endl;
+                        // Found a candidate for a valid packet - try to extract the data
+                        UCOMData d(reinterpret_cast<uint8_t*>(&(*it)), length, a_dbu);
+                        if (d.IsValid())
+                        {
+                            it += length;
+                            consumed += length;
+                            pkt_count++;
+                            f << d.get_csv() << '\n';
+                            //std::cout << d.to_string() << ", Data left: " << data.end() - it <<  std::endl;
+                        }
+                        else
+                        {
+                            it++;
+                            if (it <= data.end())
+                                consumed++;
+                        }
                     }
                     else
+                    {
+                        if (need_more_data)
+                        {
+                            it_offset = data.end() - it;
+                            break;
+                        }
                         it++;
+                        if (it <= data.end())
+                            consumed++;
+                    }
+                    it_offset = data.end() - it;
                 }
-                else
-                {
-                    it++;
-                }
+                total_bytes += consumed;
+                
             }
 
             std::cout << "Read " << pkt_count << " packets" << std::endl;
+            std::cout << "Total bytes read " << total_bytes << std::endl;
+
             f.close();
+
+            return 0;
         }
 
 
