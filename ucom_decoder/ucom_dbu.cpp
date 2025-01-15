@@ -28,6 +28,7 @@ UcomDbu::UcomDbu(std::string filename)
             {
                 uint16_t message_id = message["MessageID"];
                 _messages.insert({ message_id, UcomMessage(message) });
+                _message_ids.push_back(message_id);
             }
             _valid = true;
         }
@@ -46,6 +47,11 @@ bool UcomDbu::message_id_exists(uint16_t message_id)
 std::map<uint16_t, UcomMessage>& UcomDbu::get_messages()
 {
     return _messages;
+}
+
+std::list<uint16_t>& UcomDbu::get_message_ids()
+{
+    return _message_ids;
 }
 
 const UcomMessage& UcomDbu::get_message(int id)

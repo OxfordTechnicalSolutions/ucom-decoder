@@ -33,7 +33,7 @@ public:
 	~Socket();
 	int send(const char* buffer, int len, int& error);
 	int recv(char* buffer, int max_len, std::string& source_ip, uint32_t &ip_in, int& error);
-	bool is_initialised() { return _initialised; }
+	bool is_initialised() const { return _initialised; }
 
 	static const std::string get_ip(const in_addr_t *ip);
 };

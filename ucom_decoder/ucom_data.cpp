@@ -132,7 +132,7 @@ T UcomData::get_data_update_offset(const uint8_t* data, int& offset) {
     return *ptr;
 }
 
-std::string UcomData::get_csv()
+const std::string UcomData::get_csv() const
 {
     std::stringstream ss;
     ss.precision(7);

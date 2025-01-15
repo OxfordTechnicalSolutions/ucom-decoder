@@ -20,7 +20,7 @@ public:
     double get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_TYPE type, int& offset);
     static const int peek(const uint8_t* data, int max_size, bool& need_more_data);
 
-    std::string get_csv();
+    const std::string get_csv() const;
 
     std::string to_string();
 

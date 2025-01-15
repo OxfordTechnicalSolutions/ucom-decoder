@@ -29,8 +29,11 @@ class UcomMessage : public json {
     UcomMessage(json message);
 
     bool is_valid() { return _message_id >= 0; }
+
+    //! \brief Gets the message ID
     int get_id() { return _message_id; }
-    std::string get_header() { return _header; }
+
+    std::string get_header() const { return _header; }
     int get_signal_count() const { return _signals.size(); } 
     const std::vector<ucom_signal_ptr_t> &get_signals();
 };

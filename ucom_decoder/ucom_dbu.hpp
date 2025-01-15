@@ -3,6 +3,7 @@
 #include "nlohmann/json.hpp"
 #include <iostream>
 #include <string>
+#include <list>
 #include "enum/BasicType.hpp"
 #include "ucom_message.hpp"
 
@@ -12,6 +13,7 @@ class UcomDbu : public json {
 private:
     bool _valid;
     std::map<uint16_t, UcomMessage> _messages;
+    std::list<uint16_t> _message_ids;
     UcomMessage _empty_message;
     std::string _schema; 
     int _schema_version;
@@ -26,6 +28,7 @@ public:
     bool get_valid() { return _valid; }
     bool message_id_exists(uint16_t message_id);
     std::map<uint16_t, UcomMessage>& get_messages();
+    std::list<uint16_t>& get_message_ids();
     const UcomMessage& get_message(int id);
     const std::vector<ucom_signal_ptr_t> &get_signals(uint16_t message_id);
     static OxTS::Enum::BASIC_TYPE get_data_type(const std::string& data_type);
