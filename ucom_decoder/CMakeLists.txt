@@ -3,7 +3,7 @@
 #
 
 # Add source to this project's executable.
-add_executable (ucom_decoder "ucom_decoder.cpp" "args.cpp" "ucom_message.cpp" "ucom_signal.cpp" "ucom_dbu.cpp" "crc.cpp" "socket_helper.cpp" "input_file.cpp")
+add_executable (ucom_decoder "ucom_decoder.cpp" "args.cpp" "ucom_message.cpp" "ucom_signal.cpp" "ucom_dbu.cpp" "crc.cpp" "socket_helper.cpp" "input_file.cpp" "application.cpp" "ucom_decoder_app.cpp" "ucom_data.cpp")
 
 # include directory for json parser
 include_directories(json/include)

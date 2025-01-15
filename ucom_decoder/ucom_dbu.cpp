@@ -1,6 +1,12 @@
 #include "ucom_dbu.hpp"
 #include <fstream>
 
+UcomDbu::UcomDbu() :
+    _valid(false)
+{
+
+}
+
 UcomDbu::UcomDbu(std::string filename)
 {
     _valid = false;

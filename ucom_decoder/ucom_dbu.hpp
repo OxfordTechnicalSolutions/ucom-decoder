@@ -1,3 +1,5 @@
+#pragma once
+
 #include "nlohmann/json.hpp"
 #include <iostream>
 #include <string>
@@ -10,7 +12,7 @@ class UcomDbu : public json {
 private:
     bool _valid;
     std::map<uint16_t, UcomMessage> _messages;
-    const UcomMessage _empty_message;
+    UcomMessage _empty_message;
     std::string _schema; 
     int _schema_version;
     std::string _dbu_id;
@@ -19,6 +21,7 @@ private:
     std::string _dbu_description;
     std::string get_value(json json_data, std::string key);
 public:
+    UcomDbu();
     UcomDbu(std::string filename);
     bool get_valid() { return _valid; }
     bool message_id_exists(uint16_t message_id);

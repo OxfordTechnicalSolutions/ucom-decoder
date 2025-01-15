@@ -1,3 +1,5 @@
+#pragma once
+
 #include <map> // for map
 #include <string> // for string
 #include "string_helpers.hpp"

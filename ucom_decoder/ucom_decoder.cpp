@@ -11,6 +11,7 @@
 #include "socket_helper.hpp"
 #include <list>
 #include "input_file.hpp"
+#include "ucom_decoder_app.hpp"
 
 //using json = nlohmann::json;
 
@@ -308,7 +309,11 @@ bool get_file_data(std::string filename, std::vector<char>& data, int64_t& left)
 
 int main(int argc, char* argv[])
 {
+    UcomDecoderApp app(argc, argv);
+    return app.run();
+
     std::cout << "UCOM decoder" << std::endl;
+
     Args args{argc, argv};
 
     /* Command-line arguments
@@ -534,7 +539,7 @@ int main(int argc, char* argv[])
             continue;
         }
 
-        // Create a UCOMData instance from the received data
+        // Create a UcomData instance from the received data
         UCOMData data{buffer, len, the_dbu};
 
         if (!data.IsValid())
