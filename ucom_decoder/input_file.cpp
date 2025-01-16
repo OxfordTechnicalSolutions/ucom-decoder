@@ -62,8 +62,6 @@ std::vector<char>& InputFile::get_data(bool &data_available, int64_t& left, int 
             _file_pointer = _filestream.tellg();
         }
 
-        std::cout << "Size before file read: " << _buffer.size() << '\n';
-        std::cout << "Vector capacity: " << _buffer.capacity() << '\n';
         _buffer.resize(_buffer.capacity());
         _filestream.read(&_buffer[0], _buffer.capacity());
         int read = _filestream.gcount();
@@ -78,8 +76,6 @@ std::vector<char>& InputFile::get_data(bool &data_available, int64_t& left, int 
 
         // Resize vector to match data read
         _buffer.resize(read);
-
-        std::cout << "Size after file read: " << _buffer.size() << std::endl;
         data_available = true;
     }
     else

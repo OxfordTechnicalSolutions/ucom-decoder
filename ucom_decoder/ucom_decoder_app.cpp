@@ -38,7 +38,7 @@ int UcomDecoderApp::process_file()
         data = input.get_data(data_available, left, offset);
         consumed = 0;
         available = data.size();
-        for (auto it = data.begin(); it <= data.end();)
+        for (auto it = data.begin(); it < data.end();)
         {
             need_more_data = false;
             int length = UcomData::peek(reinterpret_cast<uint8_t*>(&(*it)), data.end() - it, need_more_data);
