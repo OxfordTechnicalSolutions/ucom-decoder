@@ -100,7 +100,7 @@ int UcomDecoderApp::process_args()
         {
             _max_packets = std::atoi(packets.c_str());
             if (!_process_file)
-                std::cout << "Capturing " << _max_packets << " packets" << std::endl;
+                std::cout << "Capturing " << _max_packets << " packets (max)" << std::endl;
         }
 
         // Source IP filtering
@@ -288,11 +288,16 @@ int UcomDecoderApp::process_udp()
             }
 
             // Skip unwanted message IDs 
-            if (std::find(_message_ids.begin(), _message_ids.end(), data.get_message_id()) == _message_ids.end())
+            uint16_t id = data.get_message_id();
+            if (std::find(_message_ids.begin(), _message_ids.end(), id) == _message_ids.end())
             {
                 skip = true;
                 _skipped_packets++;
-                std::cout << "Skipped message ID: " << data.get_message_id() << std::endl;
+                if (_skipped_ids.find(id) == _skipped_ids.end())
+                {
+                    std::cout << "Skipping messages with ID: " << id << std::endl;
+                    _skipped_ids.insert(id);
+                }
             }
 
             if (!skip && data.IsValid()) {

@@ -38,8 +38,11 @@ private:
     // Output file prefix
     std::string _output_file_prefix = "output_";
 
-    // Filtered IP list
+    // Filtered IP collection
     std::set<std::string> _filtered_ips;
+
+    // Skipped message ID collection
+    std::set<int> _skipped_ids;
 
     bool _process_file = false;
 
