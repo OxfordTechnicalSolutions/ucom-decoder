@@ -12,25 +12,15 @@ Args::Args(int argc, char* argv[]) {
     if (argc < 3)
         return;
 
-#ifdef __linux__
-    // Check that there are pairs of args
-    if ((argc - 1) % 2 == 0)
-    {
-        for (int i = 1; i < argc; i += 2) {
-            std::string key{argv[i]};
-            std::string value{argv[i + 1]};
-            trim(key);
-            trim(value);
-            insert(std::make_pair(key, value));
-        }
-    }
-#elif _WIN32
     int args = 0;
     std::string key;
     std::string value;
-    for (int i = 1; i < argc; i++) {
-        std::string arg(argv[i]);
-        if (arg.rfind('-', 0) == 0)
+    for (int i = 1; i <= argc; i++) {
+        std::string arg;
+        if (i < argc)
+            arg = std::move(std::string(argv[i]));
+
+        if ((arg.rfind('-', 0) == 0) || (i == argc)) 
         {
             if (args > 0)
             {
@@ -41,7 +31,6 @@ Args::Args(int argc, char* argv[]) {
             }
             args++;
             key = arg;
-            std::cout << arg << ' ' << std::endl;
         }
         else
         {
@@ -49,15 +38,12 @@ Args::Args(int argc, char* argv[]) {
             value += ' ';
         }
     }
-    if ((args > size()) && !value.empty())
-    {
-        trim(key);
-        trim(value);
-        insert(std::make_pair(key, value));
-    }
+}
 
-
-#endif
+bool Args::has_arg(const std::string& key)
+{
+    auto it = find(key);
+    return(it != end());
 }
 
 bool Args::get_arg(const std::string &key, std::string &s)

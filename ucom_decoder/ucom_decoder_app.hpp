@@ -41,7 +41,10 @@ private:
     void close_output_files();
     bool create_output_file(const std::string& filename, int message_id, const std::string& header, std::fstream& output_stream);
     void write_csv(std::fstream& output_stream, const std::string& csv);
+    void print_help_text();
+    int process_args();
 public:
 	UcomDecoderApp(int argc, char* argv[]);
 	int run() override;
+
 };

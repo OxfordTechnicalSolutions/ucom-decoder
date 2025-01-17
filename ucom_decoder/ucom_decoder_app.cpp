@@ -1,6 +1,7 @@
 #include "ucom_decoder_app.hpp"
 #include "input_file.hpp"
 #include "ucom_data.hpp"
+#include "help.hpp"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -164,11 +165,39 @@ int UcomDecoderApp::process_udp()
     return 0;
 }
 
+//! @brief Runs the UCOM decoder application
 int UcomDecoderApp::run() {
     std::cout << "UCOM decoder" << std::endl;
 
+    // Process command-line arguments
+    int result = process_args();
+    if (result != 0)
+        return result;
+    
+    if (_process_file)
+    {
+        // Extract UCOM data from a file
+        return process_file();
+    }
+    else
+    {
+        // Extract UCOM data from a UDP stream
+        return process_udp();
+    }
+
+    return 0;
+}
+
+int UcomDecoderApp::process_args()
+{
     // Process the command-line arguments
     if (_args.size() > 0) {
+        if (_args.has_arg("-h"))
+        {
+            print_help_text();
+            return -1;
+        }
+
         if (_args.get_arg("-u", _dbu_filename))
         {
             _dbu = UcomDbu(_dbu_filename);
@@ -189,6 +218,11 @@ int UcomDecoderApp::run() {
             return -1;
         }
 
+        /* Option: -f
+        *  Description: Extract UCOM data from an input file
+        *  Value: Path to input file
+        *  Usage: -f <input file>
+        */
         if (_args.get_arg("-f", _input_filename))
         {
             std::fstream f(_input_filename);
@@ -200,7 +234,7 @@ int UcomDecoderApp::run() {
             else
             {
                 _process_file = true;
-                std::cout << "Processing file: " << _input_filename << std::endl;
+                std::cout << "Processing input file: " << _input_filename << std::endl;
                 f.close();
             }
         }
@@ -210,7 +244,8 @@ int UcomDecoderApp::run() {
         if (_args.get_arg("-c", packets))
         {
             _max_packets = std::atoi(packets.c_str());
-            std::cout << "Capturing " << _max_packets << " packets" << std::endl;
+            if (!_process_file)
+                std::cout << "Capturing " << _max_packets << " packets" << std::endl;
         }
 
         // Source IP filtering
@@ -247,22 +282,17 @@ int UcomDecoderApp::run() {
             // Use all message ids
             _message_ids = _dbu.get_message_ids();
         }
+
+        std::cout << "Processing message IDs:";
+        for (auto id : _message_ids)
+            std::cout << " " << id;
+        std::cout << std::endl;
     }
     else
     {
         std::cout << "Failed to process command-line arguments" << std::endl;
         return -1;
     }
-
-    if (_process_file)
-    {
-        return process_file();
-    }
-    else
-    {
-        return process_udp();
-    }
-
     return 0;
 }
 
@@ -320,4 +350,11 @@ bool UcomDecoderApp::create_output_file(const std::string& filename, int message
 void UcomDecoderApp::write_csv(std::fstream& output_stream, const std::string &csv)
 {
     output_stream << csv << '\n';
+}
+
+void UcomDecoderApp::print_help_text()
+{
+    for (auto line : help_text)
+        std::cout << line << '\n';
+    std::cout << std::endl;
 }
