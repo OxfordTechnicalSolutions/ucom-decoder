@@ -1,10 +1,13 @@
 #include "ucom_decoder_app.hpp"
 #include "input_file.hpp"
 #include "ucom_data.hpp"
-#include "help.hpp"
+#include "texts.hpp"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+
+
+#define NEWLINE '\n'
 
 UcomDecoderApp::UcomDecoderApp(int argc, char* argv[]) :
 	Application(argc, argv)
@@ -12,163 +15,10 @@ UcomDecoderApp::UcomDecoderApp(int argc, char* argv[]) :
 
 }
 
-//! 
-//! \brief Extract UCOM data from an input file
-int UcomDecoderApp::process_file()
-{
-    // Create the output files; abort if creation fails
-    if (!create_output_files())
-        return -1;
 
-    InputFile input(_input_filename);
-    bool data_available;
-    int64_t left = input.get_file_size();
-
-    int pkt_count = 0;
-    int total_bytes = 0;
-    int skipped_pkts = 0;
-    int consumed = 0;
-    int available = 0;
-    int offset = 0;
-    int it_offset = 0;
-    bool need_more_data = false;
-    std::vector<char> data;
-    while (left > 0)
-    {
-        offset = consumed - available;
-        data = input.get_data(data_available, left, offset);
-        consumed = 0;
-        available = data.size();
-        for (auto it = data.begin(); it < data.end();)
-        {
-            need_more_data = false;
-            int length = UcomData::peek(reinterpret_cast<uint8_t*>(&(*it)), data.end() - it, need_more_data);
-            if (length >= 20)
-            {
-                // Found a candidate for a valid packet - try to extract the data
-                UcomData d(reinterpret_cast<uint8_t*>(&(*it)), length, _dbu);
-                if (d.IsValid())
-                {
-                    // Valid packet; resume search after the end of the packet
-                    it += length;
-                    consumed += length;
-                    pkt_count++;
-                    write_csv(_output_files[d.get_message_id()], d.get_csv());
-                }
-                else
-                {
-                    // Not a valid packet; step to next byte
-                    it++;
-                    if (it <= data.end())
-                        consumed++;
-                }
-            }
-            else
-            {
-                if (need_more_data)
-                {
-                    // Found the start of a possible candidate, but need more data
-                    it_offset = data.end() - it;
-                    break;
-                }
-                it++;
-                if (it <= data.end())
-                    consumed++;
-            }
-            it_offset = data.end() - it;
-        }
-        total_bytes += consumed;
-
-    }
-
-    std::cout << "Read " << pkt_count << " packets" << std::endl;
-    std::cout << "Total bytes read " << total_bytes << std::endl;
-
-    close_output_files();
-
-    return 0;
-}
-
-//!
-//! \brief Extract UCOM data from a UDP stream
-int UcomDecoderApp::process_udp()
-{
-    // Create the output files; abort if creation fails
-    if (!create_output_files())
-            return -1;
-
-    // Create a socket instance; abort if creation fails
-    std::vector<std::string> errors;
-    Socket socket("0.0.0.0", DEFAULT_PORT, "127.0.0.1", 50487, errors);
-
-    if (!socket.is_initialised())
-    {
-        std::cerr << "Failed to initialise socket" << std::endl;
-        return -1;
-    }
-
-    // Allocate a buffer to hold received UDP packets
-    uint8_t buffer[4096];
-
-    int skipped_packets = 0;
-    int packet_count = 0;
-    int len = 0;
-    while ((len > -1) && ((_max_packets == -1) || (packet_count < _max_packets)))
-    {
-        std::string source_ip;
-        len = get_data(socket, buffer, 4096, source_ip);
-        if (source_ip.compare(_filter_ip) != 0)
-        {
-            std::cout << "Filter IP mismatch: " << source_ip << std::endl;
-            continue;
-        }
-
-        // Create a UcomData instance from the received data
-        UcomData data{ buffer, len, _dbu };
-
-        if (!data.IsValid())
-        {
-            std::cout << "Data packet is invalid, skipping" << std::endl;
-            skipped_packets++;
-            continue;
-        }
-
-        if (std::find(_message_ids.begin(), _message_ids.end(), data.get_message_id()) == _message_ids.end())
-        {
-            std::cout << "Skipping message ID: " << data.get_message_id() << std::endl;
-            continue;
-        }
-
-        if (data.IsValid()) {
-            std::cout << "Message: " << " ID: " << data.get_message_id()
-                << " Version: " << data.get_message_version()
-                << " Time Frame: " << (uint16_t)data.get_time_frame()
-                << " Arb. Time: " << data.get_arbitrary_time()
-                << " Payload length: " << data.get_payload_length()
-                << " Signal count: " << data.get_signal_count()
-                << " CRC (calc.): " << data.get_calc_crc() << std::endl;
-
-            // Write the message data to output
-            if (_dbu.message_id_exists(data.get_message_id()))
-            {
-                write_csv(_output_files[data.get_message_id()], data.get_csv());
-                _max_packets--;
-
-            }
-
-        }
-    }
-
-    close_output_files();
-
-    std::cout << "Skipped packets: " << skipped_packets << std::endl;
-    return 0;
-}
 
 //! @brief Runs the UCOM decoder application
 int UcomDecoderApp::run() {
-    std::cout << "UCOM decoder" << std::endl;
-
     // Process command-line arguments
     int result = process_args();
     if (result != 0)
@@ -177,15 +27,17 @@ int UcomDecoderApp::run() {
     if (_process_file)
     {
         // Extract UCOM data from a file
-        return process_file();
+        result = process_file();
     }
     else
     {
         // Extract UCOM data from a UDP stream
-        return process_udp();
+        result = process_udp();
     }
 
-    return 0;
+    display_statistics();
+
+    return result;
 }
 
 int UcomDecoderApp::process_args()
@@ -197,6 +49,8 @@ int UcomDecoderApp::process_args()
             print_help_text();
             return -1;
         }
+
+        print_banner_text();
 
         if (_args.get_arg("-u", _dbu_filename))
         {
@@ -251,22 +105,20 @@ int UcomDecoderApp::process_args()
         // Source IP filtering
         if (_args.get_arg("-i", _filter_ip))
         {
-            std::cout << "Source IP filter: " << _filter_ip << std::endl;
+            if (!_process_file)
+                std::cout << "Source IP filter: " << _filter_ip << std::endl;
         }
 
         std::string ids;
         // Message IDs
         if (_args.get_arg("-m", ids))
         {
-            std::cout << "Message IDs:";
-
             std::string id;
             std::istringstream is(ids);
             while (std::getline(is, id, ' '))
             {
                 try {
                     int value = std::stoi(id);
-                    std::cout << " " << value;
                     _message_ids.push_back(value);
                 }
                 catch (...) {
@@ -275,7 +127,6 @@ int UcomDecoderApp::process_args()
                     return -1;
                 }
             }
-            std::cout << std::endl;
         }
         else
         {
@@ -290,9 +141,149 @@ int UcomDecoderApp::process_args()
     }
     else
     {
-        std::cout << "Failed to process command-line arguments" << std::endl;
+        print_help_text();
         return -1;
     }
+    return 0;
+}
+
+//! 
+//! \brief Extract UCOM data from an input file
+int UcomDecoderApp::process_file()
+{
+    // Create the output files; abort if creation fails
+    if (!create_output_files())
+        return -1;
+
+    InputFile input(_input_filename);
+    bool data_available;
+    int64_t left = input.get_file_size();
+
+    int consumed = 0;
+    int available = 0;
+    int offset = 0;
+    int it_offset = 0;
+    bool need_more_data = false;
+    std::vector<char> data;
+    // Repeat until there is no unread data left
+    while (left > 0)
+    {
+        offset = consumed - available;
+        // Get data from the input file
+        data = input.get_data(data_available, left, offset);
+        consumed = 0;
+        available = data.size();
+        for (auto it = data.begin(); it < data.end();)
+        {
+            need_more_data = false;
+            // Check if the data contains a candidate UCOM packet
+            int length = UcomData::peek(reinterpret_cast<uint8_t*>(&(*it)), data.end() - it, need_more_data);
+            if (length >= 20)
+            {
+                // Found a candidate for a valid packet - try to extract the data
+                UcomData d(reinterpret_cast<uint8_t*>(&(*it)), length, _dbu);
+                if (d.IsValid())
+                {
+                    // Valid packet; resume search after the end of the packet
+                    it += length;
+                    consumed += length;
+                    _packet_count++;
+                    write_csv(_output_files[d.get_message_id()], d.get_csv());
+                }
+                else
+                {
+                    // Not a valid packet; step to next byte
+                    it++;
+                    if (it <= data.end())
+                        consumed++;
+                }
+            }
+            else
+            {
+                if (need_more_data)
+                {
+                    // Found the start of a possible candidate, but need more data
+                    it_offset = data.end() - it;
+                    break;
+                }
+                it++;
+                if (it <= data.end())
+                    consumed++;
+            }
+            it_offset = data.end() - it;
+        }
+        _total_bytes += consumed;
+
+    }
+
+    close_output_files();
+
+    return 0;
+}
+
+//!
+//! \brief Extract UCOM data from a UDP stream
+int UcomDecoderApp::process_udp()
+{
+    // Create the output files; abort if creation fails
+    if (!create_output_files())
+        return -1;
+
+    // Create a socket instance; abort if creation fails
+    std::vector<std::string> errors;
+    Socket socket("0.0.0.0", DEFAULT_PORT, "127.0.0.1", 50487, errors);
+
+    if (!socket.is_initialised())
+    {
+        std::cerr << "Failed to initialise socket" << std::endl;
+        return -1;
+    }
+
+    // Allocate a buffer to hold received UDP packets
+    uint8_t buffer[4096];
+
+    int len = 0;
+    bool skip = false;
+    while ((len > -1) && ((_max_packets == -1) || (_packet_count < _max_packets)))
+    {
+        skip = false;
+        std::string source_ip;
+        len = get_data(socket, buffer, 4096, source_ip);
+        _total_bytes += len;
+
+        // Only process data from specified IP address
+        if (source_ip.compare(_filter_ip) == 0)
+        {
+            // Create a UcomData instance from the received data
+            UcomData data{ buffer, len, _dbu };
+
+            // Skip any invalid packets
+            if (!data.IsValid())
+            {
+                skip = true;
+                _invalid_packets++;
+            }
+
+            // Skip unwanted message IDs 
+            if (std::find(_message_ids.begin(), _message_ids.end(), data.get_message_id()) == _message_ids.end())
+            {
+                skip = true;
+                _skipped_packets++;
+            }
+
+            if (!skip && data.IsValid()) {
+                // Write the message data to output
+                if (_dbu.message_id_exists(data.get_message_id()))
+                {
+                    write_csv(_output_files[data.get_message_id()], data.get_csv());
+                    _max_packets--;
+                }
+            }
+        }
+    }
+
+    close_output_files();
+
     return 0;
 }
 
@@ -356,5 +347,21 @@ void UcomDecoderApp::print_help_text()
 {
     for (auto line : help_text)
         std::cout << line << '\n';
-    std::cout << std::endl;
+    std::cout << std::flush;
+}
+
+void UcomDecoderApp::print_banner_text()
+{
+    for (auto line : banner_text)
+        std::cout << line << '\n';
+    std::cout << std::flush;
+}
+
+void UcomDecoderApp::display_statistics()
+{
+    std::cout << "Total bytes read: " << _total_bytes << NEWLINE;
+    std::cout << "Valid packets decoded: " << _packet_count << NEWLINE;
+    std::cout << "Skipped packets: " << _skipped_packets << NEWLINE;
+    std::cout << "Invalid packets: " << _invalid_packets << std::endl;
+
 }

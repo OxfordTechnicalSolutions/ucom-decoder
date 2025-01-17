@@ -36,13 +36,21 @@ private:
 
     std::map<int, std::fstream> _output_files;
 
+    //! @brief Statistics
+    int _skipped_packets = 0;
+    int _invalid_packets = 0;
+    int _packet_count = 0;
+    int _total_bytes = 0;
+
     int get_data(Socket& socket, uint8_t* buffer, int max_len, std::string& source_ip);
     bool create_output_files();
     void close_output_files();
     bool create_output_file(const std::string& filename, int message_id, const std::string& header, std::fstream& output_stream);
     void write_csv(std::fstream& output_stream, const std::string& csv);
-    void print_help_text();
     int process_args();
+    void print_help_text();
+    void print_banner_text();
+    void display_statistics();
 public:
 	UcomDecoderApp(int argc, char* argv[]);
 	int run() override;
