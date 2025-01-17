@@ -4,6 +4,7 @@
 #include "ucom_dbu.hpp"
 #include "socket_helper.hpp"
 #include <list>
+#include <set>
 
 #define DEFAULT_PORT 50487
 
@@ -34,6 +35,9 @@ private:
     // Output file prefix
     std::string _output_file_prefix = "output_";
 
+    // Filtered IP list
+    std::set<std::string> _filtered_ips;
+
     bool _process_file = false;
 
     UcomDbu _dbu;
@@ -45,6 +49,7 @@ private:
     int _invalid_packets = 0;
     int _packet_count = 0;
     int _total_bytes = 0;
+    int _filtered_packets = 0;
 
     int get_data(Socket& socket, uint8_t* buffer, int max_len, std::string& source_ip);
     bool create_output_files();

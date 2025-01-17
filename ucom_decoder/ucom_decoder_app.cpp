@@ -249,7 +249,7 @@ int UcomDecoderApp::process_udp()
 
     int len = 0;
     bool skip = false;
-    while ((len > -1) && ((_max_packets == -1) || (_packet_count < _max_packets)))
+    while ((len > -1) && (_packet_count < _max_packets))
     {
         skip = false;
         std::string source_ip;
@@ -281,9 +281,18 @@ int UcomDecoderApp::process_udp()
                 if (_dbu.message_id_exists(data.get_message_id()))
                 {
                     write_csv(_output_files[data.get_message_id()], data.get_csv());
-                    _max_packets--;
+                    _packet_count++;
                 }
             }
+        }
+        else
+        {
+            if (_filtered_ips.find(source_ip) == _filtered_ips.end())
+            {
+                std::cout << "Ignoring packets from: " << source_ip << std::endl;
+                _filtered_ips.insert(source_ip);
+            }
+            _filtered_packets++;
         }
     }
 
@@ -367,6 +376,9 @@ void UcomDecoderApp::display_statistics()
     std::cout << "Total bytes read: " << _total_bytes << NEWLINE;
     std::cout << "Valid packets decoded: " << _packet_count << NEWLINE;
     std::cout << "Skipped packets: " << _skipped_packets << NEWLINE;
+    if (!_process_file)
+        std::cout << "Filtered packets: " << _filtered_packets << NEWLINE;
     std::cout << "Invalid packets: " << _invalid_packets << std::endl;
+    
 
 }
