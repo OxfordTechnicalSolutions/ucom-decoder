@@ -30,6 +30,10 @@ private:
     // Process a file rather than UDP stream (default)
     // -f <filename>
     std::string _input_filename;
+
+    // Output file prefix
+    std::string _output_file_prefix = "output_";
+
     bool _process_file = false;
 
     UcomDbu _dbu;

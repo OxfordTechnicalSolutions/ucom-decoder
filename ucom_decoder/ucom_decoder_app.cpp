@@ -123,7 +123,7 @@ int UcomDecoderApp::process_args()
                 }
                 catch (...) {
                     // Failed to convert string to int
-                    std::cout << std::endl << "Error parsing message ID: " << id << std::endl;
+                    std::cerr << std::endl << "Error parsing message ID: " << id << std::endl;
                     return -1;
                 }
             }
@@ -133,6 +133,9 @@ int UcomDecoderApp::process_args()
             // Use all message ids
             _message_ids = _dbu.get_message_ids();
         }
+
+        // Output file prefix
+        _args.get_arg("-o", _output_file_prefix);
 
         std::cout << "Processing message IDs:";
         for (auto id : _message_ids)
@@ -239,6 +242,8 @@ int UcomDecoderApp::process_udp()
         return -1;
     }
 
+    std::cout << "Waiting for data..." << std::endl;
+
     // Allocate a buffer to hold received UDP packets
     uint8_t buffer[4096];
 
@@ -307,7 +312,7 @@ bool UcomDecoderApp::create_output_files()
     for (auto id : _message_ids)
     {
         _output_files.insert({ id, std::fstream() });
-        if (!create_output_file("output_", id, _dbu.get_message(id).get_header(), _output_files[id]))
+        if (!create_output_file(_output_file_prefix, id, _dbu.get_message(id).get_header(), _output_files[id]))
             return false;
     }
     return true;
