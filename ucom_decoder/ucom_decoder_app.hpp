@@ -22,6 +22,9 @@ private:
     // The number of packets to capture (zero means capture indefinitely)
     int _max_packets = -1;
 
+    //! @brief Duration of capture in seconds
+    int _duration = -1;
+
     // Get data only from this IP address
     std::string _filter_ip;
 

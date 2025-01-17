@@ -2,6 +2,7 @@
 #include "input_file.hpp"
 #include "ucom_data.hpp"
 #include "texts.hpp"
+#include "duration.hpp"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -137,6 +138,22 @@ int UcomDecoderApp::process_args()
         // Output file prefix
         _args.get_arg("-o", _output_file_prefix);
 
+        // Capture duration
+        std::string duration;
+        if (_args.get_arg("-t", duration))
+        {
+            try {
+                _duration = std::stoi(duration);
+            }
+            catch (...) {
+                // Failed to convert string to int
+                std::cerr << std::endl << "Error parsing capture duration (-t): " << duration << std::endl;
+                return -1;
+            }
+            if (!_process_file)
+                std::cout << "Maximum capture duration: " << _duration << " seconds" << std::endl;
+        }
+
         std::cout << "Processing message IDs:";
         for (auto id : _message_ids)
             std::cout << " " << id;
@@ -249,7 +266,8 @@ int UcomDecoderApp::process_udp()
 
     int len = 0;
     bool skip = false;
-    while ((len > -1) && (_packet_count < _max_packets))
+    Duration capture_time(_duration);
+    while ((len > -1) && (_packet_count < _max_packets) && (_duration > -1 && !capture_time.elapsed()))
     {
         skip = false;
         std::string source_ip;
@@ -274,6 +292,7 @@ int UcomDecoderApp::process_udp()
             {
                 skip = true;
                 _skipped_packets++;
+                std::cout << "Skipped message ID: " << data.get_message_id() << std::endl;
             }
 
             if (!skip && data.IsValid()) {
