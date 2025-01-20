@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include "cmd_line_quitter.hpp"
 
 
 #define NEWLINE '\n'
@@ -154,6 +155,10 @@ int UcomDecoderApp::process_args()
                 std::cout << "Maximum capture duration: " << _duration << " seconds" << std::endl;
         }
 
+        // Disable user-abort
+        _disable_user_abort = _args.has_arg("-a");
+
+
         std::cout << "Processing message IDs:";
         for (auto id : _message_ids)
             std::cout << " " << id;
@@ -259,19 +264,40 @@ int UcomDecoderApp::process_udp()
         return -1;
     }
 
-    std::cout << "Waiting for data..." << std::endl;
+    if (!_disable_user_abort)
+    {
+        std::cout << "Processing UDP data...";
+#ifdef __linux__
+        std::cout << "Enter 'q' to quit" << std::endl;
+#elif _WIN32
+        std::cout << "Press 'q' to quit" << std::endl;
+#endif
+    }
+
+    CmdLineQuitter quitter;
+    if (!_disable_user_abort)
+        quitter.start();
 
     // Allocate a buffer to hold received UDP packets
     uint8_t buffer[4096];
 
     int len = 0;
     bool skip = false;
+    bool packet_count_reached = false;
+    bool max_capture_time_reached = false;
     Duration capture_time(_duration);
-    while ((len > -1) && (_packet_count < _max_packets) && (_duration > -1 && !capture_time.elapsed()))
+    while ((len > -1) && 
+        ((_max_packets == -1) || (_packet_count < _max_packets)) && 
+        (_duration == -1 || !capture_time.elapsed()) && 
+        !quitter.is_quit_requested())
     {
         skip = false;
         std::string source_ip;
         len = get_data(socket, buffer, 4096, source_ip);
+
+        if (len == 0) // Timeout
+            continue;
+
         _total_bytes += len;
 
         // Only process data from specified IP address
@@ -318,9 +344,22 @@ int UcomDecoderApp::process_udp()
             }
             _filtered_packets++;
         }
+
+        std::cout << '\r' << "Bytes processed: " << _total_bytes;
     }
 
+    std::cout << '\n';
     close_output_files();
+
+    if (!_disable_user_abort && !quitter.is_quit_requested())
+    {
+        std::cout << "Data collection complete. ";
+#ifdef __linux__
+        std::cout << "Enter 'f' to finish" << std::endl;
+#elif _WIN32
+        std::cout << "Press 'f' to finish" << std::endl;
+#endif
+    }
 
     return 0;
 }

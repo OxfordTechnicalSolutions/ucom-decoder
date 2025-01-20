@@ -6,7 +6,6 @@
 #define SOCKLEN_T_PTR int *
 #endif
 
-
 Socket::Socket(std::string local_ip, int local_port, std::string remote_ip, int remote_port, std::vector<std::string>& errors) :
     _local_ip(local_ip),
     _remote_ip(remote_ip),
@@ -36,12 +35,16 @@ Socket::Socket(std::string local_ip, int local_port, std::string remote_ip, int 
     _remote.sin_port = htons(remote_port);
 
     _socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    // shutdown(_socket, 1); // read-only
-    // shutdown(_socket, 0); // write-only
 
     // Bind (for incoming data / server  - associates socket with local IP address / port)
     success = bind(_socket, (sockaddr*)&_local, sizeof(_local)) == 0;
 
+    // Set up poll
+    if (success)
+    {
+        _pfd[0].fd = _socket;
+        _pfd[0].events = POLLIN;
+    }
     _initialised = success;
 }
 
@@ -75,8 +78,35 @@ int Socket::send(const char* buffer, int len, int& error)
 int Socket::recv(char* buffer, int len, std::string &source_ip, uint32_t &ip_in, int& error)
 {
     int addr_len = sizeof(_remote);
-    
-    int result = recvfrom(_socket, buffer, len, 0, (sockaddr*)&_remote, (SOCKLEN_T_PTR) &addr_len);
+    int result = 0;
+
+    // Poll socket, with a timeout of 1000ms
+    int count;
+#ifdef __linux__
+    count = poll(_pfd, 1, 1000);
+#elif _WIN32
+    count = WSAPoll(_pfd, 1, 1000);
+#endif
+    if (count == 0)
+    {
+        // Timed out 
+        return 0;
+    }
+#ifdef __linux__
+    else if (count == -1)
+    {
+        error = errno;
+        return -1;
+    }
+#elif _WIN32
+    if (count == SOCKET_ERROR)
+    {
+        error = WSAGetLastError();
+        return -1;
+    }
+#endif
+        
+    result = recvfrom(_socket, buffer, len, MSG_PEEK, (sockaddr*)&_remote, (SOCKLEN_T_PTR) &addr_len);
     in_addr_t in_ip = _remote.sin_addr.s_addr;
     
 #ifdef __linux__

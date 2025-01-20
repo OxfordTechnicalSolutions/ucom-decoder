@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <sys/poll.h>
 #elif _WIN32
 #include <WinSock2.h>
 #include <ws2tcpip.h>
@@ -25,8 +26,10 @@ private:
 	bool _initialised;
 #ifdef __linux__
 	int _socket;
+	pollfd _pfd[1];
 #elif _WIN32
 	SOCKET _socket;
+	WSAPOLLFD _pfd[1];
 #endif
 public:
 	Socket(std::string local_ip, int local_port, std::string remote_ip, int remote_port, std::vector<std::string>& errors);
