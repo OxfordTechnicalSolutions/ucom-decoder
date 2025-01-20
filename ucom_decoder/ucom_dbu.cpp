@@ -67,7 +67,7 @@ const std::vector<ucom_signal_ptr_t> &UcomDbu::get_signals(uint16_t message_id)
     if (_messages.find(message_id) != _messages.end())
         return _messages[message_id].get_signals();
     else
-        return std::vector<ucom_signal_ptr_t>();
+        return _empty_vector;
 }
 
 OxTS::Enum::BASIC_TYPE UcomDbu::get_data_type(const std::string& data_type)

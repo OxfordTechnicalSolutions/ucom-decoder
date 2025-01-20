@@ -64,7 +64,7 @@ std::vector<char>& InputFile::get_data(bool &data_available, int64_t& left, int 
 
         _buffer.resize(_buffer.capacity());
         _filestream.read(&_buffer[0], _buffer.capacity());
-        int read = _filestream.gcount();
+        std::streamsize read = _filestream.gcount();
 
         if (_filestream.eof())
         {

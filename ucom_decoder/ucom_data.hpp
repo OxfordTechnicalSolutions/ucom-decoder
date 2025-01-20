@@ -34,7 +34,7 @@ public:
 
     uint16_t get_payload_length() { return _payload_length; }
 
-    int get_signal_count() { return _values.size(); }
+    size_t get_signal_count() { return _values.size(); }
 
     uint32_t get_calc_crc() { return _calc_crc; }
 

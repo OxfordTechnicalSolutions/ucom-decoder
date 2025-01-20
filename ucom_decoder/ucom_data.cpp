@@ -37,8 +37,8 @@ UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu)
         _values.push_back(get_data_update_offset(data, type, i));
     }
 
-    int signal_count = dbu.get_message(_message_id).get_signal_count();
-    int value_count = _values.size();
+    size_t signal_count = dbu.get_message(_message_id).get_signal_count();
+    size_t value_count = _values.size();
     _valid = value_count == signal_count;
 }
 

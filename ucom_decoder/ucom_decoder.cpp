@@ -141,8 +141,8 @@ public:
             _values.push_back(value);
         }
 
-        int signal_count = dbu.get_message(_message_id).get_signal_count();
-        int value_count = _values.size();
+        size_t signal_count = dbu.get_message(_message_id).get_signal_count();
+        size_t value_count = _values.size();
         _valid = value_count == signal_count;
     }    
 
@@ -191,7 +191,7 @@ public:
         return _payload_length;
     }
 
-    int get_signal_count()
+    size_t get_signal_count()
     {
         // The count of all the doubles, plus arbitrary time and GNSST
         return _values.size() + 2;
@@ -286,7 +286,7 @@ bool get_file_data(std::string filename, std::vector<char>& data, int64_t& left)
         std::cout << "Vector capacity: " << data.capacity() << '\n';
         data.resize(data.capacity());
         f.read(& data[0], data.capacity());
-        int read = f.gcount();
+        std::streamsize read = f.gcount();
         
         if (f.eof())
         {
@@ -406,9 +406,9 @@ int main(int argc, char* argv[])
                 std::cout << "Failed to open file" << std::endl;
 
             int consumed = 0;
-            int available = 0;
-            int offset = 0;
-            int it_offset = 0;
+            size_t available = 0;
+            size_t offset = 0;
+            size_t it_offset = 0;
             bool need_more_data = false;
             std::vector<char> data;
             while (left > 0)
@@ -421,7 +421,7 @@ int main(int argc, char* argv[])
                 for (auto it = data.begin(); it <= data.end();)
                 {
                     need_more_data = false;
-                    int length = UCOMData::peek(reinterpret_cast<uint8_t*>(&(*it)), data.end() - it, need_more_data);
+                    size_t length = UCOMData::peek(reinterpret_cast<uint8_t*>(&(*it)), data.end() - it, need_more_data);
                     if (length >= 20)
                     {
                         // Found a candidate for a valid packet - try to extract the data

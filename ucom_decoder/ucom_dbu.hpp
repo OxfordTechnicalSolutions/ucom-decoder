@@ -15,6 +15,7 @@ private:
     std::map<uint16_t, UcomMessage> _messages;
     std::list<uint16_t> _message_ids;
     UcomMessage _empty_message;
+    std::vector<ucom_signal_ptr_t> _empty_vector;
     std::string _schema; 
     int _schema_version;
     std::string _dbu_id;
