@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include "cmd_line_quitter.hpp"
 
 
 #define NEWLINE '\n'
@@ -259,7 +260,8 @@ int UcomDecoderApp::process_udp()
         return -1;
     }
 
-    std::cout << "Waiting for data..." << std::endl;
+    std::cout << "Waiting for data... Enter 'q' to quit" << std::endl;
+    CmdLineQuitter quitter;
 
     // Allocate a buffer to hold received UDP packets
     uint8_t buffer[4096];
@@ -267,7 +269,7 @@ int UcomDecoderApp::process_udp()
     int len = 0;
     bool skip = false;
     Duration capture_time(_duration);
-    while ((len > -1) && (_packet_count < _max_packets) && (_duration > -1 && !capture_time.elapsed()))
+    while ((len > -1) && (_packet_count < _max_packets) && (_duration == -1 || !capture_time.elapsed()) && !quitter.is_quit_requested())
     {
         skip = false;
         std::string source_ip;
