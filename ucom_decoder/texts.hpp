@@ -9,7 +9,8 @@ const char* help_text[] = {
 	"  -c <packets>           Number of packets to process (UDP stream only)",
 	"  -t <duration>          Maximum capture duration in seconds (UDP stream only)",
 	"  -i <address>           Source IP address (UDP stream only)", 
-	"  -o <output file>       Output file prefix (default is output_)"
+	"  -o <output file>       Output file prefix (default is output_)",
+	"  -a                     Disable user-abort"
 };
 
 const char* banner_text[] = {

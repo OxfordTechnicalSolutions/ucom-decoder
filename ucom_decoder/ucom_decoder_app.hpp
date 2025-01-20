@@ -38,6 +38,9 @@ private:
     // Output file prefix
     std::string _output_file_prefix = "output_";
 
+    // Disable user-abort
+    bool _disable_user_abort = false;
+
     // Filtered IP collection
     std::set<std::string> _filtered_ips;
 

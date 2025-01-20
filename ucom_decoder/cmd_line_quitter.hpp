@@ -11,6 +11,7 @@ private:
 	std::thread _thread;
 public:
 	CmdLineQuitter();
+	void start();
 	~CmdLineQuitter();
 	void run();
 };

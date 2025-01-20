@@ -5,6 +5,12 @@
 
 CmdLineQuitter::CmdLineQuitter()
 {
+	
+}
+
+
+void CmdLineQuitter::start()
+{
 	_thread = std::thread(&CmdLineQuitter::run, this);
 }
 
@@ -21,7 +27,7 @@ void CmdLineQuitter::run()
 	while (!is_quit_requested())
 	{
 		std::cin >> input;
-		if (input.find("q") == 0)
+		if ((input.find("q") == 0) || (input.find("f") == 0))
 			request_quit();
 	}
 }

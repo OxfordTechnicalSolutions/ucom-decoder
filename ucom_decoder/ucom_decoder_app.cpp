@@ -155,6 +155,10 @@ int UcomDecoderApp::process_args()
                 std::cout << "Maximum capture duration: " << _duration << " seconds" << std::endl;
         }
 
+        // Disable user-abort
+        _disable_user_abort = _args.has_arg("-a");
+
+
         std::cout << "Processing message IDs:";
         for (auto id : _message_ids)
             std::cout << " " << id;
@@ -260,20 +264,33 @@ int UcomDecoderApp::process_udp()
         return -1;
     }
 
-    std::cout << "Waiting for data... Enter 'q' to quit" << std::endl;
+    if (!_disable_user_abort)
+        std::cout << "Waiting for data... Enter 'q' to quit" << std::endl;
+
     CmdLineQuitter quitter;
+    if (!_disable_user_abort)
+        quitter.start();
 
     // Allocate a buffer to hold received UDP packets
     uint8_t buffer[4096];
 
     int len = 0;
     bool skip = false;
+    bool packet_count_reached = false;
+    bool max_capture_time_reached = false;
     Duration capture_time(_duration);
-    while ((len > -1) && (_packet_count < _max_packets) && (_duration == -1 || !capture_time.elapsed()) && !quitter.is_quit_requested())
+    while ((len > -1) && 
+        ((_max_packets == -1) || (_packet_count < _max_packets)) && 
+        (_duration == -1 || !capture_time.elapsed()) && 
+        !quitter.is_quit_requested())
     {
         skip = false;
         std::string source_ip;
         len = get_data(socket, buffer, 4096, source_ip);
+
+        if (len == 0) // Timeout
+            continue;
+
         _total_bytes += len;
 
         // Only process data from specified IP address
@@ -323,6 +340,9 @@ int UcomDecoderApp::process_udp()
     }
 
     close_output_files();
+
+    if (!_disable_user_abort && !quitter.is_quit_requested())
+        std::cout << "Data collection complete. Enter 'f' to finish" << std::endl;
 
     return 0;
 }
