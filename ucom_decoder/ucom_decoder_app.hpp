@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fstream>
 #include "application.hpp"
 #include "ucom_dbu.hpp"
 #include "socket_helper.hpp"
