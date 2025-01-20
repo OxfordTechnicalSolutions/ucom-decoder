@@ -265,7 +265,14 @@ int UcomDecoderApp::process_udp()
     }
 
     if (!_disable_user_abort)
-        std::cout << "Waiting for data... Enter 'q' to quit" << std::endl;
+    {
+        std::cout << "Processing UDP data...";
+#ifdef __linux__
+        std::cout << "Enter 'q' to quit" << std::endl;
+#elif _WIN32
+        std::cout << "Press 'q' to quit" << std::endl;
+#endif
+    }
 
     CmdLineQuitter quitter;
     if (!_disable_user_abort)
@@ -341,10 +348,18 @@ int UcomDecoderApp::process_udp()
         std::cout << '\r' << "Bytes processed: " << _total_bytes;
     }
 
+    std::cout << '\n';
     close_output_files();
 
     if (!_disable_user_abort && !quitter.is_quit_requested())
-        std::cout << "Data collection complete. Enter 'f' to finish" << std::endl;
+    {
+        std::cout << "Data collection complete. ";
+#ifdef __linux__
+        std::cout << "Enter 'f' to finish" << std::endl;
+#elif _WIN32
+        std::cout << "Press 'f' to finish" << std::endl;
+#endif
+    }
 
     return 0;
 }
