@@ -337,6 +337,8 @@ int UcomDecoderApp::process_udp()
             }
             _filtered_packets++;
         }
+
+        std::cout << '\r' << "Bytes processed: " << _total_bytes;
     }
 
     close_output_files();
