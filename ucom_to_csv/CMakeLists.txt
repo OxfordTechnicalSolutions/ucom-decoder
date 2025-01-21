@@ -35,7 +35,7 @@ add_custom_command(TARGET ucom_to_csv POST_BUILD
 
 add_custom_command(TARGET ucom_to_csv POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy
-                       ${CMAKE_SOURCE_DIR}/UCOM_241120_SN62084/241120_SN62084_1.ucom
+                       ${CMAKE_SOURCE_DIR}/example_data/241120_SN62084.ucom
                        ${CMAKE_CURRENT_BINARY_DIR}/input.ucom)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

@@ -67,3 +67,19 @@ Options:
   -o <output file>       Output file prefix (default is "output_")
   -a                     Disable user-abort
 ```
+
+## Example Data
+
+The `example_data` directory contains:
+
+- UCOM file, logged from an OxTS INS
+- .cfg file, showing how UCOM messages are configured
+- TODO: move file here oxts.dbu - contains message definitions which are parsed 
+by the decoder. This allows the decoder flexibility to decode new messages when 
+provided with updated definitions.
+
+To use this data with the UCOM to CSV tool:
+
+```sh
+ucom_decoder <new command with dbu path option>
+```
