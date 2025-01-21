@@ -1,7 +1,7 @@
 #pragma once
-#include "ucom_dbu.hpp"
-#include "enum/BasicType.hpp"
-#include "crc.hpp"
+#include "ucom/ucom_dbu.hpp"
+#include "ucom/enum/BasicType.hpp"
+#include "ucom/crc.hpp"
 #define raw_data_ptr_t const uint8_t *
 
 class UcomData {

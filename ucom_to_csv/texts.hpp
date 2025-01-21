@@ -1,7 +1,7 @@
 #pragma once
 
 const char* help_text[] = {
-	"Usage: ucom_decoder [options] -u <.dbu filename>",
+	"Usage: ucom_to_csv [options] -u <.dbu filename>",
 	"Options:",
 	"  -h                     Help - displays this message",
 	"  -f <input file>        Extract data from a file instead of UDP stream",
@@ -15,7 +15,7 @@ const char* help_text[] = {
 
 const char* banner_text[] = {
 	"**************************************************",
-	"* UCOM Decoder                                   *",
+	"* UCOM to CSV Tool                               *",
 	"* Oxford Technical Solutions Ltd 2025            *",
 	"**************************************************"
 };
