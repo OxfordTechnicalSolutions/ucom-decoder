@@ -13,3 +13,4 @@ project ("ucom_decoder")
 
 # Include sub-projects.
 add_subdirectory ("ucom_decoder")
+add_subdirectory ("ucom_to_csv")

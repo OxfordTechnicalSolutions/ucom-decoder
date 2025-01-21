@@ -1,5 +1,5 @@
-#include "ucom_signal.hpp"
-#include "ucom_dbu.hpp"
+#include "ucom/ucom_signal.hpp"
+#include "ucom/ucom_dbu.hpp"
 
 UcomSignal::UcomSignal()
 {

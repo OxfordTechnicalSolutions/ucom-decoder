@@ -1,13 +1,15 @@
 #include "ucom_decoder_app.hpp"
-#include "input_file.hpp"
-#include "ucom_data.hpp"
+
 #include "texts.hpp"
+#include "input_file.hpp"
 #include "duration.hpp"
+#include "cmd_line_quitter.hpp"
+
 #include <iostream>
 #include <sstream>
 #include <iomanip>
-#include "cmd_line_quitter.hpp"
 
+#include "ucom/ucom_data.hpp"
 
 #define NEWLINE '\n'
 
