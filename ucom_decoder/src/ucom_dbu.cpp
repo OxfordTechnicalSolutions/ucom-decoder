@@ -7,7 +7,8 @@ UcomDbu::UcomDbu() :
 
 }
 
-UcomDbu::UcomDbu(std::string filename)
+UcomDbu::UcomDbu(std::string filename) :
+    _filename(filename)
 {
     _valid = false;
     std::ifstream f(filename);

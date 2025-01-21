@@ -11,6 +11,12 @@ endif()
 
 project ("ucom_decoder")
 
+option(OXTS_SDK_BUILD_PYTHON "Build SDK Python wrapper." ON) 
+
 # Include sub-projects.
 add_subdirectory ("ucom_decoder")
 add_subdirectory ("ucom_to_csv")
+
+if (OXTS_SDK_BUILD_PYTHON)
+	add_subdirectory("ucom_decoder_py")
+endif()

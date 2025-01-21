@@ -23,9 +23,11 @@ private:
     std::string _dbu_name;
     std::string _dbu_description;
     std::string get_value(json json_data, std::string key);
+    std::string _filename;
 public:
     UcomDbu();
     UcomDbu(std::string filename);
+    std::string get_filename() { return _filename; }
     bool get_valid() { return _valid; }
     bool message_id_exists(uint16_t message_id);
     std::map<uint16_t, UcomMessage>& get_messages();
