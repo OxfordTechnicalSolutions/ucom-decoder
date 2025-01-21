@@ -1,3 +1,7 @@
 [submodule "ucom_decoder/json"]
 	path = ucom_decoder/json
 	url = https://github.com/nlohmann/json.git
+[submodule "ucom_decoder_py/pybind11"]
+	path = ucom_decoder_py/pybind11
+	url = git@github.com:pybind/pybind11.git
+	branch = stable
