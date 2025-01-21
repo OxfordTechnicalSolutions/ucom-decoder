@@ -2,23 +2,48 @@
 # project specific logic here.
 #
 
-# Add source to this project's executable.
-add_executable (ucom_decoder "ucom_decoder.cpp" "args.cpp" "ucom_message.cpp" "ucom_signal.cpp" "ucom_dbu.cpp" "crc.cpp" "socket_helper.cpp" "input_file.cpp" "application.cpp" "ucom_decoder_app.cpp" "ucom_data.cpp" "duration.cpp" "quitter.cpp" "cmd_line_quitter.cpp")
+
+# Add source to the UCOM decoder library.
+add_library (ucom_decoder 
+   "ucom_message.cpp" 
+   "ucom_signal.cpp" 
+   "ucom_dbu.cpp" 
+   "crc.cpp" 
+   "ucom_data.cpp"
+)
+
+# Add source to the UCOM to csv executable.
+add_executable (ucom_to_csv 
+   "ucom_decoder.cpp" 
+   "args.cpp" 
+   "socket_helper.cpp" 
+   "input_file.cpp" 
+   "application.cpp" 
+   "ucom_decoder_app.cpp" 
+   "duration.cpp" 
+   "quitter.cpp" 
+   "cmd_line_quitter.cpp"
+)
 
 # include directory for json parser
 include_directories(json/include)
 
 # libraries for winsock
 if(WIN32)
-	target_link_libraries(ucom_decoder wsock32 ws2_32)
+	target_link_libraries(ucom_to_csv wsock32 ws2_32 ucom_decoder)
 endif()
 
-add_custom_command(TARGET ucom_decoder POST_BUILD
+if(UNIX)
+   find_package(Threads REQUIRED)
+   target_link_libraries(ucom_to_csv PRIVATE Threads::Threads ucom_decoder)
+endif()
+
+add_custom_command(TARGET ucom_to_csv POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy
                        ${CMAKE_SOURCE_DIR}/oxts.dbu
                        ${CMAKE_CURRENT_BINARY_DIR}/oxts.dbu)
 
-add_custom_command(TARGET ucom_decoder POST_BUILD
+add_custom_command(TARGET ucom_to_csv POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy
                        ${CMAKE_SOURCE_DIR}/UCOM_241120_SN62084/241120_SN62084_1.ucom
                        ${CMAKE_CURRENT_BINARY_DIR}/input.ucom)
