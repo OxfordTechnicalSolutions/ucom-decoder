@@ -3,6 +3,7 @@
 #include "ucom/ucom_data.hpp"
 #include "ucom/ucom_dbu.hpp"
 #include "ucom/ucom_message.hpp"
+#include "ucom/ucom_signal.hpp"
 
 #include <pybind11/stl.h> // for map, list, vector
 
@@ -27,7 +28,7 @@ PYBIND11_MODULE(ucom_py_sdk, m) {
         .def("get_calc_crc", &UcomData::get_calc_crc)
         .def("get_valid", &UcomData::get_valid);
 
-// UcomDbu
+    // UcomDbu
     py::class_<UcomDbu>(m, "UcomDbu")
         .def(py::init<>())
         .def(py::init<std::string>(), "filename"_a)
@@ -37,10 +38,16 @@ PYBIND11_MODULE(ucom_py_sdk, m) {
         .def("get_messages", &UcomDbu::get_messages)
         .def("get_message_ids", &UcomDbu::get_message_ids)
         .def("get_message", &UcomDbu::get_message, "message_id"_a)
-        .def("get_signals", &UcomDbu::get_signals, "message_id"_a)
+        .def("get_signals", &UcomDbu::get_signals_copy, "message_id"_a, py::return_value_policy::reference_internal)
+        .def("get_signals_copy", [](UcomDbu &a, int message_id) {
+        std::vector<UcomSignal> signals;
+        for (auto signal : a.get_signals(message_id))
+            signals.push_back(UcomSignal(*signal));
+        return signals;
+            }, "message_id"_a)
         .def_static("get_data_type", &UcomDbu::get_data_type, "data_type"_a);
 
-// UcomMessage
+    // UcomMessage
     py::class_<UcomMessage>(m, "UcomMessage")
         .def(py::init<>())
         .def(py::init<json>(), "message"_a)
@@ -48,10 +55,32 @@ PYBIND11_MODULE(ucom_py_sdk, m) {
         .def("get_id", &UcomMessage::get_id)
         .def("get_header", &UcomMessage::get_header)
         .def("get_signal_count", &UcomMessage::get_signal_count)
-        .def("get_signals", &UcomMessage::get_signals);
-/*
-    m.def("add2", &add, "i"_a=1, "j"_a);
+        .def("get_signals", &UcomMessage::get_signals_copy, py::return_value_policy::reference_internal);
 
-    
-    */
+    // UcomSignal
+    py::class_<UcomSignal>(m, "UcomSignal")
+        .def(py::init<>())
+        .def(py::init<json>(), "signal"_a)
+        .def(py::init<std::string, UcomSignal::SignalType>(), "signal_id"_a, "signal_type"_a)
+        .def("get_signal_id", &UcomSignal::get_signal_id)
+        .def("get_data_type", &UcomSignal::get_data_type);
+
+
+#define ENUM_BASIC_TYPE(X) .value(#X, OxTS::Enum:: ## X)
+    // OxTS::Enum::BASIC_TYPE
+    py::enum_<OxTS::Enum::BASIC_TYPE>(m, "OxTS::Enum::BASIC_TYPE")
+        ENUM_BASIC_TYPE(BASIC_TYPE_void)
+        ENUM_BASIC_TYPE(BASIC_TYPE_bool)
+        ENUM_BASIC_TYPE(BASIC_TYPE_char)
+        ENUM_BASIC_TYPE(BASIC_TYPE_float)
+        ENUM_BASIC_TYPE(BASIC_TYPE_double)
+        ENUM_BASIC_TYPE(BASIC_TYPE_uint8_t)
+        ENUM_BASIC_TYPE(BASIC_TYPE_uint16_t)
+        ENUM_BASIC_TYPE(BASIC_TYPE_uint32_t)
+        ENUM_BASIC_TYPE(BASIC_TYPE_uint64_t)
+        ENUM_BASIC_TYPE(BASIC_TYPE_int8_t)
+        ENUM_BASIC_TYPE(BASIC_TYPE_int16_t)
+        ENUM_BASIC_TYPE(BASIC_TYPE_int32_t)
+        ENUM_BASIC_TYPE(BASIC_TYPE_int64_t)
+        ENUM_BASIC_TYPE(BASIC_TYPE_UNKNOWN);
 }

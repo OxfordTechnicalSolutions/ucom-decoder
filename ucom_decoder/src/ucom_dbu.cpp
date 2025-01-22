@@ -69,6 +69,14 @@ const std::vector<ucom_signal_ptr_t> &UcomDbu::get_signals(uint16_t message_id)
         return _empty_vector;
 }
 
+std::vector<UcomSignal>& UcomDbu::get_signals_copy(uint16_t message_id)
+{
+    if (_messages.find(message_id) != _messages.end())
+        return _messages[message_id].get_signals_copy();
+    else
+        return _empty_signal_vector;
+}
+
 OxTS::Enum::BASIC_TYPE UcomDbu::get_data_type(const std::string& data_type)
 {
     /* "SupportedTypes" from signal.schema.json:

@@ -18,7 +18,7 @@ class UcomSignal {
     std::string _unit;
     double _scale_factor;
     double _offset;
-    OxTS::Enum::BASIC_TYPE _data_type;
+    OxTS::Enum::BASIC_TYPE _data_type = OxTS::Enum::BASIC_TYPE_UNKNOWN;
     SignalType _signal_type;
     public:
     UcomSignal();
@@ -26,6 +26,8 @@ class UcomSignal {
     UcomSignal(std::string signal_id, UcomSignal::SignalType signal_type);
     std::string get_signal_id() { return _signal_id; }
     const OxTS::Enum::BASIC_TYPE get_data_type() { return _data_type; } 
+    void enter() {};
+    void exit() {};
 };
 
 using ucom_signal_ptr_t = std::shared_ptr<UcomSignal>;

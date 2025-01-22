@@ -24,6 +24,9 @@ class UcomMessage : public json {
     std::string	_description;
     //! \brief Timing 
     std::string	_timing;
+
+    std::vector<UcomSignal> _signals_copy;
+
     public:
     UcomMessage() {};
     UcomMessage(json message);
@@ -36,4 +39,8 @@ class UcomMessage : public json {
     std::string get_header() const { return _header; }
     size_t get_signal_count() const { return _signals.size(); } 
     const std::vector<ucom_signal_ptr_t> &get_signals();
+
+    //! @brief For use in Python bindings. Using vector<ucom_signal_ptr> causes memory allocation issue in Python
+    //! @return 
+    std::vector<UcomSignal> &get_signals_copy();
 };

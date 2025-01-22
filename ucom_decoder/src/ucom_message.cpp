@@ -37,3 +37,13 @@ const std::vector<ucom_signal_ptr_t> &UcomMessage::get_signals()
 {
     return _signals;
 }
+
+std::vector<UcomSignal> &UcomMessage::get_signals_copy()
+{
+    if (_signals_copy.size() == 0)
+    {
+        for (auto signal : _signals)
+            _signals_copy.push_back(UcomSignal(*signal));
+    }
+    return _signals_copy;
+}
