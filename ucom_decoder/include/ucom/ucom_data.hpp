@@ -23,6 +23,7 @@ private:
     static T get_data_update_offset(const uint8_t* data, int& offset);
 public:
     UcomData(const uint8_t* data, int size, UcomDbu& dbu);
+    UcomData(const char* data, int size, UcomDbu& dbu);
     double get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_TYPE type, int& offset);
     static const int peek(const uint8_t* data, int max_size, bool& need_more_data);
 

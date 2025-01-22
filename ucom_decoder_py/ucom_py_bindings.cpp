@@ -10,11 +10,11 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 // UcomData
-PYBIND11_MODULE(ucom_sdk, m) {
+PYBIND11_MODULE(ucom_py_sdk, m) {
     m.doc() = "Ucom SDK"; // optional module docstring
 
     py::class_<UcomData>(m, "UcomData")
-        .def(py::init<uint8_t*, int, UcomDbu&>(), "data"_a, "size"_a, "dbu"_a)
+        .def(py::init<char*, int, UcomDbu&>(), "data"_a, "size"_a, "dbu"_a)
         .def_static("peek", &UcomData::peek, "data"_a, "max_size"_a, "need_more_data"_a)
         .def("get_csv", &UcomData::get_csv)
         .def("to_string", &UcomData::to_string)
@@ -25,7 +25,7 @@ PYBIND11_MODULE(ucom_sdk, m) {
         .def("get_payload_length", &UcomData::get_payload_length)
         .def("get_signal_count", &UcomData::get_signal_count)
         .def("get_calc_crc", &UcomData::get_calc_crc)
-        .def("get_valid", &UcomData::IsValid);
+        .def("get_valid", &UcomData::get_valid);
 
 // UcomDbu
     py::class_<UcomDbu>(m, "UcomDbu")
