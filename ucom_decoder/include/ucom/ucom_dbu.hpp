@@ -16,7 +16,6 @@ private:
     std::list<uint16_t> _message_ids;
     UcomMessage _empty_message;
     std::vector<ucom_signal_ptr_t> _empty_vector;
-    std::vector<UcomSignal> _empty_signal_vector;
     std::string _schema; 
     int _schema_version;
     std::string _dbu_id;
@@ -36,8 +35,4 @@ public:
     const UcomMessage& get_message(int id);
     const std::vector<ucom_signal_ptr_t> &get_signals(uint16_t message_id);
     static OxTS::Enum::BASIC_TYPE get_data_type(const std::string& data_type);
-
-    //! @brief For use in Python bindings. Using vector<ucom_signal_ptr> causes memory allocation issue in Python
-    //! @return 
-    std::vector<UcomSignal>& get_signals_copy(uint16_t message_id);
 };

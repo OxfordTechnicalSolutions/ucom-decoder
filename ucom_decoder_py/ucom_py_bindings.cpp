@@ -38,8 +38,7 @@ PYBIND11_MODULE(ucom_py_sdk, m) {
         .def("get_messages", &UcomDbu::get_messages)
         .def("get_message_ids", &UcomDbu::get_message_ids)
         .def("get_message", &UcomDbu::get_message, "message_id"_a)
-        .def("get_signals", &UcomDbu::get_signals_copy, "message_id"_a, py::return_value_policy::reference_internal)
-        .def("get_signals_copy", [](UcomDbu &a, int message_id) {
+        .def("get_signals", [](UcomDbu &a, int message_id) {
         std::vector<UcomSignal> signals;
         for (auto signal : a.get_signals(message_id))
             signals.push_back(UcomSignal(*signal));
@@ -55,7 +54,12 @@ PYBIND11_MODULE(ucom_py_sdk, m) {
         .def("get_id", &UcomMessage::get_id)
         .def("get_header", &UcomMessage::get_header)
         .def("get_signal_count", &UcomMessage::get_signal_count)
-        .def("get_signals", &UcomMessage::get_signals_copy, py::return_value_policy::reference_internal);
+        .def("get_signals", [](UcomMessage& a) {
+        std::vector<UcomSignal> signals;
+        for (auto signal : a.get_signals())
+            signals.push_back(UcomSignal(*signal));
+        return signals;
+            });
 
     // UcomSignal
     py::class_<UcomSignal>(m, "UcomSignal")
