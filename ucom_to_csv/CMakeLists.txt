@@ -5,16 +5,18 @@
 
 # Add source to the UCOM to csv executable.
 add_executable (ucom_to_csv 
-   "ucom_decoder.cpp" 
-   "args.cpp" 
-   "socket_helper.cpp" 
-   "input_file.cpp" 
-   "application.cpp" 
-   "ucom_decoder_app.cpp" 
-   "duration.cpp" 
-   "quitter.cpp" 
-   "cmd_line_quitter.cpp"
+   "src/ucom_decoder.cpp" 
+   "src/args.cpp" 
+   "src/socket_helper.cpp" 
+   "src/input_file.cpp" 
+   "src/application.cpp" 
+   "src/ucom_decoder_app.cpp" 
+   "src/duration.cpp" 
+   "src/quitter.cpp" 
+   "src/cmd_line_quitter.cpp"
 )
+
+target_include_directories(ucom_to_csv PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_dependencies(ucom_to_csv ucom_decoder)
 
