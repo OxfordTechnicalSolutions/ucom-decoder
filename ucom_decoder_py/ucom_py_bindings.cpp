@@ -5,6 +5,8 @@
 #include "ucom/ucom_message.hpp"
 #include "ucom/ucom_signal.hpp"
 
+#include <tuple>
+
 #include <pybind11/stl.h> // for map, list, vector
 
 namespace py = pybind11;
@@ -16,7 +18,10 @@ PYBIND11_MODULE(ucom_py_sdk, m) {
 
     py::class_<UcomData>(m, "UcomData")
         .def(py::init<char*, int, UcomDbu&>(), "data"_a, "size"_a, "dbu"_a)
-        .def_static("peek", &UcomData::peek, "data"_a, "max_size"_a, "need_more_data"_a)
+        .def_static("peek", [](char* data, int max_size, bool &need_more_data){
+            int length = UcomData::peek(reinterpret_cast<const uint8_t*>(data), max_size, need_more_data);
+            return std::make_tuple(length, need_more_data);
+        }, "data"_a, "max_size"_a, "need_more_data"_a)
         .def("get_csv", &UcomData::get_csv)
         .def("to_string", &UcomData::to_string)
         .def("get_message_id", &UcomData::get_message_id)
