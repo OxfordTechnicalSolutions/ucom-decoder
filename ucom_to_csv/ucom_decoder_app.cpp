@@ -209,7 +209,7 @@ int UcomDecoderApp::process_file()
             {
                 // Found a candidate for a valid packet - try to extract the data
                 UcomData d(reinterpret_cast<uint8_t*>(&(*it)), length, _dbu);
-                if (d.IsValid())
+                if (d.get_valid())
                 {
                     // Valid packet; resume search after the end of the packet
                     it += length;
@@ -309,7 +309,7 @@ int UcomDecoderApp::process_udp()
             UcomData data{ buffer, len, _dbu };
 
             // Skip any invalid packets
-            if (!data.IsValid())
+            if (!data.get_valid())
             {
                 skip = true;
                 _invalid_packets++;
@@ -328,7 +328,7 @@ int UcomDecoderApp::process_udp()
                 }
             }
 
-            if (!skip && data.IsValid()) {
+            if (!skip && data.get_valid()) {
                 // Write the message data to output
                 if (_dbu.message_id_exists(data.get_message_id()))
                 {

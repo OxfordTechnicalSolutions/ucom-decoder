@@ -14,8 +14,6 @@ UcomDbu::UcomDbu(std::string filename)
     if (f.is_open())
     {
         try {
-            //this->emplace(parse(f));
-            //this->operator[]("dbu") = parse(f);
             json data = parse(f);
             _schema = get_value(data, "$schema");
             _schema_version = data["DBUSchemaVersion"].get<int>();

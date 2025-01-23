@@ -15,6 +15,12 @@ private:
     uint32_t _calc_crc; // Bytes 16 + _payload_length 
     bool _valid;
     std::vector<double> _values; // collection for signal values
+
+    template<typename T>
+    static T get_data(const uint8_t* data, int offset);
+
+    template<typename T>
+    static T get_data_update_offset(const uint8_t* data, int& offset);
 public:
     UcomData(const uint8_t* data, int size, UcomDbu& dbu);
     double get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_TYPE type, int& offset);
@@ -38,13 +44,6 @@ public:
 
     uint32_t get_calc_crc() { return _calc_crc; }
 
-    bool IsValid() { return _valid; }
-
-    template<typename T>
-    static T get_data(const uint8_t* data, int offset);
-
-    template<typename T>
-    static T get_data_update_offset(const uint8_t* data, int& offset);
-
+    bool get_valid() { return _valid; }
 };
 
