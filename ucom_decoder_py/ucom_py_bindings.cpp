@@ -78,7 +78,7 @@ PYBIND11_MODULE(ucom_py_sdk, m) {
         .def("get_data_type", &UcomSignal::get_data_type);
 
 
-#define ENUM_BASIC_TYPE(X) .value(#X, OxTS::Enum:: ## X)
+#define ENUM_BASIC_TYPE(X) .value(#X, OxTS::Enum::X)
     // OxTS::Enum::BASIC_TYPE
     py::enum_<OxTS::Enum::BASIC_TYPE>(m, "OxTS::Enum::BASIC_TYPE")
         ENUM_BASIC_TYPE(BASIC_TYPE_void)
