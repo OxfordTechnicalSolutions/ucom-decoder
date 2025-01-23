@@ -42,14 +42,6 @@ UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu)
     _valid = value_count == signal_count;
 }
 
-// Required for Python bindings
-UcomData::UcomData(const char* data, int size, UcomDbu& dbu) :
-    UcomData(reinterpret_cast<const uint8_t*>(data), size, dbu)
-{
-
-}
-
-
 double UcomData::get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_TYPE type, int& offset)
 {
     double value;

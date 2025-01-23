@@ -17,7 +17,10 @@ PYBIND11_MODULE(ucom_py_sdk, m) {
     m.doc() = "Ucom SDK"; // optional module docstring
 
     py::class_<UcomData>(m, "UcomData")
-        .def(py::init<char*, int, UcomDbu&>(), "data"_a, "size"_a, "dbu"_a)
+        .def(py::init([](char* a, int b, UcomDbu& c) {
+        return UcomData(reinterpret_cast<const uint8_t*>(a), b, c);
+            })
+            , "data"_a, "size"_a, "dbu"_a)
         .def_static("peek", [](char* data, int max_size, bool &need_more_data){
             int length = UcomData::peek(reinterpret_cast<const uint8_t*>(data), max_size, need_more_data);
             return std::make_tuple(length, need_more_data);
