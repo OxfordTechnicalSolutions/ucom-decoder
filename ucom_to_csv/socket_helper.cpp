@@ -106,7 +106,7 @@ int Socket::recv(char* buffer, int len, std::string &source_ip, uint32_t &ip_in,
     }
 #endif
         
-    result = recvfrom(_socket, buffer, len, MSG_PEEK, (sockaddr*)&_remote, (SOCKLEN_T_PTR) &addr_len);
+    result = recvfrom(_socket, buffer, len, 0, (sockaddr*)&_remote, (SOCKLEN_T_PTR) &addr_len);
     in_addr_t in_ip = _remote.sin_addr.s_addr;
     
 #ifdef __linux__
