@@ -215,7 +215,10 @@ int UcomDecoderApp::process_file()
                     it += length;
                     consumed += length;
                     _packet_count++;
-                    write_csv(_output_files[d.get_message_id()], d.get_csv());
+                    // Skip unwanted message IDs 
+                    uint16_t id = d.get_message_id();
+                    if (std::find(_message_ids.begin(), _message_ids.end(), id) != _message_ids.end())
+                        write_csv(_output_files[id], d.get_csv());
                 }
                 else
                 {
@@ -332,6 +335,9 @@ int UcomDecoderApp::process_udp()
                 // Write the message data to output
                 if (_dbu.message_id_exists(data.get_message_id()))
                 {
+                    double value;
+                    if (data.get("Ax", _dbu, value))
+                        std::cout << "\rAx: " << value;
                     write_csv(_output_files[data.get_message_id()], data.get_csv());
                     _packet_count++;
                 }
@@ -347,7 +353,7 @@ int UcomDecoderApp::process_udp()
             _filtered_packets++;
         }
 
-        std::cout << '\r' << "Bytes processed: " << _total_bytes;
+        //std::cout << '\r' << "Bytes processed: " << _total_bytes;
     }
 
     std::cout << '\n';
