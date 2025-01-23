@@ -2,6 +2,7 @@
 
 #include "nlohmann/json.hpp"
 #include <iostream>
+#include <map>
 #include "ucom_signal.hpp"
 
 using json = nlohmann::json;
@@ -12,6 +13,8 @@ class UcomMessage : public json {
     std::string _header;
     std::string create_header();
     std::vector<ucom_signal_ptr_t> _signals;
+    std::map<std::string, ucom_signal_ptr_t> _signal_map;
+    std::map<std::string, int> _signal_indices;
     //! \brief Message schema version.
     uint16_t _schema_version = -1;
     //! \brief Message ID.
@@ -37,4 +40,6 @@ class UcomMessage : public json {
     std::string get_header() const { return _header; }
     size_t get_signal_count() const { return _signals.size(); } 
     const std::vector<ucom_signal_ptr_t> &get_signals();
+    const ucom_signal_ptr_t get_signal(std::string id);
+    int get_signal_index(std::string id);
 };

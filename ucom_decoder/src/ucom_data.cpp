@@ -148,3 +148,21 @@ std::string UcomData::to_string()
     ss << "ID: " << get_message_id() << " Version: " << get_message_version() << " Payload length: " << get_payload_length();
     return ss.str();
 }
+
+//! @brief Gets the value of the signal
+//! @param signal_id 
+//! @return True, if the signal exists, false otherwise
+bool UcomData::get(std::string signal_id, UcomDbu &dbu, double &value)
+{
+    UcomMessage msg = dbu.get_message(get_message_id());
+    int index = msg.get_signal_index(signal_id);
+
+    if (index > -1)
+    {
+        value = _values[index];
+        return true;
+    }
+
+    return false;
+}
+

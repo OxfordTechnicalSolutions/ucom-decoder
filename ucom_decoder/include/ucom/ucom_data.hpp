@@ -45,5 +45,7 @@ public:
     uint32_t get_calc_crc() { return _calc_crc; }
 
     bool get_valid() { return _valid; }
+
+    bool get(std::string signal_id, UcomDbu& dbu, double &value);
 };
 
