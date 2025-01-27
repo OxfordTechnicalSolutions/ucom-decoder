@@ -335,9 +335,6 @@ int UcomDecoderApp::process_udp()
                 // Write the message data to output
                 if (_dbu.message_id_exists(data.get_message_id()))
                 {
-                    double value;
-                    if (data.get("Ax", _dbu, value))
-                        std::cout << "\rAx: " << value;
                     write_csv(_output_files[data.get_message_id()], data.get_csv());
                     _packet_count++;
                 }
