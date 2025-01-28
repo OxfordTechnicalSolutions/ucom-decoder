@@ -2,7 +2,7 @@
 # project specific logic here.
 #
 
-
+message("BUILD_SHARED_LIBS: " ${BUILD_SHARED_LIBS})
 # Add source to the UCOM decoder library.
 add_library (ucom_decoder 
    "src/ucom_message.cpp" 
@@ -23,7 +23,8 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ucom_decoder PROPERTY CXX_STANDARD 20)
 endif()
 
-
+message("CMAKE_INSTALL_LIBDIR: " ${CMAKE_INSTALL_PREFIX}${CMAKE_INSTALL_LIBDIR})
+message("CMAKE_INSTALL_BINDIR: " ${CMAKE_INSTALL_PREFIX}${CMAKE_INSTALL_BINDIR})
 install(
     TARGETS ucom_decoder
     EXPORT ucom_decoder

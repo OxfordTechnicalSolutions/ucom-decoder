@@ -13,8 +13,8 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 // UcomData
-PYBIND11_MODULE(ucom_py_sdk, m) {
-    m.doc() = "Ucom SDK"; // optional module docstring
+PYBIND11_MODULE(ucompy, m) {
+    m.doc() = "Ucom Python SDK"; // optional module docstring
 
     py::class_<UcomData>(m, "UcomData")
         .def(py::init([](char* a, int b, UcomDbu& c) {
