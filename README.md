@@ -74,12 +74,65 @@ The `example_data` directory contains:
 
 - UCOM file, logged from an OxTS INS
 - .cfg file, showing how UCOM messages are configured
-- TODO: move file here oxts.dbu - contains message definitions which are parsed 
-by the decoder. This allows the decoder flexibility to decode new messages when 
+- oxts.dbu file (in dbu sub-directory) - contains message definitions which are parsed by the decoder. This allows the decoder flexibility to decode new messages when 
 provided with updated definitions.
 
 To use this data with the UCOM to CSV tool:
 
 ```sh
 ucom_decoder <new command with dbu path option>
+```
+## Python
+There is a Python version of the UCOM decoder SDK.
+
+### Installation
+1. Create a working folder and clone the UCOM_decoder repository:
+
+```
+mkdir ucompy_test
+cd ucompy_test
+git clone git@github.com:OxfordTechnicalSolutions/UCOM_decoder.git --recursive ucom_decoder
+```
+
+2. Create Python virtual environment:  
+NB Use the appropriate command (instead of python) to invoke the Python interpreter on you system, e.g. py, python, python3. 
+```
+python -m venv venv
+
+[Windows Command Prompt] 
+venv\Scripts\activate.bat
+
+[Windows Powershell]
+venv\Scripts\Activate.ps1
+
+[Linux]
+source venv/bin/activate
+```
+3. Install the oxts.ucompy module:
+```
+python -m pip install ucom_decoder/ucom_decoder_py
+```
+4. Test the installation:  
+a. Start Python interactive shell
+```
+python
+```
+Enter the text following the prompts (>>>) line by line. You should see the output shown:
+```Python
+>>> from oxts.ucompy import UcomDbu
+>>> u = UcomDbu("ucom_decoder/example_data/dbu/oxts.dbu")
+>>> u.get_valid()
+True 
+>>> u.get_filename()
+'ucom_decoder/example_data/dbu/oxts.dbu'
+>>> quit()
+```
+
+b. Run the ucom_to_csv example:
+```
+ucom_decoder\ucom_decoder_py\examples\ucom_to_csv\test.bat
+```
+5. Uninstall:
+```
+python -m pip uninstall ucompy
 ```
