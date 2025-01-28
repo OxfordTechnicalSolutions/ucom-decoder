@@ -2,6 +2,10 @@
 # project specific logic here.
 #
 
+if(UNIX)
+    option(BUILD_SHARED_LIBS "Build using shared linraries" ON)
+endif()
+
 message("BUILD_SHARED_LIBS: " ${BUILD_SHARED_LIBS})
 # Add source to the UCOM decoder library.
 add_library (ucom_decoder 
