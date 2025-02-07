@@ -306,7 +306,7 @@ int UcomDecoderApp::process_udp()
         _total_bytes += len;
 
         // Only process data from specified IP address
-        if (source_ip.compare(_filter_ip) == 0)
+        if (( source_ip.compare(_filter_ip) == 0) || (_filter_ip.compare("any") == 0) || _filter_ip.empty())
         {
             // Create a UcomData instance from the received data
             UcomData data{ buffer, len, _dbu };
