@@ -266,6 +266,11 @@ int UcomDecoderApp::process_udp()
     if (!socket.is_initialised())
     {
         std::cerr << "Failed to initialise socket" << std::endl;
+        if (errors.size() > 0)
+        {
+            for (auto error : errors)
+                std::cerr << error << std::endl;
+        }
         return -1;
     }
 
