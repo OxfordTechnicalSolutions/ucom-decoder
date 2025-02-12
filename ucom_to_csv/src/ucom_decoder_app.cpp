@@ -266,6 +266,11 @@ int UcomDecoderApp::process_udp()
     if (!socket.is_initialised())
     {
         std::cerr << "Failed to initialise socket" << std::endl;
+        if (errors.size() > 0)
+        {
+            for (auto error : errors)
+                std::cerr << error << std::endl;
+        }
         return -1;
     }
 
@@ -306,7 +311,7 @@ int UcomDecoderApp::process_udp()
         _total_bytes += len;
 
         // Only process data from specified IP address
-        if (source_ip.compare(_filter_ip) == 0)
+        if (( source_ip.compare(_filter_ip) == 0) || (_filter_ip.compare("any") == 0))
         {
             // Create a UcomData instance from the received data
             UcomData data{ buffer, len, _dbu };
