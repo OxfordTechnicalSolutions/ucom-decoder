@@ -34,7 +34,12 @@ PYBIND11_MODULE(ucompy, m) {
         .def("get_payload_length", &UcomData::get_payload_length)
         .def("get_signal_count", &UcomData::get_signal_count)
         .def("get_calc_crc", &UcomData::get_calc_crc)
-        .def("get_valid", &UcomData::get_valid);
+        .def("get_valid", &UcomData::get_valid)
+        .def("get", [](UcomData& a, std::string signal_id, UcomDbu& dbu) {
+        double value = 0;
+        bool success = a.get(signal_id, dbu, value);
+        return std::make_tuple(success, value);
+            });
 
     // UcomDbu
     py::class_<UcomDbu>(m, "UcomDbu")

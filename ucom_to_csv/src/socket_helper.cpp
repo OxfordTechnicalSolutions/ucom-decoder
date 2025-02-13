@@ -36,8 +36,23 @@ Socket::Socket(std::string local_ip, int local_port, std::string remote_ip, int 
 
     _socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
+    const int reuse = 1;
+    setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuse, sizeof(reuse));
+#ifdef __linux__
+    setsockopt(_socket, SOL_SOCKET, SO_REUSEPORT, (const char*)&reuse, sizeof(reuse));
+#endif
+
     // Bind (for incoming data / server  - associates socket with local IP address / port)
     success = bind(_socket, (sockaddr*)&_local, sizeof(_local)) == 0;
+
+    if (!success)
+    {
+#ifdef __linux__
+        errors.push_back(std::string("Socket bind failed: ").append(std::to_string(errno)));
+#elif _WIN32
+        errors.push_back(std::string("Socket bind failed: ").append(std::to_string(WSAGetLastError())));
+#endif
+    }
 
     // Set up poll
     if (success)
