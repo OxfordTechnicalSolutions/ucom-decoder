@@ -48,7 +48,7 @@ Socket::Socket(std::string local_ip, int local_port, std::string remote_ip, int 
     if (!success)
     {
 #ifdef __linux__
-        errors.push_back(std::string("Socket bind failed: ").append(errno)));
+        errors.push_back(std::string("Socket bind failed: ").append(std::to_string(errno)));
 #elif _WIN32
         errors.push_back(std::string("Socket bind failed: ").append(std::to_string(WSAGetLastError())));
 #endif
