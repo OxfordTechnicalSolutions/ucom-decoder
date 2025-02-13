@@ -16,6 +16,12 @@
 
 #define NEWLINE '\n'
 
+#if _WIN32
+#define PATH_SEPARATOR "\\"
+#else
+#define PATH_SEPARATOR "/"
+#endif
+
 UcomDecoderApp::UcomDecoderApp(int argc, char* argv[]) :
 	Application(argc, argv)
 {
@@ -299,6 +305,7 @@ int UcomDecoderApp::process_udp()
     bool packet_count_reached = false;
     bool max_capture_time_reached = false;
     Duration capture_time(_duration);
+    uint64_t loop_count = 0;
     while ((len > -1) && 
         ((_max_packets == -1) || (_packet_count < _max_packets)) && 
         (_duration == -1 || !capture_time.elapsed()) && 
@@ -361,7 +368,9 @@ int UcomDecoderApp::process_udp()
             _filtered_packets++;
         }
 
-        //std::cout << '\r' << "Bytes processed: " << _total_bytes;
+        loop_count++;
+        if (loop_count % 50 == 0)
+            std::cout << "Bytes processed: " << _total_bytes << "\r";
     }
 
     std::cout << '\n';
@@ -411,7 +420,7 @@ bool UcomDecoderApp::create_output_files()
     if (!create_output_dir(dir_name))
         return false;
 
-    std::string path = dir_name.append("\\").append(_output_file_prefix);
+    std::string path = dir_name.append(PATH_SEPARATOR).append(_output_file_prefix);
     for (auto id : _message_ids)
     {
         _output_files.insert({ id, std::fstream() });
