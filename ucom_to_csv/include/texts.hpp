@@ -15,7 +15,7 @@ const char* help_text[] = {
 
 const char* banner_text[] = {
 	"**************************************************",
-	"* UCOM to CSV Tool                               *",
+	"* UCOM to CSV Tool 0.2.250213                    *",
 	"* Oxford Technical Solutions Ltd 2025            *",
 	"**************************************************"
 };
