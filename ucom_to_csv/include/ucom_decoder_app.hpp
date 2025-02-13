@@ -63,6 +63,7 @@ private:
 
     int get_data(Socket& socket, uint8_t* buffer, int max_len, std::string& source_ip);
     bool create_output_files();
+    bool create_output_dir(std::string &dir_name);
     void close_output_files();
     bool create_output_file(const std::string& filename, int message_id, const std::string& header, std::fstream& output_stream);
     void write_csv(std::fstream& output_stream, const std::string& csv);

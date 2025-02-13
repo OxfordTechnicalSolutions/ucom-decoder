@@ -8,6 +8,9 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <filesystem>
+#include <chrono>
+#include <ctime>
 
 #include "ucom/ucom_data.hpp"
 
@@ -306,7 +309,10 @@ int UcomDecoderApp::process_udp()
         len = get_data(socket, buffer, 4096, source_ip);
 
         if (len == 0) // Timeout
+        {
+            std::cerr << "Timeout waiting for data...\r";
             continue;
+        }
 
         _total_bytes += len;
 
@@ -389,12 +395,27 @@ int UcomDecoderApp::get_data(Socket& socket, uint8_t* buffer, int max_len, std::
     return recvLen;
 }
 
+bool UcomDecoderApp::create_output_dir(std::string &dir_name)
+{
+    auto now = std::chrono::system_clock::now();
+    time_t tm = std::chrono::system_clock::to_time_t(now);
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&tm), "%y%m%d-%H%M%S");
+    dir_name = ss.str();
+    return std::filesystem::create_directory(dir_name);
+}
+
 bool UcomDecoderApp::create_output_files()
 {
+    std::string dir_name;
+    if (!create_output_dir(dir_name))
+        return false;
+
+    std::string path = dir_name.append("\\").append(_output_file_prefix);
     for (auto id : _message_ids)
     {
         _output_files.insert({ id, std::fstream() });
-        if (!create_output_file(_output_file_prefix, id, _dbu.get_message(id).get_header(), _output_files[id]))
+        if (!create_output_file(path, id, _dbu.get_message(id).get_header(), _output_files[id]))
             return false;
     }
     return true;

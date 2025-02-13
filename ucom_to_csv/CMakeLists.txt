@@ -1,7 +1,7 @@
 ﻿# CMakeList.txt : CMake project for ucom_decoder, include source and define
 # project specific logic here.
 #
-
+cmake_minimum_required (VERSION 3.10)
 
 # Add source to the UCOM to csv executable.
 add_executable (ucom_to_csv 
@@ -15,6 +15,8 @@ add_executable (ucom_to_csv
    "src/quitter.cpp" 
    "src/cmd_line_quitter.cpp"
 )
+
+set_property(TARGET ucom_to_csv PROPERTY CXX_STANDARD 17)
 
 target_include_directories(ucom_to_csv PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
