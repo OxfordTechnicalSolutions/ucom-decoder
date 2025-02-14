@@ -11,10 +11,19 @@
 #include <filesystem>
 #include <chrono>
 #include <ctime>
+#include <filesystem>
+#include <chrono>
+#include <ctime>
 
 #include "ucom/ucom_data.hpp"
 
 #define NEWLINE '\n'
+
+#if _WIN32
+#define PATH_SEPARATOR "\\"
+#else
+#define PATH_SEPARATOR "/"
+#endif
 
 #if _WIN32
 #define PATH_SEPARATOR "\\"
@@ -280,6 +289,11 @@ int UcomDecoderApp::process_udp()
             for (auto error : errors)
                 std::cerr << error << std::endl;
         }
+        if (errors.size() > 0)
+        {
+            for (auto error : errors)
+                std::cerr << error << std::endl;
+        }
         return -1;
     }
 
@@ -306,6 +320,7 @@ int UcomDecoderApp::process_udp()
     bool max_capture_time_reached = false;
     Duration capture_time(_duration);
     uint64_t loop_count = 0;
+    uint64_t loop_count = 0;
     while ((len > -1) && 
         ((_max_packets == -1) || (_packet_count < _max_packets)) && 
         (_duration == -1 || !capture_time.elapsed()) && 
@@ -318,7 +333,10 @@ int UcomDecoderApp::process_udp()
         if (len == 0) // Timeout
         {
             std::cerr << "Timeout waiting for data...\r";
+        {
+            std::cerr << "Timeout waiting for data...\r";
             continue;
+        }
         }
 
         _total_bytes += len;
@@ -371,6 +389,9 @@ int UcomDecoderApp::process_udp()
         loop_count++;
         if (loop_count % 50 == 0)
             std::cout << "Bytes processed: " << _total_bytes << "\r";
+        loop_count++;
+        if (loop_count % 50 == 0)
+            std::cout << "Bytes processed: " << _total_bytes << "\r";
     }
 
     std::cout << '\n';
@@ -414,8 +435,23 @@ bool UcomDecoderApp::create_output_dir(std::string &dir_name)
     return std::filesystem::create_directory(dir_name);
 }
 
+bool UcomDecoderApp::create_output_dir(std::string &dir_name)
+{
+    auto now = std::chrono::system_clock::now();
+    time_t tm = std::chrono::system_clock::to_time_t(now);
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&tm), "%y%m%d-%H%M%S");
+    dir_name = ss.str();
+    return std::filesystem::create_directory(dir_name);
+}
+
 bool UcomDecoderApp::create_output_files()
 {
+    std::string dir_name;
+    if (!create_output_dir(dir_name))
+        return false;
+
+    std::string path = dir_name.append(PATH_SEPARATOR).append(_output_file_prefix);
     std::string dir_name;
     if (!create_output_dir(dir_name))
         return false;
@@ -424,6 +460,7 @@ bool UcomDecoderApp::create_output_files()
     for (auto id : _message_ids)
     {
         _output_files.insert({ id, std::fstream() });
+        if (!create_output_file(path, id, _dbu.get_message(id).get_header(), _output_files[id]))
         if (!create_output_file(path, id, _dbu.get_message(id).get_header(), _output_files[id]))
             return false;
     }

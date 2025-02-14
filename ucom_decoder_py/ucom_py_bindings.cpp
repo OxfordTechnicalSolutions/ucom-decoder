@@ -21,10 +21,11 @@ PYBIND11_MODULE(ucompy, m) {
             return UcomData(reinterpret_cast<const uint8_t*>(a), b, c);
             })
             , "data"_a, "size"_a, "dbu"_a)
-        .def_static("peek", [](char* data, int max_size, bool &need_more_data){
+        .def_static("peek", [](char* data, int max_size){
+        bool need_more_data;
             int length = UcomData::peek(reinterpret_cast<const uint8_t*>(data), max_size, need_more_data);
             return std::make_tuple(length, need_more_data);
-        }, "data"_a, "max_size"_a, "need_more_data"_a)
+        }, "data"_a, "max_size"_a)
         .def("get_csv", &UcomData::get_csv)
         .def("to_string", &UcomData::to_string)
         .def("get_message_id", &UcomData::get_message_id)
@@ -34,7 +35,12 @@ PYBIND11_MODULE(ucompy, m) {
         .def("get_payload_length", &UcomData::get_payload_length)
         .def("get_signal_count", &UcomData::get_signal_count)
         .def("get_calc_crc", &UcomData::get_calc_crc)
-        .def("get_valid", &UcomData::get_valid);
+        .def("get_valid", &UcomData::get_valid)
+        .def("get", [](UcomData& a, std::string signal_id, UcomDbu& dbu) {
+        double value = 0;
+        bool success = a.get(signal_id, dbu, value);
+        return std::make_tuple(success, value);
+            });
 
     // UcomDbu
     py::class_<UcomDbu>(m, "UcomDbu")
