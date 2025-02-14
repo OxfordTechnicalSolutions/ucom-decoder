@@ -268,15 +268,6 @@ Usually, when capturing packets from UDP, you will specify the source IP address
 #### Description
 This class accepts a DBU filename as an argument to its constructor and parses the JSON contained in the DBU to generate collections of UcomMessages and UcomSignals.
 
-<style>
-    dt {
-        font-weight: bold;
-    }
-    ul {
-        list-style-type: none;
-    }
-</style>
-
 <dl>
 <dt>UcomDbu(std::string filename)</dt>
 <dd>Constructs a UcomDbu instance from a DBU file <filename>. The file must be valid JSON conforming to the DBU schema.</dd>
