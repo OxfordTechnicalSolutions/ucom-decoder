@@ -277,13 +277,13 @@ This class accepts a DBU filename as an argument to its constructor and parses t
 <dd>Gets the 'valid' status of the instance. Returns true if the DBU file was parsed without error; false otherwise.</dd>
 <dt>bool message_id_exists(uint16_t message_id)</dt>
 <dd>Returns true if <message_id> exists in the collection of messages in the DBU; false otherwise.</dd>
-<dt>std::map<uint16_t, UcomMessage>& get_messages()</dt>
+<dt>std::map&ltuint16_t, UcomMessage&gt& get_messages()</dt>
 <dd>Gets a collection containing all of the UCOM message definitions in the DBU, stored as key : value pairs whose key is the message ID.</dd>
-<dt>std::list<uint16_t>& get_message_ids()</dt>
+<dt>std::list&ltuint16_t&gt& get_message_ids()</dt>
 <dd>Gets a collection containing the message IDs of all of the UCOM message definitions in the DBU.</dd>
 <dt>const UcomMessage& get_message(int id)</dt>
 <dd>Gets the UcomMessage whose ID is &ltid&gt</dd>
-<dt>const std::vector<ucom_signal_ptr_t> &get_signals(uint16_t message_id)</dt>
+<dt>const std::vector&ltucom_signal_ptr_t&gt &get_signals(uint16_t message_id)</dt>
 <dd>Gets a collection containing all of the signals in the UcomMessage whose ID is &ltmessage_id&gt.</dd>
 <dt>static OxTS::Enum::BASIC_TYPE get_data_type(const std::string& data_type)</dt>
 <dd>Gets the OxTS::Enum::BASIC_TYPE from the string representation of the type.</dd>
@@ -340,7 +340,7 @@ Represents a UCOM message. Allows read-access to the signals contained within. D
 <dd>Gets a comma-separated string of the names of the signals contained in the message (mainly intended for use when generating CSV output). The string is prepended with 'Time (&lt<i>MessageTiming</i>&gt)', representing the '<i>Arbitrary Time</i>' time frame, e.g. <i>'Time (SDN)'</i></dd>
 <dt>size_t get_signal_count()</dt>
 <dd>Gets the number of signals contained in the message</dd>
-<dt>const std::vector<ucom_signal_ptr_t> &get_signals()</dt>
+<dt>const std::vector&ltucom_signal_ptr_t&gt &get_signals()</dt>
 <dd>Gets a collection of (smart, shared) pointers to the signals contained in the message</dd>
 <dt>const ucom_signal_ptr_t get_signal(std::string id)</dt>
 <dd>Gets a (smart, shared) pointer to the signal whose ID is &ltid&gt</dd>
@@ -367,15 +367,6 @@ Represents a UcomSignal. Contains the meta-data required to decode a signal from
 ### class UcomDbu
 #### Description
 This class accepts a DBU filename as an argument to its constructor and parses the JSON contained in the DBU to generate collections of UcomMessages and UcomSignals.
-
-<style>
-    dt {
-        font-weight: bold;
-    }
-    ul {
-        list-style-type: none;
-    }
-</style>
 
 <dl>
 <dt>UcomDbu(filename: str) -> UcomDbu</dt>
