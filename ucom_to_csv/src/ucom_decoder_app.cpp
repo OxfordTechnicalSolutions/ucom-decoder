@@ -318,7 +318,10 @@ int UcomDecoderApp::process_udp()
         if (len == 0) // Timeout
         {
             std::cerr << "Timeout waiting for data...\r";
+        {
+            std::cerr << "Timeout waiting for data...\r";
             continue;
+        }
         }
 
         _total_bytes += len;
@@ -368,6 +371,9 @@ int UcomDecoderApp::process_udp()
             _filtered_packets++;
         }
 
+        loop_count++;
+        if (loop_count % 50 == 0)
+            std::cout << "Bytes processed: " << _total_bytes << "\r";
         loop_count++;
         if (loop_count % 50 == 0)
             std::cout << "Bytes processed: " << _total_bytes << "\r";
@@ -424,6 +430,7 @@ bool UcomDecoderApp::create_output_files()
     for (auto id : _message_ids)
     {
         _output_files.insert({ id, std::fstream() });
+        if (!create_output_file(path, id, _dbu.get_message(id).get_header(), _output_files[id]))
         if (!create_output_file(path, id, _dbu.get_message(id).get_header(), _output_files[id]))
             return false;
     }

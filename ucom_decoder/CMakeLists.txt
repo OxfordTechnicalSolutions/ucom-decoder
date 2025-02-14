@@ -3,7 +3,7 @@
 #
 
 if(UNIX)
-    option(BUILD_SHARED_LIBS "Build using shared linraries" ON)
+    option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 endif()
 
 message("BUILD_SHARED_LIBS: " ${BUILD_SHARED_LIBS})
