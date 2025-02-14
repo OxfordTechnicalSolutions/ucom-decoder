@@ -25,7 +25,7 @@ PYBIND11_MODULE(ucompy, m) {
         bool need_more_data;
             int length = UcomData::peek(reinterpret_cast<const uint8_t*>(data), max_size, need_more_data);
             return std::make_tuple(length, need_more_data);
-        }, "data"_a, "max_size"_a, "need_more_data"_a)
+        }, "data"_a, "max_size"_a)
         .def("get_csv", &UcomData::get_csv)
         .def("to_string", &UcomData::to_string)
         .def("get_message_id", &UcomData::get_message_id)
