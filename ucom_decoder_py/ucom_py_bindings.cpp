@@ -21,7 +21,8 @@ PYBIND11_MODULE(ucompy, m) {
             return UcomData(reinterpret_cast<const uint8_t*>(a), b, c);
             })
             , "data"_a, "size"_a, "dbu"_a)
-        .def_static("peek", [](char* data, int max_size, bool &need_more_data){
+        .def_static("peek", [](char* data, int max_size){
+        bool need_more_data;
             int length = UcomData::peek(reinterpret_cast<const uint8_t*>(data), max_size, need_more_data);
             return std::make_tuple(length, need_more_data);
         }, "data"_a, "max_size"_a, "need_more_data"_a)
