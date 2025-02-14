@@ -50,6 +50,10 @@ To build and install the library, replace `cmake --build .` with
 cmake --build . --target install
 ```
 
+If there are permission errors, re-run the above command as root with `sudo`.
+
+The executable is found in the build/ucom_to_csv directory named `ucom_to_csv`.
+
 
 ## UCOM to CSV command-line options
 
