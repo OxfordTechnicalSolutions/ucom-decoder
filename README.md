@@ -500,23 +500,7 @@ Generates the following output:
 #include <iostream>
 #include "ucom\ucom_dbu.hpp"
 #include "ucom\ucom_data.hpp"
-
-const uint8_t _data[] = { 
-    0x55,0x4d,0x00,0x00,0x01,0xcc,0xb2,0x9a,0xd0,0x3c,0x00,0x00,0x00,0x00,0xd0,0x00,
-    0xc4,0x85,0x05,0x79,0x00,0x00,0x00,0x00,0x34,0x33,0x33,0x33,0x33,0x33,0x26,0x40,
-    0x9a,0x99,0x99,0x99,0x99,0x19,0x35,0x40,0x9a,0x99,0x99,0x99,0x99,0x19,0x3f,0x40,
-    0xcd,0xcc,0xcc,0xcc,0xcc,0x8c,0x44,0x40,0xcd,0xcc,0xcc,0xcc,0xcc,0x8c,0x49,0x40,
-    0xcd,0xcc,0xcc,0xcc,0xcc,0x8c,0x4e,0x40,0x67,0x66,0x66,0x66,0x66,0xc6,0x51,0x40,
-    0x66,0x66,0x66,0x66,0x66,0x46,0x54,0x40,0x66,0x66,0x66,0x66,0x66,0xc6,0x56,0x40,
-    0x66,0x66,0x66,0x66,0x66,0x46,0x59,0x40,0x66,0x66,0x66,0x66,0x66,0xc6,0x5b,0x40,
-    0x66,0x66,0x66,0x66,0x66,0x46,0x5e,0x40,0x33,0x33,0x33,0x33,0x33,0x63,0x60,0x40,
-    0x33,0x33,0x33,0x33,0x33,0xa3,0x61,0x40,0x33,0x33,0x33,0x33,0x33,0xe3,0x62,0x40,
-    0x33,0x33,0x33,0x33,0x33,0x23,0x64,0x40,0x33,0x33,0x33,0x33,0x33,0x63,0x65,0x40,
-    0x33,0x33,0x33,0x33,0x33,0xa3,0x66,0x40,0x33,0x33,0x33,0x33,0x33,0xe3,0x67,0x40,
-    0x33,0x33,0x33,0x33,0x33,0x23,0x69,0x40,0x33,0x33,0x33,0x33,0x33,0x63,0x6a,0x40,
-    0x33,0x33,0x33,0x33,0x33,0xa3,0x6b,0x40,0x33,0x33,0x33,0x33,0x33,0xe3,0x6c,0x40,
-    0x33,0x33,0x33,0x33,0x33,0x23,0x6e,0x40,0x33,0x33,0x33,0x33,0x33,0x63,0x6f,0x40,
-    0xb7,0xef,0x80,0xa4, };
+#include "ucom\example_ucom_data.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -602,3 +586,128 @@ for signal in dbu.get_message(data.get_message_id()).get_signals():
 Generates the following output:
 
 ![image](example4.png)
+
+## Using UCOM decoder library for development
+### Visual Studio - Windows
+These instructions are for Visual Studio 2022, and assume that you have already cloned and built UCOM decoder in Windows.
+
+#### Create a project
+
+  1. Open Visual Studio
+  2. Create new project  
+  3. Select:  
+    - C++  
+    - Windows  
+    - Console  
+  4. Select the required project type, e.g. `Console App`, click `Next`
+  5. Select the location and enter a project name  
+  6. Click `Create`  
+
+  #### Set Includes and Library Dependencies  
+
+ - Right-click project folder in `Solution Explorer` and select `Properties`.
+ - Select `Configuration Properties | C/C++ | General` and in `Additional Include Directories` add the paths to `ucom_decoder\include` and `ucom_decoder\json\include`.
+ - Select `Configuration Properties | Linker | General` and in `Additional Library Directories` add the path to the directory that contains ucom_decoder.lib (something like `build\ucom_decoder\Debug` for a Debug build).
+ - Select `Configuration Properties | Linker | Input` and in `Additional Dependencies` add `ucom_decoder.lib`.
+
+Add the required include files, and code. For example:
+```cpp
+#include <iostream>
+#include "ucom\ucom_dbu.hpp"
+#include "ucom\ucom_data.hpp"
+#include "ucom\example_ucom_data.hpp"
+
+int main()
+{
+    std::cout << "Ucom Decoder Example\n";
+
+    UcomDbu dbu("..\\..\\ucom_decoder\\example_data\\dbu\\oxts.dbu");
+    if (!dbu.get_valid())
+    {
+        std::cout << "Error getting DBU, exiting..." << std::endl;
+        return 1;
+    }
+    UcomData data(_data, sizeof(_data), dbu);
+
+    std::cout << "Message ID: " << data.get_message_id() << "\n";
+    
+    auto msg = dbu.get_message(data.get_message_id());
+    double value = 0;
+    for (auto signal : msg.get_signals())
+    {
+        std::cout << signal->get_signal_id() << ": ";
+        if (data.get(signal->get_signal_id(), dbu, value))
+            std::cout << std::setprecision(2) << std::fixed << value << '\n';
+        else
+            std::cout << "not found\n";
+    }
+    return 0;
+}
+```
+
+Build and run:
+
+![image](example5.png)
+
+
+### Visual Studio Code - Linux (WSL2)
+These instructions assume that you have already cloned, built and installed UCOM decoder in Linux.
+
+#### Create CMakeLists.txt
+```cmake
+cmake_minimum_required(VERSION 3.10)
+
+project(ucom_decoder_example)
+
+add_executable(${PROJECT_NAME} src/main.cpp)
+target_include_directories(${PROJECT_NAME} 
+    PRIVATE ${CMAKE_SOURCE_DIR}/../ucom_decoder/ucom_decoder/include
+    PRIVATE ${CMAKE_SOURCE_DIR}/../ucom_decoder/ucom_decoder/json/include
+)
+
+target_link_libraries(${PROJECT_NAME} ucom_decoder)
+```
+
+#### Write your program code
+```cpp
+#include <iostream>
+#include "ucom/ucom_dbu.hpp"
+#include "ucom/ucom_data.hpp"
+#include "ucom/example_ucom_data.hpp"
+
+int main()
+{
+    std::cout << "Ucom Decoder Example\n";
+
+    UcomDbu dbu("../../ucom_decoder/example_data/dbu/oxts.dbu");
+    if (!dbu.get_valid())
+    {
+        std::cout << "Error getting DBU, exiting..." << std::endl;
+        return 1;
+    }
+    UcomData data(_data, sizeof(_data), dbu);
+
+    std::cout << "Message ID: " << data.get_message_id() << "\n";
+    
+    auto msg = dbu.get_message(data.get_message_id());
+    double value = 0;
+    for (auto signal : msg.get_signals())
+    {
+        std::cout << signal->get_signal_id() << ": ";
+        if (data.get(signal->get_signal_id(), dbu, value))
+            std::cout << std::setprecision(2) << std::fixed << value << '\n';
+        else
+            std::cout << "not found\n";
+    }
+}
+```
+
+#### Configure, build and run
+```bash
+mkdir build && cd build
+cmake ..
+cmake --build .
+
+./ucom_decoder_example
+```
+Output will be the same as for Visual Studio / Windows above.
