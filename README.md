@@ -84,7 +84,7 @@ provided with updated definitions.
 To use this data with the UCOM to CSV tool:
 
 ```sh
-ucom_decoder <new command with dbu path option>
+./ucom_to_csv -u ../../example_data/dbu/oxts.dbu -f ../../example_data/input.ucom
 ```
 ## Python
 There is a Python version of the UCOM decoder SDK.
