@@ -117,7 +117,7 @@ class UcomToCsv:
                 need_more_data = False
                 nibble = chunk[start:]
                 # Check for a candidate packet at 'start'
-                length, need_more_data = UcomData.peek(nibble, len(nibble), need_more_data)
+                length, need_more_data = UcomData.peek(nibble, len(nibble))
                 if length >= 20:
                     # Found a candidate; try to decode the full packet
                     d = UcomData(nibble, length, self.dbu)
@@ -141,7 +141,7 @@ class UcomToCsv:
                         # No candidate found, step to next byte
                         start = start + 1
 
-        print(f"Time taken: {time.time() - time_start}")
+        print(f"Time taken: {time.time() - time_start} seconds")
         self.close_output_files()
         return True
 
