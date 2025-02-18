@@ -16,6 +16,10 @@ add_library (ucom_decoder
    "src/ucom_data.cpp"
 )
 
+if (UNIX)
+    set_property(TARGET ucom_decoder PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif()
+
 target_include_directories(ucom_decoder PUBLIC
    ${CMAKE_CURRENT_SOURCE_DIR}/include
    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
