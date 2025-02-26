@@ -140,6 +140,8 @@ int UcomDecoderApp::process_args()
                     return -1;
                 }
             }
+            // Add error message ID
+            _message_ids.push_back(UcomData::ERROR_MSG_ID);
         }
         else
         {
@@ -352,7 +354,13 @@ int UcomDecoderApp::process_udp()
                 }
             }
 
-            if (!skip && data.get_valid()) {
+            // Check if it's an error message
+            if (data.get_error_no() != 0)
+            {
+                std::cerr << "Error number: " << std::to_string(data.get_error_no()) << ", Error messages : " << data.get_error_messages() << std::endl;
+                write_csv(_output_files[data.get_message_id()], data.get_csv());
+            }
+            else if (!skip && data.get_valid()) {
                 // Write the message data to output
                 if (_dbu.message_id_exists(data.get_message_id()))
                 {

@@ -1,6 +1,8 @@
 #include "ucom/ucom_data.hpp"
 
-UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu)
+UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu) :
+    _error_no{ 0 },
+    _error_msgs{}
 {
     _valid = false;
     // Check that we at least have a header
@@ -29,8 +31,23 @@ UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu)
         return;
 
     int i = 16;
+    // Check if this is an error message
+    if (_message_id == ERROR_MSG_ID)
+    {
+        // Hard-coded error message structure
+        const std::vector<ucom_signal_ptr_t> signals = dbu.get_signals(_message_id);
+        if (signals.size() != 2)
+            return;
+
+        // Get the error number
+        _error_no = get_data<uint8_t>(data, i);
+        i += 1;
+        // Get the error messages string
+        _error_msgs = std::string(reinterpret_cast<const char*>(&data[i]), _payload_length - (i - 16));
+        return;
+    }
+
     // Step through the signals and decode according to their type
-    _values.clear();
     for (auto signal : dbu.get_signals(_message_id))
     {
         OxTS::Enum::BASIC_TYPE type = signal->get_data_type();
@@ -137,8 +154,16 @@ const std::string UcomData::get_csv() const
     std::stringstream ss;
     ss.precision(7);
     ss << _arbitrary_time;
-    for (double value : _values)
-        ss << "," << std::fixed << value;
+    if (_message_id == ERROR_MSG_ID)
+    {
+        ss << "," << std::to_string(_error_no);
+        ss << "," << _error_msgs;
+    }
+    else
+    {
+        for (double value : _values)
+            ss << "," << std::fixed << value;
+    }
     return ss.str();
 }
 

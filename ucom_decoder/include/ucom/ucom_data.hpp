@@ -16,6 +16,10 @@ private:
     bool _valid;
     std::vector<double> _values; // collection for signal values
 
+    // Errors
+    uint8_t _error_no;
+    std::string _error_msgs;
+
     template<typename T>
     static T get_data(const uint8_t* data, int offset);
 
@@ -47,5 +51,11 @@ public:
     bool get_valid() { return _valid; }
 
     bool get(std::string signal_id, UcomDbu& dbu, double &value);
+
+    uint8_t get_error_no() { return _error_no; }
+
+    std::string get_error_messages() { return _error_msgs; }
+
+    static const uint16_t ERROR_MSG_ID = 0xFBFF;
 };
 
