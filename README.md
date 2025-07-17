@@ -4,6 +4,14 @@ This repository contains the code to build and install the UCOM Decoder Library,
 as well as an example tool which can convert UCOM data from UDP stream or file 
 to CSV file.
 
+## Third-Party Libraries
+This project makes use of the following third-party open-source libraries:
+
+- nlohmann/json for JSON parsing
+- pybind11 for C++ / Python bindings
+
+See the relevant sub-folder for their licences.
+
 ## Clone the repository
 
 ```sh
