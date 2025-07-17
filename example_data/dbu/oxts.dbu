@@ -1,0 +1,958 @@
+{
+    "$schema": "DBU.schema.json",
+    "DBUID": "OXTS-BNS",
+    "DBUVersion": 0,
+    "DBUName": "OxTS DBU",
+    "DBUDescription": "The OxTS DBU with all the OxTS defined messages",
+    "DBUSchemaVersion": 0,
+    "Messages": [
+        {
+            "MessageSchemaVersion": 2,
+            "MessageID": 0,
+            "MessageVersion": 0,
+            "MessageName": "SDN Message",
+            "MessageEnabled": true,
+            "MessageDescription": "The basic SDN measurement message",
+            "MessageTiming": "SDN",
+            "OutputRateType": "FrequencyBased",
+            "OutputFrequencyDecimation": 1,
+            "SignalsInMessage": [
+                {
+                    "SourceID": "TIME",
+                    "SignalID": "GNSST",
+                    "Unit": "s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "S64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Lat",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Long",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Alt",
+                    "Unit": "m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Vn",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Ve",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Vd",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Ax",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Ay",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Az",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Heading",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Pitch",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Roll",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Wx",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Wy",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Wz",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Wlev_f",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Wlev_l",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Wlev_d",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Vlev_f",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Vlev_l",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "Vlev_d",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "WGS84_Lat",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "WGS84_Lon",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "WGS84_Alt",
+                    "Unit": "m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_SDN",
+                    "SignalID": "WGS84_Undul",
+                    "Unit": "m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                }
+            ]
+        },
+        {
+            "MessageSchemaVersion": 2,
+            "MessageID": 1,
+            "MessageVersion": 0,
+            "MessageName": "Filtered Measurements Message",
+            "MessageEnabled": true,
+            "MessageDescription": "The filtered SDN measurements message",
+            "MessageTiming": "SDN",
+            "OutputRateType": "FrequencyBased",
+            "OutputFrequencyDecimation": 1,
+            "SignalsInMessage": [
+                {
+                    "SourceID": "TIME",
+                    "SignalID": "GNSST",
+                    "Unit": "s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "S64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltAx",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltAy",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltAz",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltJx",
+                    "Unit": "m/s^3",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltJy",
+                    "Unit": "m/s^3",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltJz",
+                    "Unit": "m/s^3",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltWx",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltWy",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltWz",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltYx",
+                    "Unit": "deg/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltYy",
+                    "Unit": "deg/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltYz",
+                    "Unit": "deg/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltWlev_f",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltWlev_l",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_FLT",
+                    "SignalID": "FiltWlev_d",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                }
+            ]
+        },
+        {
+            "MessageSchemaVersion": 2,
+            "MessageID": 2,
+            "MessageVersion": 0,
+            "MessageName": "Derived Measurements Message",
+            "MessageEnabled": true,
+            "MessageDescription": "The basic BNS derived measurements message",
+            "MessageTiming": "SDN",
+            "OutputRateType": "FrequencyBased",
+            "OutputFrequencyDecimation": 1,
+            "SignalsInMessage": [
+                {
+                    "SourceID": "TIME",
+                    "SignalID": "GNSST",
+                    "Unit": "s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "S64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "Heave",
+                    "Unit": "1/m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "LPHeave",
+                    "Unit": "1/m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "Crv",
+                    "Unit": "1/m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "SlAg",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "TrAg",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ATP1",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ATP2",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ATP3",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ATP4",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ATP5",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ATP6",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ATP7",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ATP8",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ASP1",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ASP2",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ASP3",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ASP4",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ASP5",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ASP6",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ASP7",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "ASP8",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "CP1",
+                    "Unit": "1/m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "CP2",
+                    "Unit": "1/m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "CP3",
+                    "Unit": "1/m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "CP4",
+                    "Unit": "1/m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "CP5",
+                    "Unit": "1/m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "CP6",
+                    "Unit": "1/m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "CP7",
+                    "Unit": "1/m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_DER",
+                    "SignalID": "CP8",
+                    "Unit": "1/m",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                }
+            ]
+        },
+        {
+            "MessageSchemaVersion": 2,
+            "MessageID": 3,
+            "MessageVersion": 0,
+            "MessageName": "ISO-8855 Frame Message",
+            "MessageDescription": "The basic SDN measurement message in the ISO-8855 frame",
+            "MessageEnabled": true,
+            "MessageTiming": "SDN",
+            "OutputRateType": "FrequencyBased",
+            "OutputFrequencyDecimation": 1,
+            "SignalsInMessage": [
+                {
+                    "SourceID": "TIME",
+                    "SignalID": "GNSST",
+                    "Unit": "s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "S64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "VnX",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "VnY",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "VnZ",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "IYaw",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "IPitch",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "IRoll",
+                    "Unit": "deg",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "VhX",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "VhY",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "VhZ",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "VoX",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "VoY",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "VoZ",
+                    "Unit": "m/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "AnX",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "AnY",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "AnZ",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "AhX",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "AhY",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "AhZ",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "AoX",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "AoY",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "AoZ",
+                    "Unit": "m/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "WnX",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "WnY",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "WnZ",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "WhX",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "WhY",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "WhZ",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "WoX",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "WoY",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "WoZ",
+                    "Unit": "deg/s",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "YnX",
+                    "Unit": "deg/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "YnY",
+                    "Unit": "deg/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "YnZ",
+                    "Unit": "deg/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "YhX",
+                    "Unit": "deg/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "YhY",
+                    "Unit": "deg/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "YhZ",
+                    "Unit": "deg/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "YoX",
+                    "Unit": "deg/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "YoY",
+                    "Unit": "deg/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                },
+                {
+                    "SourceID": "BNS_ISO",
+                    "SignalID": "YoZ",
+                    "Unit": "deg/s^2",
+                    "ScaleFactor": 1,
+                    "Offset": 0,
+                    "DataType": "F64"
+                }
+            ]
+        }
+    ]
+}
