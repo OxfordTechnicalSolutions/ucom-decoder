@@ -1,20 +1,18 @@
-//============================================================================================================
-//!
-//! The software is protected by copyright of Oxford Technical Solutions.
-//! Copyright (C) 2020 Oxford Technical Solutions - http://www.oxts.com
-//!
-//! Redistribution and use in source and binary forms, with or without modification, are only permitted with
-//! the specific prior written permission of Oxford Technical Solutions.
-//!
-//! $LastChangedDate: 2019-10-23 15:17:01 +0100 (Wed, 23 Oct 2019) $
-//! $LastChangedRevision: 28687 $
-//! $LastChangedBy: mromanski $
-//!
-//! \file crc.hpp
-//!
-//! \brief CRC functions
-//!
-//============================================================================================================
+/*
+   Copyright © 2025 Oxford Technical Solutions (OxTS)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 
 #ifndef _CRC_H_
 #define _CRC_H_
