@@ -22,6 +22,7 @@
 #define SOCKLEN_T_PTR int *
 #endif
 
+// @brief A class to facilitate cross-platform (Windows / Linux) socket handling
 Socket::Socket(std::string local_ip, int local_port, std::string remote_ip, int remote_port, std::vector<std::string>& errors) :
     _local_ip(local_ip),
     _remote_ip(remote_ip),

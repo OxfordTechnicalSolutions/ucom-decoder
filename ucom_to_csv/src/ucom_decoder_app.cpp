@@ -38,6 +38,7 @@
 #define PATH_SEPARATOR "/"
 #endif
 
+// @brief The ucom_to_csv UCOM decoder app
 UcomDecoderApp::UcomDecoderApp(int argc, char* argv[]) :
 	Application(argc, argv)
 {
@@ -46,7 +47,7 @@ UcomDecoderApp::UcomDecoderApp(int argc, char* argv[]) :
 
 
 
-//! @brief Runs the UCOM decoder application
+// @brief Runs the UCOM decoder application
 int UcomDecoderApp::run() {
     // Process command-line arguments
     int result = process_args();
@@ -69,6 +70,7 @@ int UcomDecoderApp::run() {
     return result;
 }
 
+// @brief Processes the command-line arguments
 int UcomDecoderApp::process_args()
 {
     // Process the command-line arguments
@@ -200,9 +202,8 @@ int UcomDecoderApp::process_args()
     }
     return 0;
 }
-
-//! 
-//! \brief Extract UCOM data from an input file
+ 
+// \brief Extract UCOM data from an input file
 int UcomDecoderApp::process_file()
 {
     // Create the output files; abort if creation fails
@@ -278,8 +279,7 @@ int UcomDecoderApp::process_file()
     return 0;
 }
 
-//!
-//! \brief Extract UCOM data from a UDP stream
+// \brief Extract UCOM data from a UDP stream
 int UcomDecoderApp::process_udp()
 {
     // Create the output files; abort if creation fails
@@ -419,8 +419,7 @@ int UcomDecoderApp::process_udp()
     return 0;
 }
 
-//! 
-//! \brief Gets data from a UDP socket
+// \brief Gets data from a UDP socket
 int UcomDecoderApp::get_data(Socket& socket, uint8_t* buffer, int max_len, std::string& source_ip)
 {
     int error = 0;
@@ -434,6 +433,7 @@ int UcomDecoderApp::get_data(Socket& socket, uint8_t* buffer, int max_len, std::
     return recvLen;
 }
 
+// @brief Creates the time-stamped output folder
 bool UcomDecoderApp::create_output_dir(std::string &dir_name)
 {
     auto now = std::chrono::system_clock::now();
@@ -444,6 +444,7 @@ bool UcomDecoderApp::create_output_dir(std::string &dir_name)
     return std::filesystem::create_directory(dir_name);
 }
 
+// @brief Creates the output files
 bool UcomDecoderApp::create_output_files()
 {
     std::string dir_name;
@@ -461,6 +462,7 @@ bool UcomDecoderApp::create_output_files()
     return true;
 }
 
+// @brief Closes the output files
 void UcomDecoderApp::close_output_files()
 {
     for (std::map<int, std::fstream>::iterator it = _output_files.begin(); it != _output_files.end(); it++)
@@ -470,6 +472,7 @@ void UcomDecoderApp::close_output_files()
     }
 }
 
+// @brief Creates an output file
 bool UcomDecoderApp::create_output_file(const std::string& filename, int message_id, const std::string &header, std::fstream &output_stream)
 {
     std::stringstream ssfilename;
@@ -485,12 +488,13 @@ bool UcomDecoderApp::create_output_file(const std::string& filename, int message
     return true;
 }
 
-
+// @brief Writes a line of CSV output to file and terminates with a new-line
 void UcomDecoderApp::write_csv(std::fstream& output_stream, const std::string &csv)
 {
     output_stream << csv << '\n';
 }
 
+// @brief Outputs the help text to std out
 void UcomDecoderApp::print_help_text()
 {
     for (auto line : help_text)
@@ -498,6 +502,7 @@ void UcomDecoderApp::print_help_text()
     std::cout << std::flush;
 }
 
+// @brief Outpus the banner text to std out
 void UcomDecoderApp::print_banner_text()
 {
     for (auto line : banner_text)
@@ -505,6 +510,7 @@ void UcomDecoderApp::print_banner_text()
     std::cout << std::flush;
 }
 
+// @brief Outputs the decoder statistics to std out
 void UcomDecoderApp::display_statistics()
 {
     std::cout << "Total bytes read: " << _total_bytes << NEWLINE;

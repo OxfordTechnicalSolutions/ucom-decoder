@@ -20,6 +20,7 @@ UcomSignal::UcomSignal()
 {
 }
 
+// @brief Extracts UCOM signal information from its JSON representation
 UcomSignal::UcomSignal(json signal)
 {
     _signal_id = signal["SignalID"].get<std::string>();
@@ -30,6 +31,7 @@ UcomSignal::UcomSignal(json signal)
     _offset = signal["Offset"].get<double>();
 }
 
+// @brief Constructs a UCOM signal, initialising its ID and type
 UcomSignal::UcomSignal(std::string signal_id, UcomSignal::SignalType signal_type)
 {
     _signal_id = signal_id;

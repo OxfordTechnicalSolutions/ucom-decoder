@@ -19,7 +19,7 @@
 #include <iostream>
 
 /// @brief Constructor
-/// Parse the command-line arguments and populate a map with
+/// @details Parse the command-line arguments and populate a map with
 /// key-value pairs 
 /// @param argc 
 /// @param argv 
@@ -55,12 +55,17 @@ Args::Args(int argc, char* argv[]) {
     }
 }
 
+// @brief Gets if the argument identified by \p key exists
 bool Args::has_arg(const std::string& key)
 {
     auto it = find(key);
     return(it != end());
 }
 
+// @brief Gets the argument identified by \p key
+// @param[in] key The key identifying the required argument
+// @param[out] s  The value of the argument identified by \p key
+// @returns true if the argument exists, false otherwise
 bool Args::get_arg(const std::string &key, std::string &s)
 {
     auto it = find(key);

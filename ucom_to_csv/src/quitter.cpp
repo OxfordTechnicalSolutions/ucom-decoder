@@ -15,18 +15,21 @@
 */
 #include "quitter.hpp"
 
+// @brief Post a request to quit
 void Quitter::request_quit()
 {
 	std::lock_guard<std::mutex> lock(_quit_mutex);
 	_quit_requested = true;
 }
 
+// @brief Cancel the request to quit
 void Quitter::reset()
 {
 	std::lock_guard<std::mutex> lock(_quit_mutex);
 	_quit_requested = false;
 }
 
+// @brief Gets if a quit request is active
 bool Quitter::is_quit_requested()
 {
 	std::lock_guard<std::mutex> lock(_quit_mutex);

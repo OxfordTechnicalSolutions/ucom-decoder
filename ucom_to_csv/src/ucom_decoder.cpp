@@ -16,6 +16,7 @@
 */
 #include "ucom_decoder_app.hpp"
 
+// @brief Entry point for the ucom_to_csv UCOM decoder app
 int main(int argc, char* argv[])
 {
     UcomDecoderApp app(argc, argv);

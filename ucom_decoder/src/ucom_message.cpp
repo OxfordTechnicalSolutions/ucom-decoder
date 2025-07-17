@@ -29,6 +29,7 @@ std::string UcomMessage::create_header()
     return ss.str();
 }
 
+// @brief Extracts UCOM message information from its JSON representation
 UcomMessage::UcomMessage(json message) : json(message)
 {
     _message_id = message["MessageID"];
@@ -53,14 +54,15 @@ UcomMessage::UcomMessage(json message) : json(message)
     _header = create_header();
 }
 
+// @brief Gets a vector of UCOM signals from the message
 const std::vector<ucom_signal_ptr_t> &UcomMessage::get_signals()
 {
     return _signals;
 }
 
-//! @brief Gets a pointer to a signal, identified by signal ID
-//! @param id 
-//! @return ucom_signal_ptr_t if signal exists, nullptr otherwise
+// @brief Gets a pointer to a signal, identified by signal ID
+// @param id Signal ID
+// @return ucom_signal_ptr_t if signal exists, nullptr otherwise
 const ucom_signal_ptr_t UcomMessage::get_signal(std::string id)
 {
     if (_signal_map.contains(id))
@@ -69,9 +71,9 @@ const ucom_signal_ptr_t UcomMessage::get_signal(std::string id)
         return nullptr;
 }
 
-//! @brief Gets the zero-based index of a signal (in the order they are listed in the .dbu file)
-//! @param id 
-//! @return Index of signal if it exists, -1 otherwise
+// @brief Gets the zero-based index of a signal (in the order they are listed in the .dbu file)
+// @param id Signal ID
+// @return Index of signal if it exists, -1 otherwise
 int UcomMessage::get_signal_index(std::string id)
 {
     if (_signal_indices.contains(id))

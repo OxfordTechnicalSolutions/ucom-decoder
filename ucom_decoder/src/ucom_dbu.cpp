@@ -23,6 +23,10 @@ UcomDbu::UcomDbu() :
 
 }
 
+// @brief   Facilitates access to the contents of a .dbu (JSON) file
+// @details Parses a .dbu file and provides access to the messages and signals contained within it
+// for use when decoding UCOM data
+// @param[in] filename  The path to the .dbu file
 UcomDbu::UcomDbu(std::string filename) :
     _filename(filename)
 {
@@ -53,22 +57,25 @@ UcomDbu::UcomDbu(std::string filename) :
     }
 }
 
-// Check if message_id exists in the available messages
+// @brief Checks if message_id exists in the available messages
 bool UcomDbu::message_id_exists(uint16_t message_id)
 {
     return _messages.contains(message_id);
 }
 
+// @brief Gets a map of the messages
 std::map<uint16_t, UcomMessage>& UcomDbu::get_messages()
 {
     return _messages;
 }
 
+// @brief Gets a list of the message IDs
 std::list<uint16_t>& UcomDbu::get_message_ids()
 {
     return _message_ids;
 }
 
+// @brief Gets a message by ID 
 const UcomMessage& UcomDbu::get_message(int id)
 {
     if (message_id_exists(id))
@@ -77,6 +84,7 @@ const UcomMessage& UcomDbu::get_message(int id)
         return _empty_message;
 }
 
+// @brief Gets a vector of the signals contained in a specific message (by message ID)
 const std::vector<ucom_signal_ptr_t> &UcomDbu::get_signals(uint16_t message_id)
 {
     if (_messages.find(message_id) != _messages.end())
@@ -131,6 +139,7 @@ OxTS::Enum::BASIC_TYPE UcomDbu::get_data_type(const std::string& data_type)
     return OxTS::Enum::BASIC_TYPE_UNKNOWN;
 }
 
+// @brief Gets the value of the JSON element identified by \p key
 std::string UcomDbu::get_value(json json_data, std::string key)
 {
     return json_data[key].get<std::string>();

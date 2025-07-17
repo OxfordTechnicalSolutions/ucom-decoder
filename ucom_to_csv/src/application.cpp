@@ -15,6 +15,7 @@
 */
 #include "application.hpp"
 
+// @brief A base class that represents a generic application that accepts command-line arguments and can be run
 Application::Application(int argc, char* argv[]) :
 	_args(argc, argv)
 {

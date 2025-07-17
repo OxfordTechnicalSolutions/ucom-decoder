@@ -21,12 +21,14 @@
 #include <conio.h>
 #endif
 
+//! @brief Provides an asynchronous way to check for user interaction on the 
+//! command line requesting to quit a process
 CmdLineQuitter::CmdLineQuitter()
 {
 	
 }
 
-
+// @brief Starts monitoring the command-line for input
 void CmdLineQuitter::start()
 {
 	_thread = std::thread(&CmdLineQuitter::run, this);

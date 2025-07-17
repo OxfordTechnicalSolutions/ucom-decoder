@@ -16,6 +16,8 @@
 #include "input_file.hpp"
 #include <iostream>
 
+
+//! @brief A wrapper for an input file to facilitate semi-random access data retrieval
 InputFile::InputFile(std::string filename) :
 	_filename(filename)
 {
@@ -36,10 +38,7 @@ InputFile::~InputFile()
 
 }
 
-/// <summary>
-/// Get the size of the file encapsulated file
-/// </summary>
-/// <returns></returns>
+//! @brief Get the size of the file encapsulated file
 uint64_t InputFile::get_file_size()
 {
     if (_filestream)
@@ -53,6 +52,12 @@ uint64_t InputFile::get_file_size()
         return 0;
 }
 
+// @brief Gets a vector of char from the file
+// @param offset start reading at this offset from current file pointer (can be negative)
+// @param data_available true if data is available, false otherwise
+// @param left bytes left to end of file
+// @return A vector of char containing the required data
+// 
 std::vector<char>& InputFile::get_data(bool &data_available, int64_t& left, int offset)
 {    
     if (_filestream.good())

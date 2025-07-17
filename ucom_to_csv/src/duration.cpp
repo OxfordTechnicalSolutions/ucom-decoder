@@ -15,17 +15,21 @@
 */
 #include "duration.hpp"
 
+// @brief A simple class to faciliate monitoring elapsed time intervals
 Duration::Duration(uint32_t seconds) :
 	_duration_ms(seconds * 1000)
 {
 	_start_time = std::chrono::steady_clock::now();
 }
 
+// @brief Start the time interval
 void Duration::start()
 {
 	_start_time = std::chrono::steady_clock::now();
 }
 
+// @brief Gets if the time interval has elapsed
+// @returns true, if the time interval has elapsed, false otherwise
 bool Duration::elapsed() const
 {
 	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();

@@ -16,6 +16,11 @@
 
 #include "ucom/ucom_data.hpp"
 
+// @brief Encapsulates and extracts the data from a UCOM packet
+// @details Parses the data according to the supplied dbu. The dbu defines the structure of the UCOM message(s)
+// @param[in] data  Pointer to the data
+// @param[in] size  Number of bytes
+// @param[in] dbu   Reference to the dbu    
 UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu) :
     _error_no{ 0 },
     _error_msgs{},
@@ -122,11 +127,14 @@ double UcomData::get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_T
     return value;
 }
 
-/* Inspect data to determine if it contains a candidate UCOM packet
-* Returns:
+/* @brief Inspect data to determine if it contains a candidate UCOM packet
+* @param[in] data       Pointer to the data to inspect
+* @param[in] max_size   The maximum number of bytes to inspect 
+* @param[out] need_more_data    Potential packet found, but more data required for a full packet
+* @return
 *   -1 : if no candidate found or if potential candidate found but 
-*        more data is needed (need_more_data is true)
-*   packet length : if candidate found* 
+*        more data is needed (\p need_more_data is true)
+*   packet length : if candidate found 
 */
 const int UcomData::peek(const uint8_t* data, int max_size, bool& need_more_data)
 {
