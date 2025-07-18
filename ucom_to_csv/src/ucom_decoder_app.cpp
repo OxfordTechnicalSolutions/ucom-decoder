@@ -502,7 +502,7 @@ void UcomDecoderApp::print_help_text()
     std::cout << std::flush;
 }
 
-// @brief Outpus the banner text to std out
+// @brief Outputs the banner text to std out
 void UcomDecoderApp::print_banner_text()
 {
     for (auto line : banner_text)
