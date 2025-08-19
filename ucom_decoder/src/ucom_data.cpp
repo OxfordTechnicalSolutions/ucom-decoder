@@ -15,6 +15,8 @@
 */
 
 #include "ucom/ucom_data.hpp"
+#include "ucom/ucom_value.hpp"
+
 
 // @brief Encapsulates and extracts the data from a UCOM packet
 // @details Parses the data according to the supplied dbu. The dbu defines the structure of the UCOM message(s)
@@ -74,7 +76,25 @@ UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu) :
     for (auto signal : dbu.get_signals(_message_id))
     {
         OxTS::Enum::BASIC_TYPE type = signal->get_data_type();
-        _values.push_back(get_data_update_offset(data, type, i));
+        uint8_t enum_member;
+        double value = get_data_update_offset(data, type, i, enum_member);
+        
+        switch (type)
+        {
+        case OxTS::Enum::BASIC_TYPE_enum_int64_t:
+        {
+            UCOM::EnS64 v(enum_member, static_cast<int64_t>(value));
+            valueVariant ucom_value(UCOM::DATA_TYPE::EnS64);
+            ucom_value.value.ens64 = v;
+            _values.push_back(ucom_value);
+        }
+            break;
+        default:
+            valueVariant ucom_value(UCOM::DATA_TYPE::F64);
+            ucom_value.value.f64 = value;
+            _values.push_back(ucom_value);
+            break;
+        }
     }
 
     size_t signal_count = dbu.get_message(_message_id).get_signal_count();
@@ -82,9 +102,10 @@ UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu) :
     _valid = value_count == signal_count;
 }
 
-double UcomData::get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_TYPE type, int& offset)
+double UcomData::get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_TYPE type, int& offset, uint8_t& enum_member)
 {
     double value;
+    enum_member = 255;
     
     switch (type)
     {
@@ -120,6 +141,9 @@ double UcomData::get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_T
         break;
     case OxTS::Enum::BASIC_TYPE::BASIC_TYPE_double:
         value = get_data_update_offset<double>(data, offset);
+        break;
+    case OxTS::Enum::BASIC_TYPE_enum_int64_t:
+        value = get_enum_data_update_offset<int64_t>(data, offset, enum_member);
         break;
     default:
         value = nan("");
@@ -175,6 +199,17 @@ T UcomData::get_data_update_offset(const uint8_t* data, int& offset) {
     return *ptr;
 }
 
+template <typename T>
+T UcomData::get_enum_data_update_offset(const uint8_t* data, int& offset, uint8_t& enum_member) {
+
+    uint8_t* enum_ptr = (uint8_t*)&data[offset];
+    enum_member = *enum_ptr;
+    offset += sizeof(uint8_t);
+    T* ptr = (T*)&data[offset];
+    offset += sizeof(T);
+    return *ptr;
+}
+
 const std::string UcomData::get_csv() const
 {
     std::stringstream ss;
@@ -187,8 +222,18 @@ const std::string UcomData::get_csv() const
     }
     else
     {
-        for (double value : _values)
-            ss << "," << std::fixed << value;
+        for (valueVariant value : _values)
+        {
+            switch (value.value_type)
+            {
+            case UCOM::DATA_TYPE::EnS64:
+                ss << "," << (int)value.value.ens64.enum_member << "," << std::fixed << value.value.ens64.value;
+                //ss << "," << value.to_string();
+                break;
+            default:
+                ss << "," << value.to_string();
+            }
+        }
     }
 
     // T denotes that message was output as a result of a trigger event
@@ -215,7 +260,8 @@ bool UcomData::get(std::string signal_id, UcomDbu &dbu, double &value)
 
     if (index > -1)
     {
-        value = _values[index];
+        if (_values[index].value_type == UCOM::DATA_TYPE::F64)
+        value = _values[index].value.f64;
         return true;
     }
 

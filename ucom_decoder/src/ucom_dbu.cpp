@@ -133,8 +133,10 @@ OxTS::Enum::BASIC_TYPE UcomDbu::get_data_type(const std::string& data_type)
         return OxTS::Enum::BASIC_TYPE_uint64_t;
     if (data_type.compare("F32") == 0)
         return OxTS::Enum::BASIC_TYPE_float;
-    else if (data_type.compare("F64") == 0)
+    if (data_type.compare("F64") == 0)
         return OxTS::Enum::BASIC_TYPE_double;
+    else if (data_type.compare("EnS64") == 0)
+        return OxTS::Enum::BASIC_TYPE_enum_int64_t;  
     
     return OxTS::Enum::BASIC_TYPE_UNKNOWN;
 }

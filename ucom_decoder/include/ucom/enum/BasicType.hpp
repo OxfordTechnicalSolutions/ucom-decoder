@@ -37,6 +37,7 @@ namespace OxTS
 			BASIC_TYPE_int16_t,
 			BASIC_TYPE_int32_t,
 			BASIC_TYPE_int64_t,
+			BASIC_TYPE_enum_int64_t,
 			BASIC_TYPE_UNKNOWN
 		};
 	}

@@ -22,9 +22,11 @@ std::string UcomMessage::create_header()
     ss << "Time (" << this->operator[]("MessageTiming").get<std::string>() << ")";
     _signal_count = 1;
     for (auto msg : this->operator[]("SignalsInMessage")) {
-        ss << "," << msg["SignalID"].get<std::string>();
-        _signal_count++;
         UcomSignal signal(msg);
+        _signal_count++;
+        if (signal.get_data_type() == OxTS::Enum::BASIC_TYPE_enum_int64_t)
+            ss << "," << "Enum element";
+        ss << "," << msg["SignalID"].get<std::string>();
     }
     return ss.str();
 }
