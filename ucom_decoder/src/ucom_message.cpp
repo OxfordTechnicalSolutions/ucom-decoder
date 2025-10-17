@@ -16,6 +16,8 @@
 
 #include "ucom/ucom_message.hpp"
 
+const std::string UcomMessage::JSON_KEY_MESSAGEENABLED = "MessageEnabled";
+
 std::string UcomMessage::create_header()
 {
     std::stringstream ss;
@@ -41,6 +43,7 @@ UcomMessage::UcomMessage(json message) : json(message)
     _name = message["MessageName"];
     _description = message["MessageDescription"];
     _timing = message["MessageTiming"];
+    _enabled = message[JSON_KEY_MESSAGEENABLED];
 
     std::vector<ucom_signal_ptr_t> signals;
     // Add all signals to collection

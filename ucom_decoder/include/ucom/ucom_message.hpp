@@ -43,6 +43,10 @@ class UcomMessage : public json {
     std::string	_description;
     //! \brief Timing 
     std::string	_timing;
+    //! @brief  Enabled
+    bool _enabled;
+
+    static const std::string JSON_KEY_MESSAGEENABLED;
 
     public:
     UcomMessage() {};
@@ -51,7 +55,11 @@ class UcomMessage : public json {
     bool is_valid() { return _message_id >= 0; }
 
     //! \brief Gets the message ID
-    int get_id() { return _message_id; }
+    int get_id() const { return _message_id; }
+
+    //! @brief Gets the enabled status
+    //! @return true, if the message is enabled; false otherwise
+    bool get_enabled() const { return _enabled; }
 
     std::string get_header() const { return _header; }
     size_t get_signal_count() const { return _signals.size(); } 
