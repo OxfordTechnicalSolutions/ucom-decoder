@@ -39,6 +39,9 @@ private:
     std::string _dbu_description;
     std::string get_value(json json_data, std::string key);
     std::string _filename;
+    static const std::string JSON_KEY_DBUSCHEMAVERSION;
+    static const std::string JSON_KEY_UCOMVERSION;
+    static const std::string JSON_KEY_DBUVERSION;
 public:
     UcomDbu();
     UcomDbu(std::string filename);

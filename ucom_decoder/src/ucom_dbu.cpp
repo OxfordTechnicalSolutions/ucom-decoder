@@ -17,6 +17,10 @@
 #include "ucom/ucom_dbu.hpp"
 #include <fstream>
 
+const std::string UcomDbu::JSON_KEY_DBUSCHEMAVERSION = "DBUSchemaVersion";
+const std::string UcomDbu::JSON_KEY_UCOMVERSION = "UCOMVersion";
+const std::string UcomDbu::JSON_KEY_DBUVERSION = "DBUVersion";
+
 UcomDbu::UcomDbu() :
     _valid(false)
 {
@@ -37,9 +41,22 @@ UcomDbu::UcomDbu(std::string filename) :
         try {
             json data = parse(f);
             _schema = get_value(data, "$schema");
-            _schema_version = data["DBUSchemaVersion"].get<int>();
+
+            // Original versioning
+            if (data.contains(JSON_KEY_DBUSCHEMAVERSION))
+                _schema_version = data[JSON_KEY_DBUSCHEMAVERSION].get<int>();
+
+            if (data.contains(JSON_KEY_DBUVERSION))
+                _dbu_version = data[JSON_KEY_DBUVERSION].get<int>();
+            
+            // New, unified versioning - will override original in case both are specified
+            if (data.contains(JSON_KEY_UCOMVERSION))
+            {
+                _schema_version = data[JSON_KEY_UCOMVERSION].get<int>();
+                _dbu_version = _schema_version;
+            }
             _dbu_id = get_value(data, "DBUID");
-            _dbu_version = data["DBUVersion"].get<int>(); 
+            
             _dbu_name = get_value(data, "DBUName"); 
             _dbu_description = get_value(data, "DBUDescription");
             
