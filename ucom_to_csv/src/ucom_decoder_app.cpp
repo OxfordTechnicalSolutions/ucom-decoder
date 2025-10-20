@@ -246,7 +246,7 @@ int UcomDecoderApp::process_file()
                     // Skip unwanted message IDs 
                     uint16_t id = d.get_message_id();
                     if (std::find(_message_ids.begin(), _message_ids.end(), id) != _message_ids.end())
-                        write_csv(_output_files[id], d.get_csv());
+                        write_csv(_output_files[id], d.get_csv(_dbu));
                 }
                 else
                 {
@@ -374,13 +374,13 @@ int UcomDecoderApp::process_udp()
             if (data.get_error_no() != 0)
             {
                 std::cerr << "Error number: " << std::to_string(data.get_error_no()) << ", Error messages : " << data.get_error_messages() << std::endl;
-                write_csv(_output_files[data.get_message_id()], data.get_csv());
+                write_csv(_output_files[data.get_message_id()], data.get_csv(_dbu));
             }
             else if (!skip && data.get_valid()) {
                 // Write the message data to output
                 if (_dbu.message_id_exists(data.get_message_id()))
                 {
-                    write_csv(_output_files[data.get_message_id()], data.get_csv());
+                    write_csv(_output_files[data.get_message_id()], data.get_csv(_dbu));
                     _packet_count++;
                 }
             }
@@ -397,10 +397,7 @@ int UcomDecoderApp::process_udp()
 
         loop_count++;
         if (loop_count % 50 == 0)
-            std::cout << "Bytes processed: " << _total_bytes << "\r";
-        loop_count++;
-        if (loop_count % 50 == 0)
-            std::cout << "Bytes processed: " << _total_bytes << "\r";
+            std::cout << "Bytes processed: " << _total_bytes << " Valid packets: " << _packet_count << "\r";
     }
 
     std::cout << '\n';

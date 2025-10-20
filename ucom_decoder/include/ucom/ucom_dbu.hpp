@@ -21,6 +21,7 @@
 #include <list>
 #include "enum/BasicType.hpp"
 #include "ucom_message.hpp"
+#include "ucom/triggers.hpp"
 
 using json = nlohmann::json;
 
@@ -39,9 +40,11 @@ private:
     std::string _dbu_description;
     std::string get_value(json json_data, std::string key);
     std::string _filename;
+    std::map<Triggers::Types, std::string> _triggers;
     static const std::string JSON_KEY_DBUSCHEMAVERSION;
     static const std::string JSON_KEY_UCOMVERSION;
     static const std::string JSON_KEY_DBUVERSION;
+    static const std::string JSON_KEY_POSSIBLETRIGGERTYPES;
 public:
     UcomDbu();
     UcomDbu(std::string filename);
@@ -53,4 +56,5 @@ public:
     const UcomMessage& get_message(int id);
     const std::vector<ucom_signal_ptr_t> &get_signals(uint16_t message_id);
     static OxTS::Enum::BASIC_TYPE get_data_type(const std::string& data_type);
+    std::string get_trigger_name(Triggers::Types type) const;
 };

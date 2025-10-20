@@ -29,6 +29,8 @@ std::string UcomMessage::create_header()
         if (signal.get_data_type() == OxTS::Enum::BASIC_TYPE_enum_int64_t)
             ss << "," << "Enum element";
         ss << "," << msg["SignalID"].get<std::string>();
+        if (this->operator[]("OutputType").get<std::string>().compare("OnTrigger") == 0)
+            ss << ",Trigger Type";
     }
     return ss.str();
 }

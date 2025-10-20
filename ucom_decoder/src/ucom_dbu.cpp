@@ -20,6 +20,7 @@
 const std::string UcomDbu::JSON_KEY_DBUSCHEMAVERSION = "DBUSchemaVersion";
 const std::string UcomDbu::JSON_KEY_UCOMVERSION = "UCOMVersion";
 const std::string UcomDbu::JSON_KEY_DBUVERSION = "DBUVersion";
+const std::string UcomDbu::JSON_KEY_POSSIBLETRIGGERTYPES = "PossibleTriggerTypes";
 
 UcomDbu::UcomDbu() :
     _valid(false)
@@ -59,6 +60,16 @@ UcomDbu::UcomDbu(std::string filename) :
             
             _dbu_name = get_value(data, "DBUName"); 
             _dbu_description = get_value(data, "DBUDescription");
+
+            if (data.contains(JSON_KEY_POSSIBLETRIGGERTYPES))
+            {
+                for (uint8_t index = 0; index <= data[JSON_KEY_POSSIBLETRIGGERTYPES].size(); index++)
+                {
+                    std::string key = std::to_string(index);
+                    if (data[JSON_KEY_POSSIBLETRIGGERTYPES].contains(key))
+                        _triggers.insert(std::make_pair(static_cast<Triggers::Types>(index), data[JSON_KEY_POSSIBLETRIGGERTYPES][key]));
+                }
+            }
             
             for (auto message : data["Messages"])
             {
@@ -68,8 +79,9 @@ UcomDbu::UcomDbu(std::string filename) :
             }
             _valid = true;
         }
-        catch (...) {
+        catch (exception &e) {
             // Any failure will render invalid
+            std::cout << e.what() << std::endl;
         }
     }
 }
@@ -162,4 +174,12 @@ OxTS::Enum::BASIC_TYPE UcomDbu::get_data_type(const std::string& data_type)
 std::string UcomDbu::get_value(json json_data, std::string key)
 {
     return json_data[key].get<std::string>();
+}
+
+std::string UcomDbu::get_trigger_name(Triggers::Types type) const
+{
+    if (_triggers.contains(type))
+        return _triggers.at(type);
+    else
+        return "Unknown";
 }

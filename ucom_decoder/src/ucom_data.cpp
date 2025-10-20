@@ -16,6 +16,7 @@
 
 #include "ucom/ucom_data.hpp"
 #include "ucom/ucom_value.hpp"
+#include "ucom/triggers.hpp"
 
 
 // @brief Encapsulates and extracts the data from a UCOM packet
@@ -40,8 +41,12 @@ UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu) :
     // Extract data from header
     _message_id = get_data<uint16_t>(data, 2);
     _message_version = data[4];
-    _time_frame = data[5] & 0x7F;       // Bits 0 - 6 are the time, bit 7 is the trigger flag which needs to be masked off
-    _trigger = (data[5] & 0x80) == 0x80;
+    // Byte 5 is now divided into upper and lower nibbles and contains the 
+    // timing info and the trigger info 
+    // Bits 0 - 3 are the time, bits 4 - 7 is the trigger type
+    _time_frame = data[5] & 0x0F;       
+    _trigger_type = static_cast<Triggers::Types>((data[5] & 0xF0) >> 4);
+    _trigger = _trigger_type != Triggers::Types::NO_TRIGGER;
     _arbitrary_time = get_data<int64_t>(data, 6);
     _payload_length = get_data<uint16_t>(data, 14);
 
@@ -88,7 +93,7 @@ UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu) :
             ucom_value.value.ens64 = v;
             _values.push_back(ucom_value);
         }
-            break;
+        break;
         default:
             valueVariant ucom_value(UCOM::DATA_TYPE::F64);
             ucom_value.value.f64 = value;
@@ -210,7 +215,7 @@ T UcomData::get_enum_data_update_offset(const uint8_t* data, int& offset, uint8_
     return *ptr;
 }
 
-const std::string UcomData::get_csv() const
+const std::string UcomData::get_csv(const UcomDbu& dbu) const
 {
     std::stringstream ss;
     ss.precision(7);
@@ -238,7 +243,7 @@ const std::string UcomData::get_csv() const
 
     // T denotes that message was output as a result of a trigger event
     if (_trigger)
-        ss << ",T";
+        ss << "," << dbu.get_trigger_name(_trigger_type);
 
     return ss.str();
 }

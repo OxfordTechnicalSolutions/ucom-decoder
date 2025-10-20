@@ -18,6 +18,7 @@
 #include "ucom/enum/BasicType.hpp"
 #include "ucom/crc.hpp"
 #include "ucom/ucom_value.hpp"
+#include "ucom/triggers.hpp"
 #define raw_data_ptr_t const uint8_t *
 
 class UcomData {
@@ -29,7 +30,8 @@ private:
     uint16_t _payload_length; // Bytes 14-15
     int64_t _gnsst; // Bytes 16-23
     uint32_t _calc_crc; // Bytes 16 + _payload_length 
-    bool _trigger;  // Bit 7 of byte 5 - set if the message is output as a result of a trigger event
+    bool _trigger; // Set if this message was output as a result of a trigger event
+    Triggers::Types _trigger_type;  // Bits 3 - 7 of byte 5, the trigger type (zero if not a trigger output)
     bool _valid;
     //std::vector<double> _values; // collection for signal values
     std::vector<valueVariant> _values; // collection for signal values
@@ -50,7 +52,7 @@ public:
     double get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_TYPE type, int& offset, uint8_t& enum_member);
     static const int peek(const uint8_t* data, int max_size, bool& need_more_data);
 
-    const std::string get_csv() const;
+    const std::string get_csv(const UcomDbu& dbu) const;
 
     std::string to_string();
 
