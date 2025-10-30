@@ -32,11 +32,13 @@ class UcomMessage : public json {
     std::map<std::string, ucom_signal_ptr_t> _signal_map;
     std::map<std::string, int> _signal_indices;
     //! \brief Message schema version.
-    uint16_t _schema_version = -1;
+    uint16_t _schema_version;
     //! \brief Message ID.
-    uint16_t _message_id = -1;
+    uint16_t _message_id;
+    //! \brief Message UID. Uniquely identifies the message (ID and version)
+    uint32_t _message_uid;
     //! \brief Message version.
-    uint16_t _message_version = -1;
+    uint16_t _message_version;
     //! \brief Message name.
     std::string	_name;
     //! \brief Description
@@ -66,4 +68,9 @@ class UcomMessage : public json {
     const std::vector<ucom_signal_ptr_t> &get_signals();
     const ucom_signal_ptr_t get_signal(std::string id);
     int get_signal_index(std::string id);
+    static const uint16_t get_id_from_uid(uint32_t uid) { return static_cast<uint16_t>(uid & 0x0000FFFF); }
+    static const uint16_t get_version_from_uid(uint32_t uid) { return static_cast<uint16_t>((uid & 0xFFFF0000) >> 16); }
+    static const uint32_t create_uid(uint16_t message_id, uint16_t message_version) { uint32_t uid = message_version << 16 | message_id; return uid; }
+    static const std::string uid_to_string(const uint32_t uid);
+    static const bool uid_from_string(const std::string s, uint32_t& uid);
 };

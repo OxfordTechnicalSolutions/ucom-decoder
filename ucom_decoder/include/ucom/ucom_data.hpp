@@ -36,6 +36,8 @@ private:
     //std::vector<double> _values; // collection for signal values
     std::vector<valueVariant> _values; // collection for signal values
 
+    uint32_t _message_uid;  // Unique identifier
+
     // Errors
     uint8_t _error_no;
     std::string _error_msgs;
@@ -47,6 +49,10 @@ private:
     static T get_data_update_offset(const uint8_t* data, int& offset);
     template<typename T>
     static T get_enum_data_update_offset(const uint8_t* data, int& offset, uint8_t& enum_member);
+    static int64_t get_enum_data_update_offset_i(const uint8_t* data, int& offset, uint8_t& enum_member);
+    std::string get_str_data_update_offset(const uint8_t* data, int& offset);
+    valueVariant get_data_update_offset_variant(raw_data_ptr_t data, UCOM::DATA_TYPE type, int& offset, uint8_t& enum_member);
+    valueVariant get_data_update_offset_variant(raw_data_ptr_t data, UCOM::DATA_TYPE type, int& offset, uint8_t& enum_member, valueVariant& out_value);
 public:
     UcomData(const uint8_t* data, int size, UcomDbu& dbu);
     double get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_TYPE type, int& offset, uint8_t& enum_member);
@@ -57,6 +63,8 @@ public:
     std::string to_string();
 
     uint16_t get_message_id() { return _message_id; }
+
+    uint32_t get_message_uid() { return _message_uid; }
 
     uint16_t get_message_version() { return _message_version; }
 
@@ -73,6 +81,8 @@ public:
     bool get_valid() { return _valid; }
 
     bool get(std::string signal_id, UcomDbu& dbu, double &value);
+
+    bool get(std::string signal_id, UcomDbu& dbu, valueVariant& value);
 
     uint8_t get_error_no() { return _error_no; }
 

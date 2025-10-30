@@ -21,6 +21,7 @@ const std::string UcomDbu::JSON_KEY_DBUSCHEMAVERSION = "DBUSchemaVersion";
 const std::string UcomDbu::JSON_KEY_UCOMVERSION = "UCOMVersion";
 const std::string UcomDbu::JSON_KEY_DBUVERSION = "DBUVersion";
 const std::string UcomDbu::JSON_KEY_POSSIBLETRIGGERTYPES = "PossibleTriggerTypes";
+const std::string UcomDbu::JSON_KEY_POSSIBLEHEADERTIMING = "PossibleHeaderTiming";
 
 UcomDbu::UcomDbu() :
     _valid(false)
@@ -43,6 +44,8 @@ UcomDbu::UcomDbu(std::string filename) :
             json data = parse(f);
             _schema = get_value(data, "$schema");
 
+            // UCOM / DBU versioning method has changed - handle old and new versions for 
+            // backward compatibility with old DBU files
             // Original versioning
             if (data.contains(JSON_KEY_DBUSCHEMAVERSION))
                 _schema_version = data[JSON_KEY_DBUSCHEMAVERSION].get<int>();
@@ -61,6 +64,7 @@ UcomDbu::UcomDbu(std::string filename) :
             _dbu_name = get_value(data, "DBUName"); 
             _dbu_description = get_value(data, "DBUDescription");
 
+            // Get the trigger types from the DBU, if present
             if (data.contains(JSON_KEY_POSSIBLETRIGGERTYPES))
             {
                 for (uint8_t index = 0; index <= data[JSON_KEY_POSSIBLETRIGGERTYPES].size(); index++)
@@ -70,12 +74,22 @@ UcomDbu::UcomDbu(std::string filename) :
                         _triggers.insert(std::make_pair(static_cast<Triggers::Types>(index), data[JSON_KEY_POSSIBLETRIGGERTYPES][key]));
                 }
             }
+
+            // Get the header enum values from the DBU, if present
+            if (data.contains(JSON_KEY_POSSIBLEHEADERTIMING))
+            {
+                for (auto it : data.at(JSON_KEY_POSSIBLEHEADERTIMING).items())
+                    _header_timings.insert(std::make_pair(it.key(), it.value()));
+            }
             
             for (auto message : data["Messages"])
             {
                 uint16_t message_id = message["MessageID"];
-                _messages.insert({ message_id, UcomMessage(message) });
+                uint16_t message_version = message["MessageVersion"];
+                uint32_t message_uid = message_id + (message_version << 16);
+                _messages.insert({ message_uid, UcomMessage(message) });
                 _message_ids.push_back(message_id);
+                _message_uids.push_back(message_uid);
             }
             _valid = true;
         }
@@ -89,11 +103,22 @@ UcomDbu::UcomDbu(std::string filename) :
 // @brief Checks if message_id exists in the available messages
 bool UcomDbu::message_id_exists(uint16_t message_id)
 {
-    return _messages.contains(message_id);
+    for (auto it = _message_ids.begin(); it != _message_ids.end(); it++)
+    {
+        if (*it == message_id)
+            return true;
+    }
+    return false;
+}
+
+// @brief Checks if message_uid exists in the available messages
+bool UcomDbu::message_uid_exists(uint32_t message_uid)
+{
+    return _messages.contains(message_uid);
 }
 
 // @brief Gets a map of the messages
-std::map<uint16_t, UcomMessage>& UcomDbu::get_messages()
+std::map<uint32_t, UcomMessage>& UcomDbu::get_messages()
 {
     return _messages;
 }
@@ -104,20 +129,26 @@ std::list<uint16_t>& UcomDbu::get_message_ids()
     return _message_ids;
 }
 
-// @brief Gets a message by ID 
-const UcomMessage& UcomDbu::get_message(int id)
+// @brief Gets a list of the message UIDs
+std::list<uint32_t>& UcomDbu::get_message_uids()
 {
-    if (message_id_exists(id))
-        return _messages[id];
+    return _message_uids;
+}
+
+// @brief Gets a message by UID 
+const UcomMessage& UcomDbu::get_message(uint32_t uid)
+{
+    if (message_uid_exists(uid))
+        return _messages[uid];
     else
         return _empty_message;
 }
 
-// @brief Gets a vector of the signals contained in a specific message (by message ID)
-const std::vector<ucom_signal_ptr_t> &UcomDbu::get_signals(uint16_t message_id)
+// @brief Gets a vector of the signals contained in a specific message (by message UID)
+const std::vector<ucom_signal_ptr_t> &UcomDbu::get_signals(uint32_t message_uid)
 {
-    if (_messages.find(message_id) != _messages.end())
-        return _messages[message_id].get_signals();
+    if (_messages.find(message_uid) != _messages.end())
+        return _messages[message_uid].get_signals();
     else
         return _empty_vector;
 }
@@ -170,16 +201,72 @@ OxTS::Enum::BASIC_TYPE UcomDbu::get_data_type(const std::string& data_type)
     return OxTS::Enum::BASIC_TYPE_UNKNOWN;
 }
 
+// @brief Gets the UCOM data-type for the given string representation
+UCOM::DATA_TYPE UcomDbu::get_ucom_data_type(const std::string& data_type)
+{
+    /*
+        STR,    ///< String
+        U8,     ///< Unsigned 8-bit integer
+        S8,     ///< Signed 8-bit integer
+        U16,    ///< Unsigned 16-bit integer
+        S16,    ///< Signed 16-bit integer
+        U32,    ///< Unsigned 32-bit integer
+        S32,    ///< Signed 32-bit integer
+        U64,    ///< Unsigned 64-bit integer
+        S64,    ///< Signed 64-bit integer
+        F32,    ///< 32-bit floating point
+        F64,    ///< 64-bit floating point (double)
+        EnS64,  ///< Enum unsigned 8-bit value and a signed 64-bit integer (72-bit total)
+        INVALID ///< Invalid or unknown type
+        */
+    if (data_type.compare("STR") == 0)
+        return UCOM::DATA_TYPE::STR;
+    if (data_type.compare("S8") == 0)
+        return UCOM::DATA_TYPE::S8;
+    if (data_type.compare("U8") == 0)
+        return UCOM::DATA_TYPE::U8;
+    if (data_type.compare("S16") == 0)
+        return UCOM::DATA_TYPE::S16;
+    if (data_type.compare("U16") == 0)
+        return UCOM::DATA_TYPE::U16;
+    if (data_type.compare("S32") == 0)
+        return UCOM::DATA_TYPE::S32;
+    if (data_type.compare("U32") == 0)
+        return UCOM::DATA_TYPE::U32;
+    if (data_type.compare("S64") == 0)
+        return UCOM::DATA_TYPE::S64;
+    if (data_type.compare("U64") == 0)
+        return UCOM::DATA_TYPE::U64;
+    if (data_type.compare("F32") == 0)
+        return UCOM::DATA_TYPE::F32;
+    if (data_type.compare("F64") == 0)
+        return UCOM::DATA_TYPE::F64;
+    else if (data_type.compare("EnS64") == 0)
+        return UCOM::DATA_TYPE::EnS64;
+
+    return UCOM::DATA_TYPE::INVALID;
+}
+
 // @brief Gets the value of the JSON element identified by \p key
 std::string UcomDbu::get_value(json json_data, std::string key)
 {
     return json_data[key].get<std::string>();
 }
 
+// @brief Gets the trigger name corresponding to the given trigger type
 std::string UcomDbu::get_trigger_name(Triggers::Types type) const
 {
     if (_triggers.contains(type))
         return _triggers.at(type);
+    else
+        return "Unknown";
+}
+
+// @brief Gets the header timing corresponding to the given header value
+std::string UcomDbu::get_header_timing_name(const std::string& timing) const
+{
+    if (_header_timings.contains(timing))
+        return _header_timings.at(timing);
     else
         return "Unknown";
 }

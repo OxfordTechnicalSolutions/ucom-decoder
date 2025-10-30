@@ -41,7 +41,8 @@ UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu) :
     // Extract data from header
     _message_id = get_data<uint16_t>(data, 2);
     _message_version = data[4];
-    // Byte 5 is now divided into upper and lower nibbles and contains the 
+    _message_uid = UcomMessage::create_uid(_message_id, _message_version);
+    // Byte 5 is divided into upper and lower nibbles and contains the 
     // timing info and the trigger info 
     // Bits 0 - 3 are the time, bits 4 - 7 is the trigger type
     _time_frame = data[5] & 0x0F;       
@@ -65,7 +66,7 @@ UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu) :
     if (_message_id == ERROR_MSG_ID)
     {
         // Hard-coded error message structure
-        const std::vector<ucom_signal_ptr_t> signals = dbu.get_signals(_message_id);
+        const std::vector<ucom_signal_ptr_t> signals = dbu.get_signals(_message_uid);
         if (signals.size() != 2)
             return;
 
@@ -78,31 +79,16 @@ UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu) :
     }
 
     // Step through the signals and decode according to their type
-    for (auto signal : dbu.get_signals(_message_id))
+    for (auto signal : dbu.get_signals(_message_uid))
     {
-        OxTS::Enum::BASIC_TYPE type = signal->get_data_type();
+        UCOM::DATA_TYPE type = signal->get_data_type();
         uint8_t enum_member;
-        double value = get_data_update_offset(data, type, i, enum_member);
-        
-        switch (type)
-        {
-        case OxTS::Enum::BASIC_TYPE_enum_int64_t:
-        {
-            UCOM::EnS64 v(enum_member, static_cast<int64_t>(value));
-            valueVariant ucom_value(UCOM::DATA_TYPE::EnS64);
-            ucom_value.value.ens64 = v;
-            _values.push_back(ucom_value);
-        }
-        break;
-        default:
-            valueVariant ucom_value(UCOM::DATA_TYPE::F64);
-            ucom_value.value.f64 = value;
-            _values.push_back(ucom_value);
-            break;
-        }
+        valueVariant value;
+        get_data_update_offset_variant(data, type, i, enum_member, value);
+        _values.push_back(value);
     }
 
-    size_t signal_count = dbu.get_message(_message_id).get_signal_count();
+    size_t signal_count = dbu.get_message(_message_uid).get_signal_count();
     size_t value_count = _values.size();
     _valid = value_count == signal_count;
 }
@@ -114,9 +100,6 @@ double UcomData::get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_T
     
     switch (type)
     {
-    case OxTS::Enum::BASIC_TYPE_bool:
-        value = get_data_update_offset<bool>(data, offset);
-        break;
     case OxTS::Enum::BASIC_TYPE_int8_t:
         value = get_data_update_offset<int8_t>(data, offset);
         break;
@@ -135,24 +118,129 @@ double UcomData::get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_T
     case OxTS::Enum::BASIC_TYPE_uint32_t:
         value = get_data_update_offset<uint32_t>(data, offset);
         break;
-    case OxTS::Enum::BASIC_TYPE::BASIC_TYPE_int64_t:
+    case OxTS::Enum::BASIC_TYPE_int64_t:
         value = get_data_update_offset<int64_t>(data, offset);
         break;
-    case OxTS::Enum::BASIC_TYPE::BASIC_TYPE_uint64_t:
+    case OxTS::Enum::BASIC_TYPE_uint64_t:
         value = get_data_update_offset<uint64_t>(data, offset);
         break;
-    case OxTS::Enum::BASIC_TYPE::BASIC_TYPE_float:
+    case OxTS::Enum::BASIC_TYPE_float:
         value = get_data_update_offset<float>(data, offset);
         break;
-    case OxTS::Enum::BASIC_TYPE::BASIC_TYPE_double:
+    case OxTS::Enum::BASIC_TYPE_double:
         value = get_data_update_offset<double>(data, offset);
         break;
     case OxTS::Enum::BASIC_TYPE_enum_int64_t:
         value = get_enum_data_update_offset<int64_t>(data, offset, enum_member);
         break;
+    case OxTS::Enum::BASIC_TYPE_str:
+
+        break;
     default:
         value = nan("");
     }
+    return value;
+}
+
+valueVariant UcomData::get_data_update_offset_variant(raw_data_ptr_t data, UCOM::DATA_TYPE type, int& offset, uint8_t& enum_member)
+{
+    valueVariant value;
+    enum_member = 255;
+
+    switch (type)
+    {
+    case UCOM::DATA_TYPE::S8:
+        value = get_data_update_offset<int8_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::U8:
+        value = get_data_update_offset<uint8_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::S16:
+        value = get_data_update_offset<int16_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::U16:
+        value = get_data_update_offset<uint16_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::S32:
+        value = get_data_update_offset<int32_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::U32:
+        value = get_data_update_offset<uint32_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::S64:
+        value = get_data_update_offset<int64_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::U64:
+        value = get_data_update_offset<uint64_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::F32:
+        value = get_data_update_offset<float>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::F64:
+        value = get_data_update_offset<double>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::EnS64:
+        value.set_value(get_enum_data_update_offset<int64_t>(data, offset, enum_member), enum_member);
+        break;
+    case UCOM::DATA_TYPE::STR:
+        value = get_str_data_update_offset(data, offset);
+        break;
+    default:
+        value = nan("");
+    }
+
+
+    return value;
+}
+
+valueVariant UcomData::get_data_update_offset_variant(raw_data_ptr_t data, UCOM::DATA_TYPE type, int& offset, uint8_t& enum_member, valueVariant& value)
+{
+    enum_member = 255;
+    int64_t v;
+    switch (type)
+    {
+    case UCOM::DATA_TYPE::S8:
+        value = get_data_update_offset<int8_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::U8:
+        value = get_data_update_offset<uint8_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::S16:
+        value = get_data_update_offset<int16_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::U16:
+        value = get_data_update_offset<uint16_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::S32:
+        value = get_data_update_offset<int32_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::U32:
+        value = get_data_update_offset<uint32_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::S64:
+        value = get_data_update_offset<int64_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::U64:
+        value = get_data_update_offset<uint64_t>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::F32:
+        value = get_data_update_offset<float>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::F64:
+        value = get_data_update_offset<double>(data, offset);
+        break;
+    case UCOM::DATA_TYPE::EnS64:
+        v = get_enum_data_update_offset_i(data, offset, enum_member);
+        value.set_value(v, enum_member);
+        break;
+    case UCOM::DATA_TYPE::STR:
+        value = get_str_data_update_offset(data, offset);
+        break;
+    default:
+        value = nan("");
+    }
+
+    
     return value;
 }
 
@@ -190,13 +278,23 @@ const int UcomData::peek(const uint8_t* data, int max_size, bool& need_more_data
     return payload_length + 20;
 }
 
-
+/* @brief Gets a value of type T from the buffer (data), starting at offset
+* @param[in] data       Pointer to the buffer
+* @param[in] offset     The offset into the buffer where the value starts
+* @return               The value (of type T)
+*/
 template <typename T>
 T UcomData::get_data(const uint8_t* data, int offset) {
     T* ptr = (T*)&data[offset];
     return *ptr;
 }
 
+/* @brief Gets a value of type T from the buffer (data), starting at offset. Updates offset 
+* to point to the location after the extracted value
+* @param[in] data       Pointer to the buffer
+* @param[in] offset     The offset into the buffer where the value starts
+* @return               The value (of type T)
+*/
 template <typename T>
 T UcomData::get_data_update_offset(const uint8_t* data, int& offset) {
     T* ptr = (T*)&data[offset];
@@ -204,6 +302,12 @@ T UcomData::get_data_update_offset(const uint8_t* data, int& offset) {
     return *ptr;
 }
 
+/* @brief Gets an enum value of type T from the buffer (data), starting at offset. Updates offset
+* to point to the location after the extracted value
+* @param[in] data       Pointer to the buffer
+* @param[in] offset     The offset into the buffer where the value starts
+* @return               The value (of type T)
+*/
 template <typename T>
 T UcomData::get_enum_data_update_offset(const uint8_t* data, int& offset, uint8_t& enum_member) {
 
@@ -215,6 +319,33 @@ T UcomData::get_enum_data_update_offset(const uint8_t* data, int& offset, uint8_
     return *ptr;
 }
 
+int64_t UcomData::get_enum_data_update_offset_i(const uint8_t* data, int& offset, uint8_t& enum_member) {
+
+    uint8_t* enum_ptr = (uint8_t*)&data[offset];
+    enum_member = *enum_ptr;
+    offset += sizeof(uint8_t);
+    int64_t* ptr = (int64_t*)(& data[offset]);
+    offset += sizeof(int64_t);
+    int64_t v = *ptr;
+    return *ptr;
+}
+
+/* @brief Gets a value of type string from the buffer (data), starting at offset. Updates offset
+* to point to the location after the extracted value
+* @param[in] data       Pointer to the buffer
+* @param[in] offset     The offset into the buffer where the value starts
+* @return               The value (of type T)
+*/
+std::string UcomData::get_str_data_update_offset(const uint8_t* data, int& offset) {
+    std::string str(reinterpret_cast<const char*>(&data[offset]));
+    offset += str.size() + 1;
+    return str;
+}
+
+
+// @brief Gets the contents of the message (signal values) in CSV format
+// @param dbu The DBU used to decode 
+// @return A string containing the CSV
 const std::string UcomData::get_csv(const UcomDbu& dbu) const
 {
     std::stringstream ss;
@@ -225,29 +356,20 @@ const std::string UcomData::get_csv(const UcomDbu& dbu) const
         ss << "," << std::to_string(_error_no);
         ss << "," << _error_msgs;
     }
-    else
+    else 
     {
         for (valueVariant value : _values)
-        {
-            switch (value.value_type)
-            {
-            case UCOM::DATA_TYPE::EnS64:
-                ss << "," << (int)value.value.ens64.enum_member << "," << std::fixed << value.value.ens64.value;
-                //ss << "," << value.to_string();
-                break;
-            default:
-                ss << "," << value.to_string();
-            }
-        }
+            ss << "," << value.to_string();
     }
 
-    // T denotes that message was output as a result of a trigger event
+    // Output the trigger type for a message that was output as a result of a trigger event
     if (_trigger)
         ss << "," << dbu.get_trigger_name(_trigger_type);
 
     return ss.str();
 }
 
+// @brief Gets a string containing meta-data (message ID, version and payload length)
 std::string UcomData::to_string()
 {
     std::stringstream ss;
@@ -255,7 +377,7 @@ std::string UcomData::to_string()
     return ss.str();
 }
 
-//! @brief Gets the value of the signal
+//! @brief Gets the value of the signal as a double (if appropriate type)
 //! @param signal_id 
 //! @return True, if the signal exists, false otherwise
 bool UcomData::get(std::string signal_id, UcomDbu &dbu, double &value)
@@ -265,11 +387,30 @@ bool UcomData::get(std::string signal_id, UcomDbu &dbu, double &value)
 
     if (index > -1)
     {
-        if (_values[index].value_type == UCOM::DATA_TYPE::F64)
-        value = _values[index].value.f64;
+        if (_values[index].get_type() == UCOM::DATA_TYPE::F64)
+            value = _values[index].get_value().f64;
         return true;
     }
 
     return false;
 }
+
+//! @brief Gets the value of the signal as a valueVariant
+//! @param signal_id 
+//! @return True, if the signal exists, false otherwise
+bool UcomData::get(std::string signal_id, UcomDbu& dbu, valueVariant& value)
+{
+    UcomMessage msg = dbu.get_message(get_message_id());
+    int index = msg.get_signal_index(signal_id);
+
+    if (index > -1)
+    {
+        value = _values[index];
+        return true;
+    }
+
+    return false;
+}
+
+
 

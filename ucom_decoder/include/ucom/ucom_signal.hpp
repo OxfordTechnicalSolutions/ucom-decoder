@@ -18,6 +18,7 @@
 #include <string>
 #include "enum/BasicType.hpp"
 #include "nlohmann/json.hpp"
+#include "ucom/ucom_value.hpp"
 
 using json = nlohmann::json;
 
@@ -34,14 +35,14 @@ class UcomSignal {
     std::string _unit;
     double _scale_factor;
     double _offset;
-    OxTS::Enum::BASIC_TYPE _data_type = OxTS::Enum::BASIC_TYPE_UNKNOWN;
+    UCOM::DATA_TYPE _data_type = UCOM::DATA_TYPE::INVALID;
     SignalType _signal_type;
     public:
     UcomSignal();
     UcomSignal(json signal);
     UcomSignal(std::string signal_id, UcomSignal::SignalType signal_type);
     std::string get_signal_id() { return _signal_id; }
-    const OxTS::Enum::BASIC_TYPE get_data_type() { return _data_type; } 
+    const UCOM::DATA_TYPE get_data_type() { return _data_type; } 
     void enter() {};
     void exit() {};
 };

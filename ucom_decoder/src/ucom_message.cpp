@@ -26,7 +26,7 @@ std::string UcomMessage::create_header()
     for (auto msg : this->operator[]("SignalsInMessage")) {
         UcomSignal signal(msg);
         _signal_count++;
-        if (signal.get_data_type() == OxTS::Enum::BASIC_TYPE_enum_int64_t)
+        if (signal.get_data_type() == UCOM::DATA_TYPE::EnS64)
             ss << "," << "Enum element";
         ss << "," << msg["SignalID"].get<std::string>();
         if (this->operator[]("OutputType").get<std::string>().compare("OnTrigger") == 0)
@@ -46,6 +46,7 @@ UcomMessage::UcomMessage(json message) : json(message)
     _description = message["MessageDescription"];
     _timing = message["MessageTiming"];
     _enabled = message[JSON_KEY_MESSAGEENABLED];
+    _message_uid = _message_id | _message_version << 16;
 
     std::vector<ucom_signal_ptr_t> signals;
     // Add all signals to collection
@@ -87,4 +88,59 @@ int UcomMessage::get_signal_index(std::string id)
         return _signal_indices[id];
     else
         return -1;
+}
+
+// @brief Gets a string representation of a message UID
+// in the form <ID>v<VERSION>, e.g. 64520v1 for ID 64520, VERSION 1, except 
+// for VERSION 0, which is is just the message ID, e.g. 64520.
+// @param uid Message UID
+// @return String representation of UID
+const std::string UcomMessage::uid_to_string(const uint32_t uid)
+{
+    std::stringstream ss;
+    uint16_t version = get_version_from_uid(uid);
+    if (version == 0)
+        ss << get_id_from_uid(uid);
+    else
+        ss << get_id_from_uid(uid) << "v" << version;
+    return ss.str();
+}
+
+// @brief Parses a message UID from a string representation of the form
+// <ID>v<VERSION>, e.g. 64520v1. If just the ID is present (e.g. 64520), then the 
+// version is assumed to be 0
+// @param[in]   s   String representation of the message UID
+// @param[out]  uid The message UID
+// @ return True, if the string was parsed correctly, false otherwise
+const bool UcomMessage::uid_from_string(const std::string s, uint32_t& uid)
+{
+    uid = 0;
+    if (s.empty())
+        return false;
+    size_t pos;
+    pos = s.find('v');
+    
+    uint16_t version = 0;
+    uint16_t id = 0;
+    
+    // Error checking is not exhaustive, e.g. 64520v1.5 is parsed without error as 64520v1
+    try
+    {
+        id = static_cast<uint16_t>(std::stoul(s.substr(0, pos)));
+
+        if (pos != std::string::npos)
+            version = static_cast<uint16_t>(std::stoul(s.substr(pos + 1)));
+        else {
+            // Check for (some) format errors, e.g. 50x6.4
+            std::string id_str = std::to_string(id);
+            if (s.size() != id_str.size())
+                return false;
+        }
+    }
+    catch (...) {
+        return false;
+    }
+
+    uid = create_uid(id, version);
+    return true;
 }
