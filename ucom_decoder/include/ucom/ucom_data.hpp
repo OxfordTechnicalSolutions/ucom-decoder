@@ -50,9 +50,8 @@ private:
     template<typename T>
     static T get_enum_data_update_offset(const uint8_t* data, int& offset, uint8_t& enum_member);
     static int64_t get_enum_data_update_offset_i(const uint8_t* data, int& offset, uint8_t& enum_member);
-    std::string get_str_data_update_offset(const uint8_t* data, int& offset);
-    valueVariant get_data_update_offset_variant(raw_data_ptr_t data, UCOM::DATA_TYPE type, int& offset, uint8_t& enum_member);
-    valueVariant get_data_update_offset_variant(raw_data_ptr_t data, UCOM::DATA_TYPE type, int& offset, uint8_t& enum_member, valueVariant& out_value);
+    static std::string get_str_data_update_offset(const uint8_t* data, int& offset);
+    static void get_data_update_offset(raw_data_ptr_t data, UCOM::DATA_TYPE type, int& offset, uint8_t& enum_member, valueVariant& out_value);
 public:
     UcomData(const uint8_t* data, int size, UcomDbu& dbu);
     double get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_TYPE type, int& offset, uint8_t& enum_member);

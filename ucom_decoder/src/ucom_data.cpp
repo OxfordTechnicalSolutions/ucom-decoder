@@ -84,7 +84,7 @@ UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu) :
         UCOM::DATA_TYPE type = signal->get_data_type();
         uint8_t enum_member;
         valueVariant value;
-        get_data_update_offset_variant(data, type, i, enum_member, value);
+        get_data_update_offset(data, type, i, enum_member, value);
         _values.push_back(value);
     }
 
@@ -93,107 +93,23 @@ UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu) :
     _valid = value_count == signal_count;
 }
 
-double UcomData::get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_TYPE type, int& offset, uint8_t& enum_member)
-{
-    double value;
-    enum_member = 255;
-    
-    switch (type)
-    {
-    case OxTS::Enum::BASIC_TYPE_int8_t:
-        value = get_data_update_offset<int8_t>(data, offset);
-        break;
-    case OxTS::Enum::BASIC_TYPE_uint8_t:
-        value = get_data_update_offset<uint8_t>(data, offset);
-        break;
-    case OxTS::Enum::BASIC_TYPE_int16_t:
-        value = get_data_update_offset<int16_t>(data, offset);
-        break;
-    case OxTS::Enum::BASIC_TYPE_uint16_t:
-        value = get_data_update_offset<uint16_t>(data, offset);
-        break;
-    case OxTS::Enum::BASIC_TYPE_int32_t:
-        value = get_data_update_offset<int32_t>(data, offset);
-        break;
-    case OxTS::Enum::BASIC_TYPE_uint32_t:
-        value = get_data_update_offset<uint32_t>(data, offset);
-        break;
-    case OxTS::Enum::BASIC_TYPE_int64_t:
-        value = get_data_update_offset<int64_t>(data, offset);
-        break;
-    case OxTS::Enum::BASIC_TYPE_uint64_t:
-        value = get_data_update_offset<uint64_t>(data, offset);
-        break;
-    case OxTS::Enum::BASIC_TYPE_float:
-        value = get_data_update_offset<float>(data, offset);
-        break;
-    case OxTS::Enum::BASIC_TYPE_double:
-        value = get_data_update_offset<double>(data, offset);
-        break;
-    case OxTS::Enum::BASIC_TYPE_enum_int64_t:
-        value = get_enum_data_update_offset<int64_t>(data, offset, enum_member);
-        break;
-    case OxTS::Enum::BASIC_TYPE_str:
-
-        break;
-    default:
-        value = nan("");
-    }
-    return value;
-}
-
-valueVariant UcomData::get_data_update_offset_variant(raw_data_ptr_t data, UCOM::DATA_TYPE type, int& offset, uint8_t& enum_member)
-{
-    valueVariant value;
-    enum_member = 255;
-
-    switch (type)
-    {
-    case UCOM::DATA_TYPE::S8:
-        value = get_data_update_offset<int8_t>(data, offset);
-        break;
-    case UCOM::DATA_TYPE::U8:
-        value = get_data_update_offset<uint8_t>(data, offset);
-        break;
-    case UCOM::DATA_TYPE::S16:
-        value = get_data_update_offset<int16_t>(data, offset);
-        break;
-    case UCOM::DATA_TYPE::U16:
-        value = get_data_update_offset<uint16_t>(data, offset);
-        break;
-    case UCOM::DATA_TYPE::S32:
-        value = get_data_update_offset<int32_t>(data, offset);
-        break;
-    case UCOM::DATA_TYPE::U32:
-        value = get_data_update_offset<uint32_t>(data, offset);
-        break;
-    case UCOM::DATA_TYPE::S64:
-        value = get_data_update_offset<int64_t>(data, offset);
-        break;
-    case UCOM::DATA_TYPE::U64:
-        value = get_data_update_offset<uint64_t>(data, offset);
-        break;
-    case UCOM::DATA_TYPE::F32:
-        value = get_data_update_offset<float>(data, offset);
-        break;
-    case UCOM::DATA_TYPE::F64:
-        value = get_data_update_offset<double>(data, offset);
-        break;
-    case UCOM::DATA_TYPE::EnS64:
-        value.set_value(get_enum_data_update_offset<int64_t>(data, offset, enum_member), enum_member);
-        break;
-    case UCOM::DATA_TYPE::STR:
-        value = get_str_data_update_offset(data, offset);
-        break;
-    default:
-        value = nan("");
-    }
-
-
-    return value;
-}
-
-valueVariant UcomData::get_data_update_offset_variant(raw_data_ptr_t data, UCOM::DATA_TYPE type, int& offset, uint8_t& enum_member, valueVariant& value)
+/**
+ * @brief Extracts and updates a value from raw data based on the specified data type and offset.
+ *
+ * This method reads a value from the provided raw data buffer, interprets it according to the given
+ * `UCOM::DATA_TYPE`, and stores the result in a `valueVariant` object. It also updates the offset
+ * to reflect the position after the extracted value and sets the `enum_member` if the type is
+ * `EnS64` (enumerated signed 64-bit).
+ *
+ * If the type is unrecognized, the value is set to NaN.
+ *
+ * @param data Pointer to the raw data buffer.
+ * @param type The data type to interpret from the buffer.
+ * @param offset Reference to the current offset in the buffer; updated after reading.
+ * @param enum_member Reference to the enum member identifier; set if type is `EnS64`.
+ * @param value Reference to a valueVariant object where the extracted value will be stored.
+ */
+void UcomData::get_data_update_offset(raw_data_ptr_t data, UCOM::DATA_TYPE type, int& offset, uint8_t& enum_member, valueVariant& value)
 {
     enum_member = 255;
     int64_t v;
@@ -239,9 +155,6 @@ valueVariant UcomData::get_data_update_offset_variant(raw_data_ptr_t data, UCOM:
     default:
         value = nan("");
     }
-
-    
-    return value;
 }
 
 /* @brief Inspect data to determine if it contains a candidate UCOM packet
