@@ -20,30 +20,40 @@ class Interval:
         return self.duration > 0 and not self.is_elapsed()
 
 class UcomToCsv:
-    def __init__(self, dbu_filename, message_ids = [], output_file_prefix = "output_"):
+    def __init__(self, dbu_filename, message_uids = [], output_file_prefix = "output_"):
         self.output_files = {}
+        f = open(dbu_filename)
+        f.close()
         self.dbu = UcomDbu(dbu_filename)
         self.valid = self.dbu.get_valid()
         self.output_file_prefix = output_file_prefix
         self.input = None
         self.packets = 0
-        self.message_ids = message_ids if message_ids is not None else []
+        self.message_uids = message_uids if message_uids is not None else []
     
     def __repr__(self):
         return f"UcomToCsv: .dbu = {self.dbu.get_filename()}, valid = {self.valid}"
 
-    def create_output_file(self, filename_prefix, message_id, header):
-        filename = f"{filename_prefix}{message_id:03d}.csv"
+    def create_output_file(self, filename_prefix:str, message_uid:int, header:str):
+        message_version = UcomMessage.get_version_from_uid(message_uid)
+        message_id = UcomMessage.get_id_from_uid(message_uid)
+        if message_version == 0:
+            filename = f"{filename_prefix}{message_id:03d}.csv"
+        else:
+            filename = f"{filename_prefix}{message_id:03d}v{message_version}.csv"
+        
         try:
-            self.output_files[message_id] = open(filename, "w")
+            self.output_files[message_uid] = open(filename, "w")
+            # Write header
+            self.output_files[message_uid].write(f"{self.dbu.get_message(message_uid).get_header()}\n")
             return True
         except:
             pass
         return False
 
     def create_output_files(self):
-        for id in self.dbu.get_message_ids():
-            if not self.create_output_file(self.output_file_prefix, id, self.dbu.get_message(id).get_header()):
+        for uid in self.dbu.get_message_uids():
+            if not self.create_output_file(self.output_file_prefix, uid, self.dbu.get_message(uid).get_header()):
                 return False
         return True
 
@@ -78,9 +88,11 @@ class UcomToCsv:
         except:
             return -1
         
-    def write_packet_csv(self, packet):
-        if packet.get_message_id() in self.output_files:
-            self.write_csv(self.output_files[packet.get_message_id()], packet.get_csv())
+    def write_packet_csv(self, packet) -> bool:
+        if packet.get_message_uid() in self.output_files:
+            self.write_csv(self.output_files[packet.get_message_uid()], packet.get_csv(self.dbu))
+            return True
+        return False
     
     def write_csv(self, file, csv):
         file.write(f"{csv}\n")
@@ -122,10 +134,10 @@ class UcomToCsv:
                     # Found a candidate; try to decode the full packet
                     d = UcomData(nibble, length, self.dbu)
                     if d.get_valid():
-                        # Packet is valid, write it to file (if in list of required message IDs)
-                        if len(self.message_ids) == 0 or d.get_message_id() in self.message_ids:
-                            self.write_packet_csv(d)
-                            self.packets = self.packets + 1
+                        # Packet is valid, write it to file (if in list of required message UIDs)
+                        if len(self.message_uids) == 0 or d.get_message_uid() in self.message_ids:
+                            if self.write_packet_csv(d):
+                                self.packets = self.packets + 1
                         # Adjust the position to start searching for the next packet
                         start = start + length
                         left = left - length                
@@ -165,16 +177,18 @@ class UcomToCsv:
             return False
         timer = Interval(duration)
         timer.start()
+        old_value = None
+        values = {}
         while self.packets < max_packets or (timer.active() and not timer.is_elapsed()):
             data = udp.read()
             if data is not None:
                 d = UcomData(data, len(data), self.dbu)
                 if d.get_valid():
-                    # Packet is valid, write it to file (if in list of required message IDs)
-                    if len(self.message_ids) == 0 or d.get_message_id() in self.message_ids:
-                        self.write_packet_csv(d)
-                        self.packets = self.packets + 1
-
+                    # Packet is valid, write it to file (if in list of required message UIDs)
+                    if len(self.message_uids) == 0 or d.get_message_uid() in self.message_uids:
+                        if self.write_packet_csv(d):
+                            self.packets = self.packets + 1
+                   
         if timer.is_elapsed() and (max_packets == 0 or self.packets < max_packets):
             print("Maximum capture duration reached") 
 
@@ -197,11 +211,26 @@ class Arguments:
         except:
             sys.exit()
 
+def parse_message_uids(message_uids: str) -> tuple[bool, list[int]]:
+    uids = []
+    for uid_str in message_uids.split():
+        success, uid = UcomMessage.uid_from_string(uid_str)
+        if success:
+            uids.append(uid)
+        else:
+            print(f"Error parsing message ID: {uid_str}")
+            return False, []
+    return True, uids
+
 if __name__ == "__main__":
     args = Arguments().args
-    message_ids = [int(x) for x in args.message_ids.split()] if args.message_ids is not None else []
+    message_uids = parse_message_uids(args.message_ids)  if args.message_ids is not None else []
 
-    app = UcomToCsv(args.dbu_file, message_ids=message_ids, output_file_prefix=args.output_file)
+    app = UcomToCsv(args.dbu_file, message_uids=message_uids, output_file_prefix=args.output_file)
+    if not app.valid:
+        print("Invalid DBU, exiting")
+        exit()
+
     print(app)
     if args.input_file is None:
         app.process_udp(filter_ip=args.source_ip, max_packets=args.max_packets, duration=args.duration)
