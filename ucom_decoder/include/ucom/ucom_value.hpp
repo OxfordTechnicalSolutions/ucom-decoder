@@ -10,7 +10,7 @@
 namespace UCOM
 {
 
-    /// Enumeration of possible data types, currently supported data types for UCOM
+    /// Enumeration of currently supported data types for UCOM
     enum class DATA_TYPE
     {
         STR,    ///< String
@@ -51,6 +51,7 @@ std::string enumToString(TimeSources timeSource);
 
 class valueVariant
 {
+public:
     union Value
     {
         uint8_t  u8;
@@ -69,10 +70,13 @@ class valueVariant
 
         Value() :
             s32(0)
-        {};
+        {
+        };
         ~Value() {}
-
-    } value;
+    };
+    
+private:
+    Value value;
 
     UCOM::DATA_TYPE value_type; // Data type
 public:
@@ -81,6 +85,15 @@ public:
     valueVariant() : value_type(UCOM::DATA_TYPE::S32) {};
 
     valueVariant(const valueVariant& v);
+
+    ~valueVariant() {
+        if (value_type == UCOM::DATA_TYPE::STR)
+            value.str.~basic_string();
+    }
+
+    bool operator== (const valueVariant& v) const;
+
+    bool operator!= (const valueVariant& v) const { return !(this->operator==(v)); }
     
     /**
     * @brief Sets the variant to the value of another valueVariant instance.
