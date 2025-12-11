@@ -79,8 +79,6 @@ public:
 
     bool get_valid() { return _valid; }
 
-    bool get(std::string signal_id, UcomDbu& dbu, double &value);
-
     bool get(std::string signal_id, UcomDbu& dbu, valueVariant& value);
 
     uint8_t get_error_no() { return _error_no; }
