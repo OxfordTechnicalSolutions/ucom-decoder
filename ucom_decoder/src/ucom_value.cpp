@@ -93,6 +93,42 @@ valueVariant::valueVariant(const valueVariant& v)
     set_value(v);
 }
 
+bool valueVariant::operator== (const valueVariant& v) const
+{
+    if (v.value_type != value_type)
+        return false;
+
+    switch (value_type)
+    {
+    case UCOM::DATA_TYPE::STR:
+        return value.str == v.value.str;
+    case UCOM::DATA_TYPE::U8:
+        return value.u8 == v.value.u8;
+    case UCOM::DATA_TYPE::S8:
+        return value.s8 == v.value.s8;
+    case UCOM::DATA_TYPE::U16:
+        return value.u16 == v.value.u16;
+    case UCOM::DATA_TYPE::S16:
+        return value.s16 == v.value.s16;
+    case UCOM::DATA_TYPE::U32:
+        return value.u32 == v.value.u32;
+    case UCOM::DATA_TYPE::S32:
+        return value.s32 == v.value.s32;
+    case UCOM::DATA_TYPE::U64:
+        return value.u64 == v.value.u64;
+    case UCOM::DATA_TYPE::S64:
+        return value.s64 == v.value.s64;
+    case UCOM::DATA_TYPE::F32:
+        return value.f32 == v.value.f32;
+    case UCOM::DATA_TYPE::F64:
+        return value.f64 == v.value.f64;
+    case UCOM::DATA_TYPE::EnS64:
+        return (value.ens64.enum_member == v.value.ens64.enum_member) && (value.ens64.value == v.value.ens64.value);
+    default:
+        return false;
+    }
+}
+
 /**
  * @brief Sets the value of this valueVariant instance from another valueVariant.
  * If the type is unrecognized, the value is set to NaN.
@@ -358,10 +394,12 @@ std::string valueVariant::to_string() const
         ss << value.s64;
         break;
     case UCOM::DATA_TYPE::F32:
-        ss << value.f32;
+        ss.precision(9);
+        ss << std::scientific << value.f32;
         break;
     case UCOM::DATA_TYPE::F64:
-        ss << value.f64;
+        ss.precision(15);
+        ss << std::scientific << value.f64;
         break;
     case UCOM::DATA_TYPE::STR:
         ss << value.str;

@@ -290,24 +290,6 @@ std::string UcomData::to_string()
     return ss.str();
 }
 
-//! @brief Gets the value of the signal as a double (if appropriate type)
-//! @param signal_id 
-//! @return True, if the signal exists, false otherwise
-bool UcomData::get(std::string signal_id, UcomDbu &dbu, double &value)
-{
-    UcomMessage msg = dbu.get_message(get_message_id());
-    int index = msg.get_signal_index(signal_id);
-
-    if (index > -1)
-    {
-        if (_values[index].get_type() == UCOM::DATA_TYPE::F64)
-            value = _values[index].get_value().f64;
-        return true;
-    }
-
-    return false;
-}
-
 //! @brief Gets the value of the signal as a valueVariant
 //! @param signal_id 
 //! @return True, if the signal exists, false otherwise

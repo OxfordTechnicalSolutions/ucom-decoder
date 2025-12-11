@@ -95,8 +95,12 @@ UcomDbu::UcomDbu(std::string filename) :
         }
         catch (exception &e) {
             // Any failure will render invalid
-            std::cout << e.what() << std::endl;
+            std::cerr << e.what() << std::endl;
         }
+    }
+    else
+    {
+        std::cerr << "Failed to open .dbu file: " << filename << std::endl;
     }
 }
 
