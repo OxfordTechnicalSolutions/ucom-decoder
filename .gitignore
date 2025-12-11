@@ -365,3 +365,9 @@ FodyWeavers.xsd
 
 # Ignore virtual environment
 venv/
+/test/test_data
+/test/ucomgen.egg-info
+/ucom_decoder_py/examples/ucom_to_csv/.vscode
+/ucom_decoder_py/tests/.vscode
+/ucom_decoder_py/tests/test_data
+/test/.vscode
