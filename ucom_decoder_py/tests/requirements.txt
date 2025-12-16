@@ -1,0 +1,2 @@
+../../ucom_decoder_py
+../../test
