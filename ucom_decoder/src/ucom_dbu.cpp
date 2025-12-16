@@ -71,7 +71,7 @@ UcomDbu::UcomDbu(std::string filename) :
                 {
                     std::string key = std::to_string(index);
                     if (data[JSON_KEY_POSSIBLETRIGGERTYPES].contains(key))
-                        _triggers.insert(std::make_pair(static_cast<Triggers::Types>(index), data[JSON_KEY_POSSIBLETRIGGERTYPES][key]));
+                        _triggers.insert(std::make_pair(static_cast<UCOM::TRIGGER_TYPES>(index), data[JSON_KEY_POSSIBLETRIGGERTYPES][key]));
                 }
             }
 
@@ -258,7 +258,7 @@ std::string UcomDbu::get_value(json json_data, std::string key)
 }
 
 // @brief Gets the trigger name corresponding to the given trigger type
-std::string UcomDbu::get_trigger_name(Triggers::Types type) const
+std::string UcomDbu::get_trigger_name(UCOM::TRIGGER_TYPES type) const
 {
     if (_triggers.contains(type))
         return _triggers.at(type);

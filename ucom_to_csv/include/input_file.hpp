@@ -17,6 +17,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <cstdint>
 
 class InputFile {
 private:

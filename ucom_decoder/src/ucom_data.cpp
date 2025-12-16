@@ -16,7 +16,7 @@
 
 #include "ucom/ucom_data.hpp"
 #include "ucom/ucom_value.hpp"
-#include "ucom/triggers.hpp"
+#include "ucom/ucom_triggers.hpp"
 
 
 // @brief Encapsulates and extracts the data from a UCOM packet
@@ -46,8 +46,8 @@ UcomData::UcomData(const uint8_t* data, int size, UcomDbu& dbu) :
     // timing info and the trigger info 
     // Bits 0 - 3 are the time, bits 4 - 7 is the trigger type
     _time_frame = data[5] & 0x0F;       
-    _trigger_type = static_cast<Triggers::Types>((data[5] & 0xF0) >> 4);
-    _trigger = _trigger_type != Triggers::Types::NO_TRIGGER;
+    _trigger_type = static_cast<UCOM::TRIGGER_TYPES>((data[5] & 0xF0) >> 4);
+    _trigger = _trigger_type != UCOM::TRIGGER_TYPES::NO_TRIGGER;
     _arbitrary_time = get_data<int64_t>(data, 6);
     _payload_length = get_data<uint16_t>(data, 14);
 

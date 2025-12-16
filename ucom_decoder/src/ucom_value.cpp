@@ -1,7 +1,7 @@
-#pragma once
 #include "ucom/ucom_value.hpp"
 #include <memory>
 #include <string>
+#include <cmath>
 
 UcomValue::UcomValue(std::shared_ptr<void> ptr_to_value, std::string type) :
 	_value_ptr{ ptr_to_value },

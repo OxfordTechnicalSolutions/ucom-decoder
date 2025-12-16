@@ -59,6 +59,9 @@ class UcomMessage : public json {
     //! \brief Gets the message ID
     int get_id() const { return _message_id; }
 
+    //! \brief Gets the message UID
+    int get_uid() const { return _message_uid; }
+
     //! @brief Gets the enabled status
     //! @return true, if the message is enabled; false otherwise
     bool get_enabled() const { return _enabled; }

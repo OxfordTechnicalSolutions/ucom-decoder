@@ -21,7 +21,7 @@
 #include <list>
 #include "enum/BasicType.hpp"
 #include "ucom_message.hpp"
-#include "ucom/triggers.hpp"
+#include "ucom/ucom_triggers.hpp"
 
 #include "ucom/ucom_value.hpp"
 
@@ -43,7 +43,7 @@ private:
     std::string _dbu_description;
     std::string get_value(json json_data, std::string key);
     std::string _filename;
-    std::map<Triggers::Types, std::string> _triggers;
+    std::map<UCOM::TRIGGER_TYPES, std::string> _triggers;
     std::map<std::string, std::string> _header_timings;
     static const std::string JSON_KEY_DBUSCHEMAVERSION;
     static const std::string JSON_KEY_UCOMVERSION;
@@ -64,7 +64,7 @@ public:
     const std::vector<ucom_signal_ptr_t> &get_signals(uint32_t message_uid);
     static OxTS::Enum::BASIC_TYPE get_data_type(const std::string& data_type);
     static UCOM::DATA_TYPE get_ucom_data_type(const std::string& data_type);
-    std::string get_trigger_name(Triggers::Types type) const;
+    std::string get_trigger_name(UCOM::TRIGGER_TYPES type) const;
     std::string get_header_timing_name(const std::string& timing) const;
 
 };

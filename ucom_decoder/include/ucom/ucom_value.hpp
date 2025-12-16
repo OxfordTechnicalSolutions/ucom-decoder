@@ -297,7 +297,7 @@ public:
     template<typename T>
     std::shared_ptr<T> get()
     {
-        return static_pointer_cast<T>(_value_ptr);
+        return std::static_pointer_cast<T>(_value_ptr);
     }
 
     std::string type()

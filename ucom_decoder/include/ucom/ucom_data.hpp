@@ -18,7 +18,7 @@
 #include "ucom/enum/BasicType.hpp"
 #include "ucom/crc.hpp"
 #include "ucom/ucom_value.hpp"
-#include "ucom/triggers.hpp"
+#include "ucom/ucom_triggers.hpp"
 #define raw_data_ptr_t const uint8_t *
 
 class UcomData {
@@ -31,7 +31,7 @@ private:
     int64_t _gnsst; // Bytes 16-23
     uint32_t _calc_crc; // Bytes 16 + _payload_length 
     bool _trigger; // Set if this message was output as a result of a trigger event
-    Triggers::Types _trigger_type;  // Bits 3 - 7 of byte 5, the trigger type (zero if not a trigger output)
+    UCOM::TRIGGER_TYPES _trigger_type;  // Bits 3 - 7 of byte 5, the trigger type (zero if not a trigger output)
     bool _valid;
     //std::vector<double> _values; // collection for signal values
     std::vector<valueVariant> _values; // collection for signal values
