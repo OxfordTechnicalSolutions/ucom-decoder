@@ -20,6 +20,7 @@
 #include "ucom/ucom_dbu.hpp"
 #include "ucom/ucom_message.hpp"
 #include "ucom/ucom_signal.hpp"
+#include "ucom/ucom_triggers.hpp"
 
 #include <tuple>
 
@@ -67,6 +68,7 @@ PYBIND11_MODULE(ucompy, m) {
         .def("get_valid", &UcomDbu::get_valid)
         .def("get_filename", &UcomDbu::get_filename)
         .def("message_id_exists", &UcomDbu::message_id_exists, "message_id"_a)
+        .def("message_uid_exists", &UcomDbu::message_uid_exists, "message_uid"_a)
         .def("get_messages", &UcomDbu::get_messages)
         .def("get_message_ids", &UcomDbu::get_message_ids)
         .def("get_message_uids", &UcomDbu::get_message_uids)
@@ -77,7 +79,10 @@ PYBIND11_MODULE(ucompy, m) {
             signals.push_back(UcomSignal(*signal));
         return signals;
             }, "message_id"_a)
-        .def_static("get_data_type", &UcomDbu::get_data_type, "data_type"_a);
+        .def_static("get_data_type", &UcomDbu::get_data_type, "data_type"_a)
+        .def_static("get_ucom_data_type", &UcomDbu::get_ucom_data_type, "data_type"_a)
+        .def("get_trigger_name", &UcomDbu::get_trigger_name, "type"_a)
+        .def("get_header_timing_name", &UcomDbu::get_header_timing_name, "timing"_a);
 
     // UcomMessage
     py::class_<UcomMessage>(m, "UcomMessage")
@@ -89,6 +94,7 @@ PYBIND11_MODULE(ucompy, m) {
             }))
         .def("is_valid", &UcomMessage::is_valid)
         .def("get_id", &UcomMessage::get_id)
+        .def("get_uid", &UcomMessage::get_uid)
         .def("get_header", &UcomMessage::get_header)
         .def("get_signal_count", &UcomMessage::get_signal_count)
         .def("get_enabled", &UcomMessage::get_enabled)
@@ -156,7 +162,7 @@ PYBIND11_MODULE(ucompy, m) {
 
     // UCOM::DATA_TYPE
 #define UCOM_DATA_TYPE(X) .value(#X, UCOM::DATA_TYPE::X)
-    py::native_enum<UCOM::DATA_TYPE>(m, "UCOM::DATA_TYPE", "enum.Enum")
+    py::native_enum<UCOM::DATA_TYPE>(m, "UCOM_DATA_TYPE", "enum.Enum")
         UCOM_DATA_TYPE(STR)    ///< String
         UCOM_DATA_TYPE(U8)     ///< Unsigned 8-bit integer
         UCOM_DATA_TYPE(S8)     ///< Signed 8-bit integer
@@ -172,4 +178,21 @@ PYBIND11_MODULE(ucompy, m) {
         UCOM_DATA_TYPE(INVALID) ///< Invalid or unknown type
         .export_values()
         .finalize();
+
+    // UCOM::Triggers::Types
+#define UCOM_TRIGGERS(X) .value(#X, UCOM::TRIGGER_TYPES::X)
+    py::native_enum<UCOM::TRIGGER_TYPES>(m, "UCOM_TRIGGERS", "enum.Enum")
+        UCOM_TRIGGERS(NO_TRIGGER)
+        UCOM_TRIGGERS(IN_1_DOWN)
+        UCOM_TRIGGERS(IN_1_UP)
+        UCOM_TRIGGERS(OUT_1)
+        UCOM_TRIGGERS(IN_2_DOWN)
+        UCOM_TRIGGERS(IN_2_UP)
+        UCOM_TRIGGERS(UNKNOWN_1)
+        UCOM_TRIGGERS(UNKNOWN_2)
+        UCOM_TRIGGERS(OUT_2)
+        .export_values()
+        .finalize();
+
 }
+
