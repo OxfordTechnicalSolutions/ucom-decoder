@@ -97,6 +97,9 @@ To use this data with the UCOM to CSV tool:
 ## Python
 There is a Python version of the UCOM decoder SDK.
 
+### Requirements
+The code has been tested with Python 3.12. It may work with earlier versions, but if any issues with package dependencies are encountered then it is recommended to upgrade to at least Python 3.12.
+
 ### Installation
 1. Create a working folder and clone the UCOM_decoder repository:
 
