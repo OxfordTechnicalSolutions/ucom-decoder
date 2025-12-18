@@ -97,6 +97,9 @@ To use this data with the UCOM to CSV tool:
 ## Python
 There is a Python version of the UCOM decoder SDK.
 
+### Requirements
+The code has been tested with Python 3.12. It may work with earlier versions, but if any issues with package dependencies are encountered then it is recommended to upgrade to at least Python 3.12.
+
 ### Installation
 1. Create a working folder and clone the UCOM_decoder repository:
 
@@ -147,6 +150,37 @@ ucom_decoder\ucom_decoder_py\examples\ucom_to_csv\test.bat
 5. Uninstall:
 ```
 python -m pip uninstall ucompy
+```
+
+# Tests
+
+## All tests
+
+To run all of the automated tests, first build ucom_to_csv and then from the **ucom_decoder/test/** folder, run:
+
+Windows
+```
+.\run_tests.bat
+```
+Linux
+```
+./run_tests.sh
+```
+
+The automated unit tests run on the Python bindings to simulataneously test the bindings and the underlying (bound) C++ code.
+
+There is also a test of the overall (C++) decoder functionality using automatically-generated UCOM data. A range of known values are encoded into UCOM packets. These packets are then decoded (using ucom_to_csv) and the extracted values are compared with the original values.
+
+## Unit tests
+The Python unit tests can be run on their own by changing to the **ucom_decoder_py/tests** folder and running:
+
+Windows
+```
+.\run_tests.bat
+```
+Linux
+```
+./run_tests.sh
 ```
 
 # Decoding UCOM 

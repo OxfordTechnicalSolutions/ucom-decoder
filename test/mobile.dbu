@@ -1,0 +1,286 @@
+{
+    "$schema": "DBU.schema.json",
+    "UCOMVersion": 1,
+    "DBUID": "2025-10-02",
+    "DBUName": "Custom Test DBU",
+    "DBUDescription": "Custom DBU",
+    "PossibleTriggerTypes": {
+        "0": "No Trigger",
+        "1": "In 1 Down",
+        "2": "In 1 Up",
+        "3": "Out 1",
+        "4": "In 2 Down",
+        "5": "In 2 Up",
+        "6": "Unknown 1",
+        "7": "Unknown 2",
+        "8": "Out 2"
+    },
+    "PossibleHeaderTiming": {
+        "0": "SDN",
+        "1": "GNSS"
+    },
+    "Messages": [
+        {
+            "MessageSchemaVersion": 2,
+            "MessageID": 64512,
+            "MessageVersion": 0,
+            "MessageName": "Custom Test",
+            "MessageDescription": "Custom message for testing some signals",
+            "MessageTiming": "SDN",
+            "MessageEnabled": true,
+            "OutputType": "FrequencyBased",
+            "FrequencyOutputType": "IMU",
+            "OutputFrequencyDecimation": 1,
+            "SignalsInMessage": [
+                {
+                    "DataType": "U32",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1,
+                    "SignalID": "UCOMVersion",
+                    "SourceID": "META",
+                    "Unit": "s"
+                },
+                {
+                    "DataType": "STR",
+                    "Offset": 0,
+                    "ScaleFactor": 1,
+                    "SignalID": "DevID",
+                    "SourceID": "CONFIG",
+                    "Unit": "-"
+                },
+                {
+                    "DataType": "F64",
+                    "Offset": 0,
+                    "ScaleFactor": 1,
+                    "SignalID": "Wd",
+                    "SourceID": "BNS_SDN",
+                    "Unit": "deg/s"
+                }
+            ]
+        },
+        {
+            "MessageSchemaVersion": 2,
+            "MessageID": 64512,
+            "MessageVersion": 1,
+            "MessageName": "Custom Test",
+            "MessageDescription": "Custom message for testing some signals",
+            "MessageTiming": "SDN",
+            "MessageEnabled": true,
+            "OutputType": "FrequencyBased",
+            "FrequencyOutputType": "IMU",
+            "OutputFrequencyDecimation": 1,
+            "SignalsInMessage": [
+                {
+                    "DataType": "U32",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1,
+                    "SignalID": "UCOMVersion",
+                    "SourceID": "META",
+                    "Unit": "s"
+                },
+                {
+                    "DataType": "STR",
+                    "Offset": 0,
+                    "ScaleFactor": 1,
+                    "SignalID": "DevID",
+                    "SourceID": "CONFIG",
+                    "Unit": "-"
+                },
+                {
+                    "DataType": "F64",
+                    "Offset": 0,
+                    "ScaleFactor": 1,
+                    "SignalID": "Wd",
+                    "SourceID": "BNS_SDN",
+                    "Unit": "deg/s"
+                }
+            ]
+        },
+		{
+            "MessageSchemaVersion": 2,
+            "MessageID": 64520,
+            "MessageVersion": 0,
+            "MessageName": "Custom Test",
+            "MessageDescription": "Custom message for testing some signals",
+            "MessageTiming": "SDN",
+            "MessageEnabled": false,
+            "OutputType": "FrequencyBased",
+            "FrequencyOutputType": "IMU",
+            "OutputFrequencyDecimation": 1,
+            "SignalsInMessage": [
+                {
+                    "DataType": "U32",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1,
+                    "SignalID": "UCOMVersion",
+                    "SourceID": "META",
+                    "Unit": "s"
+                },
+                {
+                    "DataType": "STR",
+                    "Offset": 0,
+                    "ScaleFactor": 1,
+                    "SignalID": "DevID",
+                    "SourceID": "CONFIG",
+                    "Unit": "-"
+                },
+                {
+                    "DataType": "F64",
+                    "Offset": 0,
+                    "ScaleFactor": 1,
+                    "SignalID": "Wd",
+                    "SourceID": "BNS_SDN",
+                    "Unit": "deg/s"
+                }
+            ]
+        },
+
+        {
+            "IntroducedInVersion": 0,
+            "MessageDescription": "Heartbeat message with meta information about the INS",
+            "MessageEnabled": true,
+            "MessageID": 0,
+            "MessageName": "Heartbeat",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputType": "OnTrigger",
+            "TriggerType": [
+                "Out1",
+                "In1_Up",
+                "In1_Down"
+            ],
+            "SignalsInMessage": [
+                {
+                    "SignalID": "SerialNumber",
+                    "SourceID": "META",
+                    "DataType": "U32",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-"
+                }
+            ]
+        },
+        {
+            "IntroducedInVersion": 1,
+            "MessageDescription": "The time offsets from the SDN time in the header to the time in the message payload described by the enum value.",
+            "MessageEnabled": true,
+            "MessageID": 50,
+            "MessageName": "The SDN time offsets",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputType": "OnChange",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "SDNOFF",
+                    "SourceID": "TIME",
+                    "DataType": "EnS64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1000000000.0,
+                    "Unit": "s",
+                    "EnumValues": {
+                        "0": "Time Source None",
+                        "1": "Time Source Gnss",
+                        "2": "Time Source Ptp",
+                        "3": "Time Source Ext Gnss",
+                        "4": "Time Source User",
+                        "5": "Time Source Gad",
+                        "6": "Time Source Unknown"
+                    }
+                }
+            ]
+        },
+        {
+            "IntroducedInVersion": 1,
+            "MessageDescription": "The time offsets from the SDN time in the header to the time in the message payload described by the enum value. V2",
+            "MessageEnabled": false,
+            "MessageID": 50,
+            "MessageName": "The SDN time offsets v2",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputType": "OnChange",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "SDNOFF",
+                    "SourceID": "TIME",
+                    "DataType": "EnS64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1000000000.0,
+                    "Unit": "s",
+                    "EnumValues": {
+                        "0": "Time Source None",
+                        "1": "Time Source Gnss",
+                        "2": "Time Source Ptp",
+                        "3": "Time Source Ext Gnss",
+                        "4": "Time Source User",
+                        "5": "Time Source Gad",
+                        "6": "Time Source Unknown"
+                    }
+                }
+            ]
+        },
+        {
+            "IntroducedInVersion": 1,
+            "MessageDescription": "The time offsets from the SDN time in the header to the time in the message payload described by the enum value.",
+            "MessageEnabled": false,
+            "MessageID": 50,
+            "MessageName": "The SDN time offsets v3",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 2,
+            "OutputType": "OnChange",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "SDNOFF",
+                    "SourceID": "TIME",
+                    "DataType": "EnS64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1000000000.0,
+                    "Unit": "s",
+                    "EnumValues": {
+                        "0": "Time Source None",
+                        "1": "Time Source Gnss",
+                        "2": "Time Source Ptp",
+                        "3": "Time Source Ext Gnss",
+                        "4": "Time Source User",
+                        "5": "Time Source Gad",
+                        "6": "Time Source Unknown"
+                    }
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 0,
+            "MessageDescription": "Invalid mobile DBU packet flag, containing the error messages encoded and separated by commas",
+            "MessageEnabled": false,
+            "MessageID": 64511,
+            "MessageName": "Invalid mobile DBU",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputFrequencyDecimation": 100,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "ErrNo",
+                    "SourceID": "META",
+                    "DataType": "U8",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-"
+                },
+                {
+                    "SignalID": "ErrMsg",
+                    "SourceID": "META",
+                    "DataType": "STR",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-"
+                }
+            ]
+        }
+    ]
+}

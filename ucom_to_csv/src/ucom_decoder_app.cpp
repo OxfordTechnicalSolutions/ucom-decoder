@@ -148,23 +148,22 @@ int UcomDecoderApp::process_args()
             std::istringstream is(ids);
             while (std::getline(is, id, ' '))
             {
-                try {
-                    int value = std::stoi(id);
-                    _message_ids.push_back(value);
-                }
-                catch (...) {
-                    // Failed to convert string to int
+                uint32_t uid;
+                if (UcomMessage::uid_from_string(id, uid))
+                    _message_uids.push_back(uid);
+                else
+                {
                     std::cerr << std::endl << "Error parsing message ID: " << id << std::endl;
                     return -1;
                 }
             }
             // Add error message ID
-            _message_ids.push_back(UcomData::ERROR_MSG_ID);
+            _message_uids.push_back(UcomData::ERROR_MSG_ID);
         }
         else
         {
-            // Use all message ids
-            _message_ids = _dbu.get_message_ids();
+            // Use all message ids (uids)
+            _message_uids = _dbu.get_message_uids();
         }
 
         // Output file prefix
@@ -191,8 +190,10 @@ int UcomDecoderApp::process_args()
 
 
         std::cout << "Processing message IDs:";
-        for (auto id : _message_ids)
-            std::cout << " " << id;
+        for (auto uid : _message_uids)
+        {
+            std::cout << " " << UcomMessage::uid_to_string(uid);
+        }
         std::cout << std::endl;
     }
     else
@@ -244,9 +245,9 @@ int UcomDecoderApp::process_file()
                     consumed += length;
                     _packet_count++;
                     // Skip unwanted message IDs 
-                    uint16_t id = d.get_message_id();
-                    if (std::find(_message_ids.begin(), _message_ids.end(), id) != _message_ids.end())
-                        write_csv(_output_files[id], d.get_csv());
+                    uint32_t uid = d.get_message_uid();
+                    if (std::find(_message_uids.begin(), _message_uids.end(), uid) != _message_uids.end())
+                        write_csv(_output_files[uid], d.get_csv(_dbu));
                 }
                 else
                 {
@@ -358,15 +359,15 @@ int UcomDecoderApp::process_udp()
             }
 
             // Skip unwanted message IDs 
-            uint16_t id = data.get_message_id();
-            if (std::find(_message_ids.begin(), _message_ids.end(), id) == _message_ids.end())
+            uint32_t uid = data.get_message_uid();
+            if (std::find(_message_uids.begin(), _message_uids.end(), uid) == _message_uids.end())
             {
                 skip = true;
                 _skipped_packets++;
-                if (_skipped_ids.find(id) == _skipped_ids.end())
+                if (_skipped_ids.find(uid) == _skipped_ids.end())
                 {
-                    std::cout << "Skipping messages with ID: " << id << std::endl;
-                    _skipped_ids.insert(id);
+                    std::cout << "Skipping messages with ID: " << UcomMessage::uid_to_string(uid) << std::endl;
+                    _skipped_ids.insert(uid);
                 }
             }
 
@@ -374,13 +375,13 @@ int UcomDecoderApp::process_udp()
             if (data.get_error_no() != 0)
             {
                 std::cerr << "Error number: " << std::to_string(data.get_error_no()) << ", Error messages : " << data.get_error_messages() << std::endl;
-                write_csv(_output_files[data.get_message_id()], data.get_csv());
+                write_csv(_output_files[data.get_message_uid()], data.get_csv(_dbu));
             }
             else if (!skip && data.get_valid()) {
                 // Write the message data to output
-                if (_dbu.message_id_exists(data.get_message_id()))
+                if (_dbu.message_uid_exists(data.get_message_uid()))
                 {
-                    write_csv(_output_files[data.get_message_id()], data.get_csv());
+                    write_csv(_output_files[data.get_message_uid()], data.get_csv(_dbu));
                     _packet_count++;
                 }
             }
@@ -397,10 +398,7 @@ int UcomDecoderApp::process_udp()
 
         loop_count++;
         if (loop_count % 50 == 0)
-            std::cout << "Bytes processed: " << _total_bytes << "\r";
-        loop_count++;
-        if (loop_count % 50 == 0)
-            std::cout << "Bytes processed: " << _total_bytes << "\r";
+            std::cout << "Bytes processed: " << _total_bytes << " Valid packets: " << _packet_count << "\r";
     }
 
     std::cout << '\n';
@@ -452,11 +450,12 @@ bool UcomDecoderApp::create_output_files()
         return false;
 
     std::string path = dir_name.append(PATH_SEPARATOR).append(_output_file_prefix);
-    for (auto id : _message_ids)
+    for (auto uid : _message_uids)
     {
-        _output_files.insert({ id, std::fstream() });
-        if (!create_output_file(path, id, _dbu.get_message(id).get_header(), _output_files[id]))
-        if (!create_output_file(path, id, _dbu.get_message(id).get_header(), _output_files[id]))
+        _output_files.insert({ uid, std::fstream() });
+        uint16_t message_id = UcomMessage::get_id_from_uid(uid);
+        uint16_t message_version = UcomMessage::get_version_from_uid(uid);
+        if (!create_output_file(path, message_id, message_version, _dbu.get_message(uid).get_header(), _output_files[uid]))
             return false;
     }
     return true;
@@ -465,7 +464,7 @@ bool UcomDecoderApp::create_output_files()
 // @brief Closes the output files
 void UcomDecoderApp::close_output_files()
 {
-    for (std::map<int, std::fstream>::iterator it = _output_files.begin(); it != _output_files.end(); it++)
+    for (std::map<uint32_t, std::fstream>::iterator it = _output_files.begin(); it != _output_files.end(); it++)
     {
         if (it->second.is_open())
             it->second.close();
@@ -473,10 +472,13 @@ void UcomDecoderApp::close_output_files()
 }
 
 // @brief Creates an output file
-bool UcomDecoderApp::create_output_file(const std::string& filename, int message_id, const std::string &header, std::fstream &output_stream)
+bool UcomDecoderApp::create_output_file(const std::string& filename, uint16_t message_id, uint16_t message_version, const std::string &header, std::fstream &output_stream)
 {
     std::stringstream ssfilename;
-    ssfilename << filename << std::setfill('0') << std::setw(3) << message_id << ".csv";
+    if (message_version == 0)
+        ssfilename << filename << std::setfill('0') << std::setw(3) << message_id << ".csv";
+    else
+        ssfilename << filename << std::setfill('0') << std::setw(3) << message_id << "v" << message_version << ".csv";
     std::cout << "Creating output file: " << ssfilename.str() << std::endl;
     output_stream.open(ssfilename.str(), std::ios_base::trunc | std::ios_base::out);
     if (!output_stream.is_open())
@@ -519,6 +521,4 @@ void UcomDecoderApp::display_statistics()
     if (!_process_file)
         std::cout << "Filtered packets: " << _filtered_packets << NEWLINE;
     std::cout << "Invalid packets: " << _invalid_packets << std::endl;
-    
-
 }

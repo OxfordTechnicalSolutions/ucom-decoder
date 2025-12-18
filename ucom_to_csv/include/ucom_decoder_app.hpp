@@ -46,7 +46,7 @@ private:
     std::string _filter_ip;
 
     // Get data only from these message IDs
-    std::list<uint16_t> _message_ids;
+    std::list<uint32_t> _message_uids;
 
     // Process a file rather than UDP stream (default)
     // -f <filename>
@@ -68,7 +68,7 @@ private:
 
     UcomDbu _dbu;
 
-    std::map<int, std::fstream> _output_files;
+    std::map<uint32_t, std::fstream> _output_files;
 
     //! @brief Statistics
     int _skipped_packets = 0;
@@ -81,7 +81,7 @@ private:
     bool create_output_files();
     bool create_output_dir(std::string &dir_name);
     void close_output_files();
-    bool create_output_file(const std::string& filename, int message_id, const std::string& header, std::fstream& output_stream);
+    bool create_output_file(const std::string& filename, uint16_t message_id, uint16_t message_version, const std::string& header, std::fstream& output_stream);
     void write_csv(std::fstream& output_stream, const std::string& csv);
     int process_args();
     void print_help_text();

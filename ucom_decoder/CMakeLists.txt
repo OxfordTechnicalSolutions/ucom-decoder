@@ -14,6 +14,7 @@ add_library (ucom_decoder
    "src/ucom_dbu.cpp" 
    "src/crc.cpp" 
    "src/ucom_data.cpp"
+   "src/ucom_value.cpp"
 )
 
 if (UNIX)

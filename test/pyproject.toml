@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ucomgen"
+version = "0.0.1" 
+description = "UCOM testing - data generation"
+
+[tool.setuptools]
+packages = ["ucomgen"]
+
+[tool.setuptools.package-dir]
+ucomgen = "src/ucomgen"
