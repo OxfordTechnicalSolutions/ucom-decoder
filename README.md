@@ -1,3 +1,28 @@
+# UCOM Decoder
+
+> [!IMPORTANT]
+> The materials in this repository are relevant to the ucoming NavSuite 3.15 release (UCOM Version 1).
+
+This repository contains the code to build and install the UCOM Decoder Library, 
+as well as an example tool which can convert UCOM data from UDP stream or file 
+to CSV file.
+
+## Third-Party Libraries
+This project makes use of the following third-party open-source libraries:
+
+- nlohmann/json for JSON parsing
+- pybind11 for C++ / Python bindings
+
+See the relevant sub-folder for their licences.
+
+## Clone the repository
+
+```sh
+git clone --recursive https://github.com/OxfordTechnicalSolutions/ucom-decoder.git
+```
+
+The repository must be cloned recursively as the UCOM decoder uses a sub-module 
+for the JSON parser.
 <!--toc:start-->
 - [UCOM Decoder](#ucom-decoder)
   - [Third-Party Libraries](#third-party-libraries)
@@ -60,32 +85,6 @@
       - [Write your program code](#write-your-program-code)
       - [Configure, build and run](#configure-build-and-run)
 <!--toc:end-->
-
-# UCOM Decoder
-
-> [!IMPORTANT]
-> The materials in this repository are relevant to the ucoming NavSuite 3.15 release (UCOM Version 1).
-
-This repository contains the code to build and install the UCOM Decoder Library, 
-as well as an example tool which can convert UCOM data from UDP stream or file 
-to CSV file.
-
-## Third-Party Libraries
-This project makes use of the following third-party open-source libraries:
-
-- nlohmann/json for JSON parsing
-- pybind11 for C++ / Python bindings
-
-See the relevant sub-folder for their licences.
-
-## Clone the repository
-
-```sh
-git clone --recursive https://github.com/OxfordTechnicalSolutions/ucom-decoder.git
-```
-
-The repository must be cloned recursively as the UCOM decoder uses a sub-module 
-for the JSON parser.
 
 ## Build
 
