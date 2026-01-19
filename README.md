@@ -586,7 +586,7 @@ Represents a UcomSignal. Contains the meta-data required to decode a signal from
 > [!WARNING]
 > The example pictures may not reflect the current state of the messages within
 > oxts.dbu file however the code examples should still work and you should see
-> data reflective of provided DBU file. If you do not, please raise an issue or
+> data reflective of the provided DBU file. If you do not, please raise an issue or
 > see [OXTS support](https://support.oxts.com/hc/en-us).
 
 ### C++
