@@ -182,12 +182,12 @@ python -m venv venv
 ```
 
 [Windows Command Prompt] 
-```sh
+```cmd
 venv\Scripts\activate.bat
 ```
 
 [Windows Powershell]
-```sh
+```powershell
 venv\Scripts\Activate.ps1
 ```
 
@@ -221,7 +221,7 @@ True
 ```
 
 b. Run the ucom_to_csv example:
-```sh
+```powershell
 ucom_decoder\ucom_decoder_py\examples\ucom_to_csv\test.bat
 ```
 5. Uninstall:
@@ -236,7 +236,7 @@ python -m pip uninstall ucompy
 To run all of the automated tests, first build ucom_to_csv and then from the **ucom_decoder/test/** folder, run:
 
 Windows
-```sh
+```powershell
 .\run_tests.bat
 ```
 Linux
@@ -252,7 +252,7 @@ There is also a test of the overall (C++) decoder functionality using automatica
 The Python unit tests can be run on their own by changing to the **ucom_decoder_py/tests** folder and running:
 
 Windows
-```sh
+```powershell
 .\run_tests.bat
 ```
 Linux
@@ -348,14 +348,14 @@ Open a 'Developer Command Prompt for VS'
 
 Navigate to the UCOM_decoder folder and then build 
 
-```sh
+```powershell
 mkdir build && cd build
 cmake ..
 cmake --build . --config Release
 ```
 
 Start capturing UCOM packets from UDP:
-```sh
+```powershell
 cd ..
 mkdir test && cd test
 ..\build\ucom_to_csv\Release\ucom_to_csv.exe -u ..\example_data\dbu\oxts.dbu -i any
