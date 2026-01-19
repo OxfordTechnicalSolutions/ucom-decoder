@@ -2,7 +2,7 @@
     "$schema": "DBU.schema.json",
     "DBUDescription": "The OXTS DBU with all the OXTS defined messages",
     "DBUID": "OXTS_DBU",
-    "DBUName": "OXTS DBU",
+    "DBUName": "2026-01-12",
     "UCOMVersion": 1,
     "PossibleTriggerTypes": {
         "0": "No Trigger",
@@ -44,9 +44,86 @@
             ]
         },
         {
+            "IntroducedInVersion": 1,
+            "MessageDescription": "The time offsets from the SDN time in the header to the time in the message payload described by the enum value.",
+            "MessageEnabled": false,
+            "MessageID": 100,
+            "MessageName": "The SDN time offsets",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputType": "OnChange",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "SDNOFF",
+                    "SourceID": "TIME",
+                    "DataType": "EnS64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1000000000.0,
+                    "Unit": "s",
+                    "EnumValues": {
+                        "0": "Time Source None",
+                        "1": "Time Source Gnss",
+                        "2": "Time Source Ptp",
+                        "3": "Time Source Ext Gnss",
+                        "4": "Time Source User",
+                        "5": "Time Source Gad"
+                    }
+                }
+            ]
+        },
+        {
+            "IntroducedInVersion": 1,
+            "MessageDescription": "The current INS navigation status from the blended navigation system",
+            "MessageEnabled": false,
+            "MessageID": 54,
+            "MessageName": "INS Status",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputType": "FrequencyBased",
+            "FrequencyOutputType": "IMU",
+            "OutputFrequencyDecimation": 1,
+            "SignalsInMessage": [
+                {
+                    "SignalID": "InsNavMode",
+                    "SourceID": "BNS_STS",
+                    "DataType": "U8",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-",
+                    "EnumValues": {
+                        "0": "Navigation Status Invalid",
+                        "1": "Navigation Status RawImu",
+                        "2": "Navigation Status Init",
+                        "3": "Navigation Status Locking",
+                        "4": "Navigation Status Locked",
+                        "5": "Navigation Status Unlocked",
+                        "6": "Navigation Status Expired",
+                        "7": "Navigation Status Blocked",
+                        "8": "Navigation Status Reserved 08",
+                        "9": "Navigation Status Reserved 09",
+                        "10": "Navigation Status Statusonly",
+                        "11": "Navigation Status Extra",
+                        "12": "Navigation Status Locked Survey",
+                        "13": "Navigation Status Reserved 13",
+                        "14": "Navigation Status Reserved 14",
+                        "15": "Navigation Status Reserved 15",
+                        "16": "Navigation Status Reserved 16",
+                        "17": "Navigation Status Reserved 17",
+                        "18": "Navigation Status Reserved 18",
+                        "19": "Navigation Status Reserved 19",
+                        "20": "Navigation Status Triginit",
+                        "21": "Navigation Status Triglocking",
+                        "22": "Navigation Status Triglocked"
+                    }
+                }
+            ]
+        },
+        {
             "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
-            "MessageDescription": "Position, velocity, and attitude in OXTS navigation frame (NED)",
+            "MessageDescription": "Position, velocity, and attitude in OXTS navigation frame (NED) in the configured output datum",
             "MessageEnabled": false,
             "MessageID": 1,
             "MessageName": "OXTS navigation frame PVA",
@@ -64,6 +141,93 @@
                     "ScaleFactor": 1000000000.0,
                     "Unit": "s"
                 },
+                {
+                    "SignalID": "Lat",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Lon",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Alt",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "Vn",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Ve",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Vd",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Heading",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Pitch",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Roll",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Position, velocity, and attitude in OXTS navigation frame (NED) in the configured output datum",
+            "MessageEnabled": false,
+            "MessageID": 1,
+            "MessageName": "OXTS navigation frame PVA",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
                 {
                     "SignalID": "Lat",
                     "SourceID": "BNS_SDN",
@@ -211,16 +375,77 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Velocity and attitude in the ISO 8855 Earth fixed frame (ENU)",
+            "MessageEnabled": false,
+            "MessageID": 2,
+            "MessageName": "ISO-8855 Earth fixed frame VA",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "IsoVnX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "IsoVnY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "IsoVnZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "IsoYaw",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "IsoPitch",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "IsoRoll",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                }
+            ]
+        },
+        {
             "IntroducedInVersion": 0,
-            "MessageDescription": "OXTS navigation frame (NED) position, velocity, and attitude accuracies",
+            "MessageDescription": "OXTS navigation frame (NED) position, velocity, and attitude accuracies - these accuracies are taken from the Kalman filter and do not account for output smoothing",
             "MessageEnabled": false,
             "MessageID": 3,
             "MessageName": "OXTS navigation frame PVA accuracies",
             "MessageSchemaVersion": 2,
             "MessageTiming": "SDN",
             "MessageVersion": 0,
-            "OutputFrequencyDecimation": 1,
-            "OutputType": "FrequencyBased",
+            "OutputType": "OnChange",
             "SignalsInMessage": [
                 {
                     "SignalID": "Nano",
@@ -313,17 +538,108 @@
             ]
         },
         {
-            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "OXTS navigation frame (NED) position, velocity, and attitude accuracies - these accuracies are taken from the Kalman filter and do not account for output smoothing",
+            "MessageEnabled": false,
+            "MessageID": 3,
+            "MessageName": "OXTS navigation frame PVA accuracies",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputType": "OnChange",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "NorthAcc",
+                    "SourceID": "BNS_ACC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "EastAcc",
+                    "SourceID": "BNS_ACC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "AltAcc",
+                    "SourceID": "BNS_ACC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "VnAcc",
+                    "SourceID": "BNS_ACC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "VeAcc",
+                    "SourceID": "BNS_ACC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "VdAcc",
+                    "SourceID": "BNS_ACC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "VuAcc",
+                    "SourceID": "BNS_ACC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "HeadingAcc",
+                    "SourceID": "BNS_ACC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "PitchAcc",
+                    "SourceID": "BNS_ACC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "RollAcc",
+                    "SourceID": "BNS_ACC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                }
+            ]
+        },
+        {
             "IntroducedInVersion": 0,
-            "MessageDescription": "ISO-8855 Earth fixed (ENU) velocity and attitude accuracies",
+            "MessageDescription": "ISO-8855 Earth fixed (ENU) velocity and attitude accuracies - these accuracies are taken from the Kalman filter and do not account for output smoothing",
             "MessageEnabled": false,
             "MessageID": 4,
             "MessageName": "ISO-8855 Earth fixed VA accuracies",
             "MessageSchemaVersion": 2,
             "MessageTiming": "SDN",
             "MessageVersion": 0,
-            "OutputFrequencyDecimation": 1,
-            "OutputType": "FrequencyBased",
+            "OutputType": "OnChange",
             "SignalsInMessage": [
                 {
                     "SignalID": "Nano",
@@ -334,7 +650,7 @@
                     "Unit": "s"
                 },
                 {
-                    "SignalID": "VnXAcc",
+                    "SignalID": "IsoVnXAcc",
                     "SourceID": "BNS_ACCISO",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -342,7 +658,7 @@
                     "Unit": "m/s"
                 },
                 {
-                    "SignalID": "VnYAcc",
+                    "SignalID": "IsoVnYAcc",
                     "SourceID": "BNS_ACCISO",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -350,7 +666,7 @@
                     "Unit": "m/s"
                 },
                 {
-                    "SignalID": "VnZAcc",
+                    "SignalID": "IsoVnZAcc",
                     "SourceID": "BNS_ACCISO",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -358,7 +674,7 @@
                     "Unit": "m/s"
                 },
                 {
-                    "SignalID": "IYawAcc",
+                    "SignalID": "IsoYawAcc",
                     "SourceID": "BNS_ACCISO",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -366,7 +682,7 @@
                     "Unit": "deg"
                 },
                 {
-                    "SignalID": "IPitchAcc",
+                    "SignalID": "IsoPitchAcc",
                     "SourceID": "BNS_ACCISO",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -374,7 +690,7 @@
                     "Unit": "deg"
                 },
                 {
-                    "SignalID": "IRollAcc",
+                    "SignalID": "IsoRollAcc",
                     "SourceID": "BNS_ACCISO",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -384,7 +700,68 @@
             ]
         },
         {
-            "FrequencyOutputType": "GNSS_RAW",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "ISO-8855 Earth fixed (ENU) velocity and attitude accuracies - these accuracies are taken from the Kalman filter and do not account for output smoothing",
+            "MessageEnabled": false,
+            "MessageID": 4,
+            "MessageName": "ISO-8855 Earth fixed VA accuracies",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputType": "OnChange",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "IsoVnXAcc",
+                    "SourceID": "BNS_ACCISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "IsoVnYAcc",
+                    "SourceID": "BNS_ACCISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "IsoVnZAcc",
+                    "SourceID": "BNS_ACCISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "IsoYawAcc",
+                    "SourceID": "BNS_ACCISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "IsoPitchAcc",
+                    "SourceID": "BNS_ACCISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "IsoRollAcc",
+                    "SourceID": "BNS_ACCISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "GNSSRaw",
             "IntroducedInVersion": 0,
             "MessageDescription": "GNSS Status",
             "MessageEnabled": false,
@@ -406,14 +783,14 @@
                 },
                 {
                     "SignalID": "InsNavMode",
-                    "SourceID": "GNSS_STS",
+                    "SourceID": "BNS_STS",
                     "DataType": "U8",
                     "Offset": 0.0,
                     "ScaleFactor": 1.0,
                     "Unit": "-",
                     "EnumValues": {
                         "0": "Navigation Status Invalid",
-                        "1": "Navigation Status Rawimu",
+                        "1": "Navigation Status RawImu",
                         "2": "Navigation Status Init",
                         "3": "Navigation Status Locking",
                         "4": "Navigation Status Locked",
@@ -434,12 +811,11 @@
                         "19": "Navigation Status Reserved 19",
                         "20": "Navigation Status Triginit",
                         "21": "Navigation Status Triglocking",
-                        "22": "Navigation Status Triglocked",
-                        "23": "Navigation Status Unknown"
+                        "22": "Navigation Status Triglocked"
                     }
                 },
                 {
-                    "SignalID": "GpsPosMode",
+                    "SignalID": "GnssPosMode",
                     "SourceID": "GNSS_STS",
                     "DataType": "U8",
                     "Offset": 0.0,
@@ -481,12 +857,11 @@
                         "32": "GNSS Type Gx Sbas",
                         "33": "GNSS Type Ix Sbas",
                         "34": "GNSS Type Genaid",
-                        "35": "GNSS Type Segment",
-                        "36": "GNSS Type Unknown"
+                        "35": "GNSS Type Segment"
                     }
                 },
                 {
-                    "SignalID": "GpsVelMode",
+                    "SignalID": "GnssVelMode",
                     "SourceID": "GNSS_STS",
                     "DataType": "U8",
                     "Offset": 0.0,
@@ -528,12 +903,11 @@
                         "32": "GNSS Type Gx Sbas",
                         "33": "GNSS Type Ix Sbas",
                         "34": "GNSS Type Genaid",
-                        "35": "GNSS Type Segment",
-                        "36": "GNSS Type Unknown"
+                        "35": "GNSS Type Segment"
                     }
                 },
                 {
-                    "SignalID": "GpsAttMode",
+                    "SignalID": "GnssAttMode",
                     "SourceID": "GNSS_STS",
                     "DataType": "U8",
                     "Offset": 0.0,
@@ -575,12 +949,11 @@
                         "32": "GNSS Type Gx Sbas",
                         "33": "GNSS Type Ix Sbas",
                         "34": "GNSS Type Genaid",
-                        "35": "GNSS Type Segment",
-                        "36": "GNSS Type Unknown"
+                        "35": "GNSS Type Segment"
                     }
                 },
                 {
-                    "SignalID": "GpsDiffAge",
+                    "SignalID": "GnssDiffAge",
                     "SourceID": "GNSS_STS",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -604,7 +977,7 @@
                     "Unit": "-"
                 },
                 {
-                    "SignalID": "GpsNumObs",
+                    "SignalID": "GnssPosNumSats",
                     "SourceID": "GNSS_STS",
                     "DataType": "U8",
                     "Offset": 0.0,
@@ -620,7 +993,208 @@
                     "Unit": "-"
                 },
                 {
-                    "SignalID": "GpsAttNumObs",
+                    "SignalID": "GnssAttNumSats",
+                    "SourceID": "GNSS_STS",
+                    "DataType": "U8",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "GNSSRaw",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "GNSS Status",
+            "MessageEnabled": false,
+            "MessageID": 5,
+            "MessageName": "GNSS Status",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "GnssPosMode",
+                    "SourceID": "GNSS_STS",
+                    "DataType": "U8",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-",
+                    "EnumValues": {
+                        "0": "GNSS Type None",
+                        "1": "GNSS Type Search",
+                        "2": "GNSS Type Doppler",
+                        "3": "GNSS Type Sps",
+                        "4": "GNSS Type Diff",
+                        "5": "GNSS Type Float",
+                        "6": "GNSS Type Integer",
+                        "7": "GNSS Type Waas",
+                        "8": "GNSS Type Omnistar",
+                        "9": "GNSS Type Omnistarhp",
+                        "10": "GNSS Type No data",
+                        "11": "GNSS Type Blanked",
+                        "12": "GNSS Type Pp Doppler",
+                        "13": "GNSS Type Pp Sps",
+                        "14": "GNSS Type Pp Diff",
+                        "15": "GNSS Type Pp Float",
+                        "16": "GNSS Type Pp Integer",
+                        "17": "GNSS Type Omnistarxp",
+                        "18": "GNSS Type Cdgps",
+                        "19": "GNSS Type Not Known",
+                        "20": "GNSS Type Gx Doppler",
+                        "21": "GNSS Type Gx Sps",
+                        "22": "GNSS Type Gx Diff",
+                        "23": "GNSS Type Gx Float",
+                        "24": "GNSS Type Gx Integer",
+                        "25": "GNSS Type Ix Doppler",
+                        "26": "GNSS Type Ix Sps",
+                        "27": "GNSS Type Ix Diff",
+                        "28": "GNSS Type Ix Float",
+                        "29": "GNSS Type Ix Integer",
+                        "30": "GNSS Type Ppp Converging",
+                        "31": "GNSS Type Ppp",
+                        "32": "GNSS Type Gx Sbas",
+                        "33": "GNSS Type Ix Sbas",
+                        "34": "GNSS Type Genaid",
+                        "35": "GNSS Type Segment"
+                    }
+                },
+                {
+                    "SignalID": "GnssVelMode",
+                    "SourceID": "GNSS_STS",
+                    "DataType": "U8",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-",
+                    "EnumValues": {
+                        "0": "GNSS Type None",
+                        "1": "GNSS Type Search",
+                        "2": "GNSS Type Doppler",
+                        "3": "GNSS Type Sps",
+                        "4": "GNSS Type Diff",
+                        "5": "GNSS Type Float",
+                        "6": "GNSS Type Integer",
+                        "7": "GNSS Type Waas",
+                        "8": "GNSS Type Omnistar",
+                        "9": "GNSS Type Omnistarhp",
+                        "10": "GNSS Type No data",
+                        "11": "GNSS Type Blanked",
+                        "12": "GNSS Type Pp Doppler",
+                        "13": "GNSS Type Pp Sps",
+                        "14": "GNSS Type Pp Diff",
+                        "15": "GNSS Type Pp Float",
+                        "16": "GNSS Type Pp Integer",
+                        "17": "GNSS Type Omnistarxp",
+                        "18": "GNSS Type Cdgps",
+                        "19": "GNSS Type Not Known",
+                        "20": "GNSS Type Gx Doppler",
+                        "21": "GNSS Type Gx Sps",
+                        "22": "GNSS Type Gx Diff",
+                        "23": "GNSS Type Gx Float",
+                        "24": "GNSS Type Gx Integer",
+                        "25": "GNSS Type Ix Doppler",
+                        "26": "GNSS Type Ix Sps",
+                        "27": "GNSS Type Ix Diff",
+                        "28": "GNSS Type Ix Float",
+                        "29": "GNSS Type Ix Integer",
+                        "30": "GNSS Type Ppp Converging",
+                        "31": "GNSS Type Ppp",
+                        "32": "GNSS Type Gx Sbas",
+                        "33": "GNSS Type Ix Sbas",
+                        "34": "GNSS Type Genaid",
+                        "35": "GNSS Type Segment"
+                    }
+                },
+                {
+                    "SignalID": "GnssAttMode",
+                    "SourceID": "GNSS_STS",
+                    "DataType": "U8",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-",
+                    "EnumValues": {
+                        "0": "GNSS Type None",
+                        "1": "GNSS Type Search",
+                        "2": "GNSS Type Doppler",
+                        "3": "GNSS Type Sps",
+                        "4": "GNSS Type Diff",
+                        "5": "GNSS Type Float",
+                        "6": "GNSS Type Integer",
+                        "7": "GNSS Type Waas",
+                        "8": "GNSS Type Omnistar",
+                        "9": "GNSS Type Omnistarhp",
+                        "10": "GNSS Type No data",
+                        "11": "GNSS Type Blanked",
+                        "12": "GNSS Type Pp Doppler",
+                        "13": "GNSS Type Pp Sps",
+                        "14": "GNSS Type Pp Diff",
+                        "15": "GNSS Type Pp Float",
+                        "16": "GNSS Type Pp Integer",
+                        "17": "GNSS Type Omnistarxp",
+                        "18": "GNSS Type Cdgps",
+                        "19": "GNSS Type Not Known",
+                        "20": "GNSS Type Gx Doppler",
+                        "21": "GNSS Type Gx Sps",
+                        "22": "GNSS Type Gx Diff",
+                        "23": "GNSS Type Gx Float",
+                        "24": "GNSS Type Gx Integer",
+                        "25": "GNSS Type Ix Doppler",
+                        "26": "GNSS Type Ix Sps",
+                        "27": "GNSS Type Ix Diff",
+                        "28": "GNSS Type Ix Float",
+                        "29": "GNSS Type Ix Integer",
+                        "30": "GNSS Type Ppp Converging",
+                        "31": "GNSS Type Ppp",
+                        "32": "GNSS Type Gx Sbas",
+                        "33": "GNSS Type Ix Sbas",
+                        "34": "GNSS Type Genaid",
+                        "35": "GNSS Type Segment"
+                    }
+                },
+                {
+                    "SignalID": "GnssDiffAge",
+                    "SourceID": "GNSS_STS",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "s"
+                },
+                {
+                    "SignalID": "PriSatTrac",
+                    "SourceID": "GNSS_STS",
+                    "DataType": "U8",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-"
+                },
+                {
+                    "SignalID": "SecSatTrac",
+                    "SourceID": "GNSS_STS",
+                    "DataType": "U8",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-"
+                },
+                {
+                    "SignalID": "GnssPosNumSats",
+                    "SourceID": "GNSS_STS",
+                    "DataType": "U8",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-"
+                },
+                {
+                    "SignalID": "HeaSatTrac",
+                    "SourceID": "GNSS_STS",
+                    "DataType": "U8",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-"
+                },
+                {
+                    "SignalID": "GnssAttNumSats",
                     "SourceID": "GNSS_STS",
                     "DataType": "U8",
                     "Offset": 0.0,
@@ -650,6 +1224,45 @@
                     "ScaleFactor": 1000000000.0,
                     "Unit": "s"
                 },
+                {
+                    "SignalID": "Vf",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Vl",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Vd",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "OXTS horizontal frame (level frame; FLD) liner velocities",
+            "MessageEnabled": false,
+            "MessageID": 6,
+            "MessageName": "OXTS horizontal frame velocity",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
                 {
                     "SignalID": "Vf",
                     "SourceID": "BNS_SDN",
@@ -725,6 +1338,45 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "OXTS vehicle system frame (XYZ) liner velocities",
+            "MessageEnabled": false,
+            "MessageID": 7,
+            "MessageName": "OXTS vehicle frame velocity",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "Vx",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Vy",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Vz",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
             "MessageDescription": "ISO-8855 intermediate frame (FLU) liner velocities",
             "MessageEnabled": false,
@@ -744,6 +1396,45 @@
                     "ScaleFactor": 1000000000.0,
                     "Unit": "s"
                 },
+                {
+                    "SignalID": "IsoVhX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "IsoVhY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "IsoVhZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "ISO-8855 intermediate frame (FLU) liner velocities",
+            "MessageEnabled": false,
+            "MessageID": 8,
+            "MessageName": "ISO-8855 intermediate frame velocity",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
                 {
                     "SignalID": "IsoVhX",
                     "SourceID": "BNS_ISO",
@@ -819,8 +1510,47 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "ISO 8855 vehicle system frame (XYZ) liner velocities",
+            "MessageEnabled": false,
+            "MessageID": 9,
+            "MessageName": "ISO-8855 vehicle system velocity",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "IsoVoX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "IsoVoY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "IsoVoZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
-            "MessageDescription": "Inertial measurements in OXTS vehicle frame (XYZ)",
+            "MessageDescription": "Inertial measurements in OXTS vehicle frame (XYZ) - the Kalman filter model has been applied to these signals",
             "MessageEnabled": false,
             "MessageID": 10,
             "MessageName": "OXTS vehicle frame inertial measurements",
@@ -938,8 +1668,71 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Linear accelerations and angular rates in OXTS vehicle frame (XYZ) - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 10,
+            "MessageName": "OXTS vehicle frame linear accelerations and angular rates",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "Ax",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "Ay",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "Az",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "Wx",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "Wy",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "Wz",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
-            "MessageDescription": "Inertial measurements in OXTS navigation frame (NED)",
+            "MessageDescription": "Inertial measurements in OXTS navigation frame (NED) - the Kalman filter model has been applied to these signals",
             "MessageEnabled": false,
             "MessageID": 11,
             "MessageName": "OXTS navigation frame inertial measurements",
@@ -1057,8 +1850,71 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Linear accelerations and angular rates in OXTS navigation frame (NED) - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 11,
+            "MessageName": "OXTS navigation frame linear accelerations and angular rates",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "An",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "Ae",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "Ad",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "Wn",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "We",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "Wd",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
-            "MessageDescription": "Inertial measurements in OXTS intermediate frame (FLD)",
+            "MessageDescription": "Inertial measurements in OXTS intermediate frame (FLD) - the Kalman filter model has been applied to these signals",
             "MessageEnabled": false,
             "MessageID": 12,
             "MessageName": "OXTS intermediate frame inertial measurements",
@@ -1176,8 +2032,71 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Linear accelerations and angular rates in OXTS intermediate frame (FLD) - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 12,
+            "MessageName": "OXTS intermediate frame linear accelerations and angular rates",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "Af",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "Al",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "Ad",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "Wf",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "Wl",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "Wd",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
-            "MessageDescription": "ISO-8855 Earth Fixed (ENU) inertial measurements",
+            "MessageDescription": "ISO-8855 Earth Fixed (ENU) inertial measurement - the Kalman filter model has been applied to these signalss",
             "MessageEnabled": false,
             "MessageID": 13,
             "MessageName": "ISO-8855 Earth fixed inertial measurements",
@@ -1295,8 +2214,71 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "ISO-8855 Earth Fixed (ENU) inertial measurement - the Kalman filter model has been applied to these signalss",
+            "MessageEnabled": false,
+            "MessageID": 13,
+            "MessageName": "ISO-8855 Earth fixed linear accelerations and angular rates",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "IsoAnX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "IsoAnY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "IsoAnZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "IsoWnX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "IsoWnY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "IsoWnZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
-            "MessageDescription": "ISO 8855 intermediate frame (FLD) inertial measurements",
+            "MessageDescription": "ISO 8855 intermediate frame (FLD) inertial measurements - the Kalman filter model has been applied to these signals",
             "MessageEnabled": false,
             "MessageID": 14,
             "MessageName": "ISO-8855 intermediate frame inertial measurements",
@@ -1414,8 +2396,71 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "ISO 8855 intermediate frame (FLD) linear accelerations and angular rates - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 14,
+            "MessageName": "ISO-8855 intermediate frame linear accelerations and angular rates",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "IsoAhX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "IsoAhY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "IsoAhZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "IsoWhX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "IsoWhY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "IsoWhZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
-            "MessageDescription": "ISO 8855 vehicle frame (XYZ) inertial measurements",
+            "MessageDescription": "ISO 8855 vehicle frame (XYZ) inertial measurements - the Kalman filter model has been applied to these signals",
             "MessageEnabled": false,
             "MessageID": 15,
             "MessageName": "ISO-8855 vehicle frame inertial measurements",
@@ -1533,8 +2578,71 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "ISO 8855 vehicle frame (XYZ) linear accelerations and angular rates - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 15,
+            "MessageName": "ISO-8855 vehicle frame linear accelerations and angular rates",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "IsoAoX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "IsoAoY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "IsoAoZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "IsoWoX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "IsoWoY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "IsoWoZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
-            "MessageDescription": "Filtered inertial measurements in OXTS vehicle frame (XYZ)",
+            "MessageDescription": "Filtered inertial measurements in OXTS vehicle frame (XYZ) - the Kalman filter model has been applied to these signals",
             "MessageEnabled": false,
             "MessageID": 16,
             "MessageName": "OXTS vehicle frame filtered inertial measurements",
@@ -1652,8 +2760,119 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Filtered inertial measurements in OXTS vehicle frame (XYZ) - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 16,
+            "MessageName": "OXTS vehicle frame filtered inertial measurements",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "FiltAx",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltAy",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltAz",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltJx",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltJy",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltJz",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltWx",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltWy",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltWz",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltYx",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "FiltYy",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "FiltYz",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
-            "MessageDescription": "Filtered inertial measurements in OXTS navigation frame (NED)",
+            "MessageDescription": "Filtered inertial measurements in OXTS navigation frame (NED) - the Kalman filter model has been applied to these signals",
             "MessageEnabled": false,
             "MessageID": 17,
             "MessageName": "OXTS navigation frame filtered inertial measurements",
@@ -1771,8 +2990,119 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Filtered inertial measurements in OXTS navigation frame (NED) - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 17,
+            "MessageName": "OXTS navigation frame filtered inertial measurements",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "FiltAn",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltAe",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltAd",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltJn",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltJe",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltJd",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltWn",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltWe",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltWd",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltYn",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "FiltYe",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "FiltYd",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
-            "MessageDescription": "Filtered inertial measurements in OXTS intermediate frame (FLD)",
+            "MessageDescription": "Filtered inertial measurements in OXTS intermediate frame (FLD) - the Kalman filter model has been applied to these signals",
             "MessageEnabled": false,
             "MessageID": 18,
             "MessageName": "OXTS intermediate frame filtered inertial measurements",
@@ -1839,7 +3169,7 @@
                     "Unit": "m/s^3"
                 },
                 {
-                    "SignalID": "FiltWhf",
+                    "SignalID": "FiltWf",
                     "SourceID": "BNS_FLT",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -1847,7 +3177,7 @@
                     "Unit": "deg/s"
                 },
                 {
-                    "SignalID": "FiltWhl",
+                    "SignalID": "FiltWl",
                     "SourceID": "BNS_FLT",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -1855,7 +3185,118 @@
                     "Unit": "deg/s"
                 },
                 {
-                    "SignalID": "FiltWhd",
+                    "SignalID": "FiltWd",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltYf",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "FiltYl",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "FiltYd",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Filtered inertial measurements in OXTS intermediate frame (FLD) - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 18,
+            "MessageName": "OXTS intermediate frame filtered inertial measurements",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "FiltAf",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltAl",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltAd",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltJf",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltJl",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltJd",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltWf",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltWl",
+                    "SourceID": "BNS_FLT",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltWd",
                     "SourceID": "BNS_FLT",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -1891,7 +3332,7 @@
         {
             "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
-            "MessageDescription": "ISO-8855 Earth Fixed (ENU) filtered inertial measurements",
+            "MessageDescription": "ISO-8855 Earth Fixed (ENU) filtered inertial measurements - the Kalman filter model has been applied to these signals",
             "MessageEnabled": false,
             "MessageID": 19,
             "MessageName": "ISO-8855 Earth fixed filtered inertial measurements",
@@ -2009,8 +3450,119 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "ISO-8855 Earth Fixed (ENU) filtered inertial measurements - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 19,
+            "MessageName": "ISO-8855 Earth fixed filtered inertial measurements",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "FiltIsoAnX",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoAnY",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoAnZ",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoJnX",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltIsoJnY",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltIsoJnZ",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltWnX",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltWnY",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltWnZ",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltIsoYnX",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoYnY",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoYnZ",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
-            "MessageDescription": "ISO 8855 intermediate frame (FLD) filtered inertial measurements",
+            "MessageDescription": "ISO 8855 intermediate frame (FLD) filtered inertial measurements - the Kalman filter model has been applied to these signals",
             "MessageEnabled": false,
             "MessageID": 20,
             "MessageName": "ISO-8855 intermediate frame filtered inertial measurements",
@@ -2128,8 +3680,119 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "ISO 8855 intermediate frame (FLD) filtered inertial measurements - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 20,
+            "MessageName": "ISO-8855 intermediate frame filtered inertial measurements",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "FiltIsoAhX",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoAhY",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoAhZ",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoJhX",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltIsoJhY",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltIsoJhZ",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltWhX",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltWhY",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltWhZ",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltIsoYhX",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoYhY",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoYhZ",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
-            "MessageDescription": "ISO 8855 vehicle frame (XYZ) filtered inertial measurements",
+            "MessageDescription": "ISO 8855 vehicle frame (XYZ) filtered inertial measurements - the Kalman filter model has been applied to these signals",
             "MessageEnabled": false,
             "MessageID": 21,
             "MessageName": "ISO-8855 vehicle frame filtered inertial measurements",
@@ -2147,6 +3810,117 @@
                     "ScaleFactor": 1000000000.0,
                     "Unit": "s"
                 },
+                {
+                    "SignalID": "FiltIsoAoX",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoAoY",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoAoZ",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoJoX",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltIsoJoY",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltIsoJoZ",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "FiltWoX",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltWoY",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltWoZ",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s"
+                },
+                {
+                    "SignalID": "FiltIsoYoX",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoYoY",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "FiltIsoYoZ",
+                    "SourceID": "BNS_FLTISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "ISO 8855 vehicle frame (XYZ) filtered inertial measurements - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 21,
+            "MessageName": "ISO-8855 vehicle frame filtered inertial measurements",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
                 {
                     "SignalID": "FiltIsoAoX",
                     "SourceID": "BNS_FLTISO",
@@ -2350,6 +4124,117 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Point of interest 1 (Linear velocity (FLD), 2D speed, accelerations (FLD and NED), track, slip, curvature)",
+            "MessageEnabled": false,
+            "MessageID": 22,
+            "MessageName": "Point of interest 1",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "MeasPt1_Vf",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt1_Vl",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt1_Vd",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt1_Speed2d",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt1_Af",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt1_Al",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt1_Ad",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt1_An",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt1_Ae",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt1_Track",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt1_Slip",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt1_Curvature",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "1/m"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
             "MessageDescription": "Point of interest 2 (Linear velocity (FLD), 2D speed, accelerations (FLD), track, slip, curvature)",
             "MessageEnabled": false,
@@ -2419,6 +4304,117 @@
                 },
                 {
                     "SignalID": "MeasPt2_Ad",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt2_Track",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt2_Slip",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt2_Curvature",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "1/m"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Point of interest 2 (Linear velocity (FLD), 2D speed, accelerations (FLD and NED), track, slip, curvature)",
+            "MessageEnabled": false,
+            "MessageID": 23,
+            "MessageName": "Point of interest 2",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "MeasPt2_Vf",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt2_Vl",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt2_Vd",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt2_Speed2d",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt2_Af",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt2_Al",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt2_Ad",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt2_An",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt2_Ae",
                     "SourceID": "BNS_DER",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -2556,6 +4552,117 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Point of interest 3 (Linear velocity (FLD), 2D speed, accelerations (FLD and NED), track, slip, curvature)",
+            "MessageEnabled": false,
+            "MessageID": 24,
+            "MessageName": "Point of interest 3",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "MeasPt3_Vf",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt3_Vl",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt3_Vd",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt3_Speed2d",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt3_Af",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt3_Al",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt3_Ad",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt3_An",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt3_Ae",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt3_Track",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt3_Slip",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt3_Curvature",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "1/m"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
             "MessageDescription": "Point of interest 4 (Linear velocity (FLD), 2D speed, accelerations (FLD), track, slip, curvature)",
             "MessageEnabled": false,
@@ -2625,6 +4732,117 @@
                 },
                 {
                     "SignalID": "MeasPt4_Ad",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt4_Track",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt4_Slip",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt4_Curvature",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "1/m"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Point of interest 4 (Linear velocity (FLD), 2D speed, accelerations (FLD and NED), track, slip, curvature)",
+            "MessageEnabled": false,
+            "MessageID": 25,
+            "MessageName": "Point of interest 4",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "MeasPt4_Vf",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt4_Vl",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt4_Vd",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt4_Speed2d",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt4_Af",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt4_Al",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt4_Ad",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt4_An",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt4_Ae",
                     "SourceID": "BNS_DER",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -2762,6 +4980,117 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Point of interest 5 (Linear velocity (FLD), 2D speed, accelerations (FLD and NED), track, slip, curvature)",
+            "MessageEnabled": false,
+            "MessageID": 26,
+            "MessageName": "Point of interest 5",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "MeasPt5_Vf",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt5_Vl",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt5_Vd",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt5_Speed2d",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt5_Af",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt5_Al",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt5_Ad",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt5_An",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt5_Ae",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt5_Track",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt5_Slip",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt5_Curvature",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "1/m"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
             "MessageDescription": "Point of interest 6 (Linear velocity (FLD), 2D speed, accelerations (FLD), track, slip, curvature)",
             "MessageEnabled": false,
@@ -2831,6 +5160,117 @@
                 },
                 {
                     "SignalID": "MeasPt6_Ad",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt6_Track",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt6_Slip",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt6_Curvature",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "1/m"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Point of interest 6 (Linear velocity (FLD), 2D speed, accelerations (FLD and NED), track, slip, curvature)",
+            "MessageEnabled": false,
+            "MessageID": 27,
+            "MessageName": "Point of interest 6",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "MeasPt6_Vf",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt6_Vl",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt6_Vd",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt6_Speed2d",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt6_Af",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt6_Al",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt6_Ad",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt6_An",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt6_Ae",
                     "SourceID": "BNS_DER",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -2968,6 +5408,117 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Point of interest 7 (Linear velocity (FLD), 2D speed, accelerations (FLD and NED), track, slip, curvature)",
+            "MessageEnabled": false,
+            "MessageID": 28,
+            "MessageName": "Point of interest 7",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "MeasPt7_Vf",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt7_Vl",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt7_Vd",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt7_Speed2d",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt7_Af",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt7_Al",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt7_Ad",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt7_An",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt7_Ae",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt7_Track",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt7_Slip",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt7_Curvature",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "1/m"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
             "MessageDescription": "Point of interest 8 (Linear velocity (FLD), 2D speed, accelerations (FLD), track, slip, curvature)",
             "MessageEnabled": false,
@@ -3071,6 +5622,117 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Point of interest 8 (Linear velocity (FLD), 2D speed, accelerations (FLD and NED), track, slip, curvature)",
+            "MessageEnabled": false,
+            "MessageID": 29,
+            "MessageName": "Point of interest 8",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "MeasPt8_Vf",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt8_Vl",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt8_Vd",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt8_Speed2d",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "MeasPt8_Af",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt8_Al",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt8_Ad",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt8_An",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt8_Ae",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^2"
+                },
+                {
+                    "SignalID": "MeasPt8_Track",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt8_Slip",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "MeasPt8_Curvature",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "1/m"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
             "MessageDescription": "Distance travelled and speed (2D and 3D)",
             "MessageEnabled": false,
@@ -3090,6 +5752,69 @@
                     "ScaleFactor": 1000000000.0,
                     "Unit": "s"
                 },
+                {
+                    "SignalID": "Dist2d",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "Dist2dHold",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "Dist3d",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "Dist3dHold",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "Speed2d",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Speed3d",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Distance travelled and speed (2D and 3D)",
+            "MessageEnabled": false,
+            "MessageID": 30,
+            "MessageName": "Distance and speed",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
                 {
                     "SignalID": "Dist2d",
                     "SourceID": "BNS_DER",
@@ -3197,6 +5922,53 @@
         },
         {
             "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Track, slip, curvature, and angle gradient",
+            "MessageEnabled": false,
+            "MessageID": 31,
+            "MessageName": "Track, slip, curvature, angle gradient",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "Curvature",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "1/m"
+                },
+                {
+                    "SignalID": "Slip",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Track",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "AngleGradient",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 0,
             "MessageDescription": "Heave and long period heave",
             "MessageEnabled": false,
@@ -3235,7 +6007,30 @@
             ]
         },
         {
-            "FrequencyOutputType": "GNSS_RAW",
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Heave",
+            "MessageEnabled": false,
+            "MessageID": 32,
+            "MessageName": "Heave",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "Heave",
+                    "SourceID": "BNS_DER",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "GNSSRaw",
             "IntroducedInVersion": 0,
             "MessageDescription": "Primary GNSS card native measurements",
             "MessageEnabled": false,
@@ -3330,7 +6125,70 @@
             ]
         },
         {
-            "FrequencyOutputType": "GNSS_RAW",
+            "FrequencyOutputType": "GNSSRaw",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Primary GNSS card native measurements",
+            "MessageEnabled": false,
+            "MessageID": 33,
+            "MessageName": "Primary GNSS card measurements",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "PGCApproxLat",
+                    "SourceID": "GNSS_PGC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-"
+                },
+                {
+                    "SignalID": "PGCApproxLon",
+                    "SourceID": "GNSS_PGC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "PGCApproxAlt",
+                    "SourceID": "GNSS_PGC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "PGCVn",
+                    "SourceID": "GNSS_PGC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "PGCVe",
+                    "SourceID": "GNSS_PGC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "PGCVd",
+                    "SourceID": "GNSS_PGC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "GNSSRaw",
             "IntroducedInVersion": 0,
             "MessageDescription": "Secondary GNSS card native measurements",
             "MessageEnabled": false,
@@ -3350,6 +6208,45 @@
                     "ScaleFactor": 1000000000.0,
                     "Unit": "s"
                 },
+                {
+                    "SignalID": "SGCApproxLat",
+                    "SourceID": "GNSS_SGC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "SGCApproxLon",
+                    "SourceID": "GNSS_SGC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "SGCApproxAlt",
+                    "SourceID": "GNSS_SGC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "GNSSRaw",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Secondary GNSS card native measurements",
+            "MessageEnabled": false,
+            "MessageID": 34,
+            "MessageName": "Secondary GNSS card measurements",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
                 {
                     "SignalID": "SGCApproxLat",
                     "SourceID": "GNSS_SGC",
@@ -3450,8 +6347,71 @@
         {
             "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 1,
+            "MessageDescription": "Local coordinate position, velocity, and attitude",
+            "MessageEnabled": false,
+            "MessageID": 35,
+            "MessageName": "Local coordinate PVA",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "RefFrameX",
+                    "SourceID": "BNS_LOC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "RefFrameY",
+                    "SourceID": "BNS_LOC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "RefFrameVelX",
+                    "SourceID": "BNS_LOC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "RefFrameVelY",
+                    "SourceID": "BNS_LOC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "RefFrameYaw",
+                    "SourceID": "BNS_LOC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "RefFrameTrack",
+                    "SourceID": "BNS_LOC",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
             "MessageDescription": "GAD decoder information",
-            "MessageEnabled": true,
+            "MessageEnabled": false,
             "MessageID": 36,
             "MessageName": "GAD decoder information",
             "MessageSchemaVersion": 2,
@@ -3462,7 +6422,7 @@
             "SignalsInMessage": [
                 {
                     "SignalID": "GADChars",
-                    "SourceID": "META",
+                    "SourceID": "BNS_GAD",
                     "DataType": "U32",
                     "Offset": 0.0,
                     "ScaleFactor": 1.0,
@@ -3470,7 +6430,7 @@
                 },
                 {
                     "SignalID": "GADPkts",
-                    "SourceID": "META",
+                    "SourceID": "BNS_GAD",
                     "DataType": "U32",
                     "Offset": 0.0,
                     "ScaleFactor": 1.0,
@@ -3482,7 +6442,7 @@
             "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 1,
             "MessageDescription": "GAD aiding statuses",
-            "MessageEnabled": true,
+            "MessageEnabled": false,
             "MessageID": 37,
             "MessageName": "GAD statuses",
             "MessageSchemaVersion": 2,
@@ -3493,7 +6453,7 @@
             "SignalsInMessage": [
                 {
                     "SignalID": "GADPosStatus",
-                    "SourceID": "META",
+                    "SourceID": "BNS_GAD",
                     "DataType": "U8",
                     "Offset": 0.0,
                     "ScaleFactor": 1.0,
@@ -3501,7 +6461,7 @@
                 },
                 {
                     "SignalID": "GADVelStatus",
-                    "SourceID": "META",
+                    "SourceID": "BNS_GAD",
                     "DataType": "U8",
                     "Offset": 0.0,
                     "ScaleFactor": 1.0,
@@ -3509,7 +6469,7 @@
                 },
                 {
                     "SignalID": "GADAttStatus",
-                    "SourceID": "META",
+                    "SourceID": "BNS_GAD",
                     "DataType": "U8",
                     "Offset": 0.0,
                     "ScaleFactor": 1.0,
@@ -3517,7 +6477,7 @@
                 },
                 {
                     "SignalID": "GADAngRateStatus",
-                    "SourceID": "META",
+                    "SourceID": "BNS_GAD",
                     "DataType": "U8",
                     "Offset": 0.0,
                     "ScaleFactor": 1.0,
@@ -3528,7 +6488,7 @@
         {
             "IntroducedInVersion": 1,
             "MessageDescription": "Position aiding innovations",
-            "MessageEnabled": true,
+            "MessageEnabled": false,
             "MessageID": 38,
             "MessageName": "Position aiding innovations",
             "MessageSchemaVersion": 2,
@@ -3573,7 +6533,7 @@
         {
             "IntroducedInVersion": 1,
             "MessageDescription": "Velocity aiding innovations",
-            "MessageEnabled": true,
+            "MessageEnabled": false,
             "MessageID": 39,
             "MessageName": "Velocity aiding innovations",
             "MessageSchemaVersion": 2,
@@ -3618,7 +6578,7 @@
         {
             "IntroducedInVersion": 1,
             "MessageDescription": "Attitude aiding innovations",
-            "MessageEnabled": true,
+            "MessageEnabled": false,
             "MessageID": 40,
             "MessageName": "Attitude aiding innovations",
             "MessageSchemaVersion": 2,
@@ -3655,7 +6615,7 @@
         {
             "IntroducedInVersion": 1,
             "MessageDescription": "GAD packet statistics",
-            "MessageEnabled": true,
+            "MessageEnabled": false,
             "MessageID": 41,
             "MessageName": "GAD packet statistics",
             "MessageSchemaVersion": 2,
@@ -3665,7 +6625,7 @@
             "SignalsInMessage": [
                 {
                     "SignalID": "GADLatestStreamID",
-                    "SourceID": "GAD",
+                    "SourceID": "BNS_GAD",
                     "DataType": "U8",
                     "Offset": 0.0,
                     "ScaleFactor": 1.0,
@@ -3673,7 +6633,7 @@
                 },
                 {
                     "SignalID": "GADNumEarly",
-                    "SourceID": "GAD",
+                    "SourceID": "BNS_GAD",
                     "DataType": "U32",
                     "Offset": 0.0,
                     "ScaleFactor": 1.0,
@@ -3681,7 +6641,7 @@
                 },
                 {
                     "SignalID": "GADNumLate",
-                    "SourceID": "GAD",
+                    "SourceID": "BNS_GAD",
                     "DataType": "U32",
                     "Offset": 0.0,
                     "ScaleFactor": 1.0,
@@ -3689,7 +6649,7 @@
                 },
                 {
                     "SignalID": "GADNumScheduled",
-                    "SourceID": "GAD",
+                    "SourceID": "BNS_GAD",
                     "DataType": "U32",
                     "Offset": 0.0,
                     "ScaleFactor": 1.0,
@@ -3697,7 +6657,7 @@
                 },
                 {
                     "SignalID": "GADLatestStatus",
-                    "SourceID": "GAD",
+                    "SourceID": "BNS_GAD",
                     "DataType": "U8",
                     "Offset": 0.0,
                     "ScaleFactor": 1.0,
@@ -3708,7 +6668,7 @@
         {
             "IntroducedInVersion": 1,
             "MessageDescription": "Position aiding update of INS as WGS84",
-            "MessageEnabled": true,
+            "MessageEnabled": false,
             "MessageID": 42,
             "MessageName": "Position aiding in the INS frame",
             "MessageSchemaVersion": 2,
@@ -3753,7 +6713,7 @@
         {
             "IntroducedInVersion": 1,
             "MessageDescription": "Velocity aiding update of INS",
-            "MessageEnabled": true,
+            "MessageEnabled": false,
             "MessageID": 43,
             "MessageName": "Velocity aiding of the INS in navigation frame",
             "MessageSchemaVersion": 2,
@@ -3806,7 +6766,7 @@
         {
             "IntroducedInVersion": 1,
             "MessageDescription": "Orientation aiding update of INS",
-            "MessageEnabled": true,
+            "MessageEnabled": false,
             "MessageID": 44,
             "MessageName": "Orientation aiding of the INS in dual-antenna frame",
             "MessageSchemaVersion": 2,
@@ -3843,7 +6803,7 @@
         {
             "IntroducedInVersion": 1,
             "MessageDescription": "Position aiding update covariances",
-            "MessageEnabled": true,
+            "MessageEnabled": false,
             "MessageID": 45,
             "MessageName": "Covariances of the latest position aiding update in navigation frame",
             "MessageSchemaVersion": 2,
@@ -3912,7 +6872,7 @@
         {
             "IntroducedInVersion": 1,
             "MessageDescription": "Velocity aiding update covariances",
-            "MessageEnabled": true,
+            "MessageEnabled": false,
             "MessageID": 46,
             "MessageName": "Covariances of the latest velocity aiding update in navigation frame",
             "MessageSchemaVersion": 2,
@@ -3990,7 +6950,7 @@
             "IntroducedInVersion": 1,
             "FrequencyOutputType": "IMU",
             "MessageDescription": "Raw accelerations and angular rates in the IMU frame",
-            "MessageEnabled": true,
+            "MessageEnabled": false,
             "MessageID": 47,
             "MessageName": "Raw IMU measurements",
             "MessageSchemaVersion": 2,
@@ -4000,15 +6960,7 @@
             "OutputType": "FrequencyBased",
             "SignalsInMessage": [
                 {
-                    "SignalID": "Nano",
-                    "SourceID": "TIME",
-                    "DataType": "S64",
-                    "Offset": 0.0,
-                    "ScaleFactor": 1000000000.0,
-                    "Unit": "s"
-                },
-                {
-                    "SignalID": "rawAx",
+                    "SignalID": "RawAx",
                     "SourceID": "BNS_SDN",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -4016,7 +6968,7 @@
                     "Unit": "m/s^2"
                 },
                 {
-                    "SignalID": "rawAy",
+                    "SignalID": "RawAy",
                     "SourceID": "BNS_SDN",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -4024,7 +6976,7 @@
                     "Unit": "m/s^2"
                 },
                 {
-                    "SignalID": "rawAz",
+                    "SignalID": "RawAz",
                     "SourceID": "BNS_SDN",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -4032,7 +6984,7 @@
                     "Unit": "m/s^2"
                 },
                 {
-                    "SignalID": "rawWx",
+                    "SignalID": "RawWx",
                     "SourceID": "BNS_SDN",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -4040,7 +6992,7 @@
                     "Unit": "deg/s"
                 },
                 {
-                    "SignalID": "rawWy",
+                    "SignalID": "RawWy",
                     "SourceID": "BNS_SDN",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -4048,7 +7000,7 @@
                     "Unit": "deg/s"
                 },
                 {
-                    "SignalID": "rawWz",
+                    "SignalID": "RawWz",
                     "SourceID": "BNS_SDN",
                     "DataType": "F64",
                     "Offset": 0.0,
@@ -4058,32 +7010,380 @@
             ]
         },
         {
+            "FrequencyOutputType": "IMU",
             "IntroducedInVersion": 1,
-            "MessageDescription": "The time offsets from the SDN time in the header to the time in the message payload described by the enum value.",
-            "MessageEnabled": true,
-            "MessageID": 50,
-            "MessageName": "The SDN time offsets",
+            "MessageDescription": "Linear jerks and angular accelerations in OXTS vehicle frame (XYZ) - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 48,
+            "MessageName": "OXTS vehicle frame linear jerks and angular accelerations",
             "MessageSchemaVersion": 2,
             "MessageTiming": "SDN",
             "MessageVersion": 0,
-            "OutputType": "OnChange",
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
             "SignalsInMessage": [
                 {
-                    "SignalID": "SDNOFF",
-                    "SourceID": "TIME",
-                    "DataType": "EnS64",
+                    "SignalID": "Jx",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
                     "Offset": 0.0,
-                    "ScaleFactor": 1000000000.0,
-                    "Unit": "s",
-                    "EnumValues": {
-                        "0": "Time Source None",
-                        "1": "Time Source Gnss",
-                        "2": "Time Source Ptp",
-                        "3": "Time Source Ext Gnss",
-                        "4": "Time Source User",
-                        "5": "Time Source Gad",
-                        "6": "Time Source Unknown"
-                    }
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "Jy",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "Jz",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "Yx",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "Yy",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "Yz",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Linear jerks and angular accelerations in OXTS navigation frame (NED) - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 49,
+            "MessageName": "OXTS navigation frame linear jerks and angular accelerations",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "Jn",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "Je",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "Jd",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "Yn",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "Ye",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "Yd",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Linear jerks and angular accelerations in OXTS intermediate frame (FLD) - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 50,
+            "MessageName": "OXTS intermediate frame linear jerks and angular accelerations",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "Jf",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "Jl",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "Jd",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "Yf",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "Yl",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "Yd",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "ISO-8855 Earth Fixed (ENU) inertial measurement - the Kalman filter model has been applied to these signalss",
+            "MessageEnabled": false,
+            "MessageID": 51,
+            "MessageName": "ISO-8855 Earth fixed linear jerks and angular accelerations",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "IsoJnX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "IsoJnY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "IsoJnZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "IsoYnX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "IsoYnY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "IsoYnZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "ISO 8855 intermediate frame (FLD) linear jerks and angular accelerations - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 52,
+            "MessageName": "ISO-8855 intermediate frame linear jerks and angular accelerations",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "IsoJhX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "IsoJhY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "IsoJhZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "IsoYhX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "IsoYhY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "IsoYhZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "ISO 8855 vehicle frame (XYZ) linear jerks and angular accelerations - the Kalman filter model has been applied to these signals",
+            "MessageEnabled": false,
+            "MessageID": 53,
+            "MessageName": "ISO-8855 vehicle frame linear jerks and angular accelerations",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "IsoJoX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "IsoJoY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "IsoJoZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s^3"
+                },
+                {
+                    "SignalID": "IsoYoX",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "IsoYoY",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
+                },
+                {
+                    "SignalID": "IsoYoZ",
+                    "SourceID": "BNS_ISO",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg/s^2"
                 }
             ]
         },
