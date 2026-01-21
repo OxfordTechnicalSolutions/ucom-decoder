@@ -1,0 +1,258 @@
+{
+    "$schema": "DBU.schema.json",
+    "DBUDescription": "An example mobile DBU file",
+    "DBUID": "Mobile DBU file",
+    "DBUName": "2026-01-20",
+    "UCOMVersion": 1,
+    "PossibleTriggerTypes": {
+        "0": "No Trigger",
+        "1": "In 1 Down",
+        "2": "In 1 Up",
+        "3": "Out 1",
+        "4": "In 2 Down",
+        "5": "In 2 Up",
+        "6": "Unknown 1",
+        "7": "Unknown 2",
+        "8": "Out 2"
+    },
+    "PossibleHeaderTiming": {
+        "0": "SDN",
+        "1": "GNSS"
+    },
+    "Messages": [
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 0,
+            "MessageDescription": "Heartbeat message with meta information about the INS",
+            "MessageEnabled": true,
+            "MessageID": 0,
+            "MessageName": "Heartbeat",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputFrequencyDecimation": 100,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "SerialNumber",
+                    "SourceID": "META",
+                    "DataType": "U32",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-"
+                }
+            ]
+        },
+        {
+            "IntroducedInVersion": 1,
+            "MessageDescription": "The time offsets from the SDN time in the header to the time in the message payload described by the enum value.",
+            "MessageEnabled": true,
+            "MessageID": 100,
+            "MessageName": "The SDN time offsets",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputType": "OnChange",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "SDNOFF",
+                    "SourceID": "TIME",
+                    "DataType": "EnS64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1000000000.0,
+                    "Unit": "s",
+                    "EnumValues": {
+                        "0": "Time Source None",
+                        "1": "Time Source Gnss",
+                        "2": "Time Source Ptp",
+                        "3": "Time Source Ext Gnss",
+                        "4": "Time Source User",
+                        "5": "Time Source Gad"
+                    }
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 0,
+            "MessageDescription": "Position, velocity, and attitude in OXTS navigation frame (NED) in the configured output datum",
+            "MessageEnabled": true,
+            "MessageID": 1,
+            "MessageName": "OXTS navigation frame PVA",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "Nano",
+                    "SourceID": "TIME",
+                    "DataType": "S64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1000000000.0,
+                    "Unit": "s"
+                },
+                {
+                    "SignalID": "Lat",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Lon",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Alt",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "Vn",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Ve",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Vd",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Heading",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Pitch",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Roll",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                }
+            ]
+        },
+        {
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Position, velocity, and attitude in OXTS navigation frame (NED) in the configured output datum",
+            "MessageEnabled": true,
+            "MessageID": 1,
+            "MessageName": "OXTS navigation frame PVA",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "Lat",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Lon",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Alt",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "Vn",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Ve",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Vd",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Heading",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Pitch",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Roll",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                }
+            ]
+        }
+    ]
+}

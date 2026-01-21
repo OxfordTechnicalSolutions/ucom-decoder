@@ -1,5 +1,8 @@
 # UCOM Decoder
 
+> [!IMPORTANT]
+> The materials in this repository are relevant to the ucoming NavSuite 3.15 release (UCOM Version 1).
+
 This repository contains the code to build and install the UCOM Decoder Library, 
 as well as an example tool which can convert UCOM data from UDP stream or file 
 to CSV file.
@@ -15,11 +18,73 @@ See the relevant sub-folder for their licences.
 ## Clone the repository
 
 ```sh
-git clone --recursive git@github.com:OxfordTechnicalSolutions/UCOM_decoder.git
+git clone --recursive https://github.com/OxfordTechnicalSolutions/ucom-decoder.git
 ```
 
 The repository must be cloned recursively as the UCOM decoder uses a sub-module 
 for the JSON parser.
+<!--toc:start-->
+- [UCOM Decoder](#ucom-decoder)
+  - [Third-Party Libraries](#third-party-libraries)
+  - [Clone the repository](#clone-the-repository)
+  - [Build](#build)
+    - [Visual Studio](#visual-studio)
+      - [Quick Start](#quick-start)
+    - [Linux](#linux)
+  - [UCOM to CSV command-line options](#ucom-to-csv-command-line-options)
+  - [Example Data](#example-data)
+  - [Python](#python)
+    - [Requirements](#requirements)
+    - [Installation](#installation)
+- [Tests](#tests)
+  - [All tests](#all-tests)
+  - [Unit tests](#unit-tests)
+- [Decoding UCOM](#decoding-ucom)
+  - [Overview](#overview)
+  - [UCOM](#ucom)
+    - [UCOM Packet](#ucom-packet)
+      - [Header](#header)
+      - [Payload](#payload)
+    - [Decoding](#decoding)
+  - [ucom_to_csv](#ucomtocsv)
+    - [Description](#description)
+    - [Windows](#windows)
+      - [ucom_to_csv arguments](#ucomtocsv-arguments)
+  - [SDK](#sdk)
+    - [C++ API](#c-api)
+    - [class UcomDbu](#class-ucomdbu)
+      - [Description](#description-1)
+    - [class UcomData](#class-ucomdata)
+      - [Description](#description-2)
+    - [class UcomMessage](#class-ucommessage)
+      - [Description](#description-3)
+    - [class UcomSignal](#class-ucomsignal)
+      - [Description](#description-4)
+    - [Python API](#python-api)
+    - [class UcomDbu](#class-ucomdbu-1)
+      - [Description](#description-5)
+    - [class UcomData](#class-ucomdata-1)
+      - [Description](#description-6)
+    - [class UcomMessage](#class-ucommessage-1)
+      - [Description](#description-7)
+    - [class UcomSignal](#class-ucomsignal-1)
+      - [Description](#description-8)
+  - [Examples](#examples)
+    - [C++](#c)
+      - [1. Parse DBU and display message info](#1-parse-dbu-and-display-message-info)
+      - [2. Decoding data](#2-decoding-data)
+    - [Python](#python-1)
+      - [1. Parse DBU and display message info](#1-parse-dbu-and-display-message-info-1)
+      - [2. Decoding data](#2-decoding-data-1)
+  - [Using UCOM decoder library for development](#using-ucom-decoder-library-for-development)
+    - [Visual Studio - Windows](#visual-studio-windows)
+      - [Create a project](#create-a-project)
+      - [Set Includes and Library Dependencies](#set-includes-and-library-dependencies)
+    - [Visual Studio Code - Linux (WSL2)](#visual-studio-code-linux-wsl2)
+      - [Create CMakeLists.txt](#create-cmakeliststxt)
+      - [Write your program code](#write-your-program-code)
+      - [Configure, build and run](#configure-build-and-run)
+<!--toc:end-->
 
 ## Build
 
@@ -68,7 +133,7 @@ The executable is found in the build/ucom_to_csv directory named `ucom_to_csv`.
 Running UCOM to CSV with no arguments produces the following output:
 
 ```
-Usage: ucom_decoder [options] -u <.dbu filename>
+Usage: ucom_to_csv [options] -u <.dbu filename>
 Options:
   -h                     Help - displays this message
   -f <input file>        Extract data from a file instead of UDP stream
@@ -76,7 +141,7 @@ Options:
   -c <packets>           Number of packets to process (UDP stream only)
   -t <duration>          Maximum capture duration in seconds (UDP stream only)
   -i <address>           Source IP address (UDP stream only)
-  -o <output file>       Output file prefix (default is "output_")
+  -o <output file>       Output file prefix (default is output_)
   -a                     Disable user-abort
 ```
 
@@ -84,15 +149,15 @@ Options:
 
 The `example_data` directory contains:
 
-- UCOM file, logged from an OxTS INS
-- .cfg file, showing how UCOM messages are configured
-- oxts.dbu file (in dbu sub-directory) - contains message definitions which are parsed by the decoder. This allows the decoder flexibility to decode new messages when 
+- UCOM file, logged from an OXTS INS
+- .cfg file, showing how the unit is configured
+- mobile.dbu file (in dbu sub-directory) - contains message definitions which are parsed by the decoder. This allows the decoder flexibility to decode new messages when 
 provided with updated definitions.
 
 To use this data with the UCOM to CSV tool:
 
 ```sh
-./ucom_to_csv -u ../../example_data/dbu/oxts.dbu -f ../../example_data/input.ucom
+./ucom_to_csv -u ../../example_data/dbu/mobile.dbu -f ../../example_data/input.ucom
 ```
 ## Python
 There is a Python version of the UCOM decoder SDK.
@@ -103,35 +168,47 @@ The code has been tested with Python 3.12. It may work with earlier versions, bu
 ### Installation
 1. Create a working folder and clone the UCOM_decoder repository:
 
-```
+```sh
 mkdir ucompy_test
 cd ucompy_test
-git clone git@github.com:OxfordTechnicalSolutions/UCOM_decoder.git --recursive ucom_decoder
+git clone https://github.com/OxfordTechnicalSolutions/ucom-decoder.git --recursive ucom_decoder
 ```
 
 2. Create Python virtual environment:  
 NB Use the appropriate command (instead of python) to invoke the Python interpreter on your system, e.g. py, python, python3. 
-```
+
+```sh
 python -m venv venv
+```
 
 [Windows Command Prompt] 
+```cmd
 venv\Scripts\activate.bat
+```
 
 [Windows Powershell]
+```powershell
 venv\Scripts\Activate.ps1
+```
 
 [Linux]
+```sh
 source venv/bin/activate
 ```
+
 3. Install the oxts.ucompy module:
-```
+
+```sh
 python -m pip install ucom_decoder/ucom_decoder_py
 ```
+
 4. Test the installation:  
 a. Start Python interactive shell
-```
+
+```sh
 python
 ```
+
 Enter the text following the prompts (>>>) line by line. You should see the output shown:
 ```Python
 >>> from oxts.ucompy import UcomDbu
@@ -144,11 +221,11 @@ True
 ```
 
 b. Run the ucom_to_csv example:
-```
+```powershell
 ucom_decoder\ucom_decoder_py\examples\ucom_to_csv\test.bat
 ```
 5. Uninstall:
-```
+```sh
 python -m pip uninstall ucompy
 ```
 
@@ -159,15 +236,15 @@ python -m pip uninstall ucompy
 To run all of the automated tests, first build ucom_to_csv and then from the **ucom_decoder/test/** folder, run:
 
 Windows
-```
+```powershell
 .\run_tests.bat
 ```
 Linux
-```
+```sh
 ./run_tests.sh
 ```
 
-The automated unit tests run on the Python bindings to simulataneously test the bindings and the underlying (bound) C++ code.
+The automated unit tests run on the Python bindings to simultaneously test the bindings and the underlying (bound) C++ code.
 
 There is also a test of the overall (C++) decoder functionality using automatically-generated UCOM data. A range of known values are encoded into UCOM packets. These packets are then decoded (using ucom_to_csv) and the extracted values are compared with the original values.
 
@@ -175,18 +252,18 @@ There is also a test of the overall (C++) decoder functionality using automatica
 The Python unit tests can be run on their own by changing to the **ucom_decoder_py/tests** folder and running:
 
 Windows
-```
+```powershell
 .\run_tests.bat
 ```
 Linux
-```
+```sh
 ./run_tests.sh
 ```
 
 # Decoding UCOM 
 
 ## Overview
-UCOM provides the facility to customise the data that is output by an OxTS INS by using user-defined messages. 
+UCOM provides the facility to customise the data that is output by an OXTS INS by using user-defined messages. 
 These user-defined messages are specified in a mobile.dbu file. For ease of explanation, hereafter the term DBU will be used to refer to .dbu files, such as oxts.dbu and mobile.dbu, or their content.
 
 ## UCOM
@@ -228,7 +305,7 @@ Example:
                 },
                 {
                     "SourceID": "BNS_SDN",
-                    "SignalID": "Long",
+                    "SignalID": "Lon",
                     "Unit": "deg",
                     "ScaleFactor": 1,
                     "Offset": 0,
@@ -241,15 +318,14 @@ These three signals are each 64 bits - or 8 bytes - long (as are the vast majori
 ```
 A0 A1 A2 A3 A4 A5 A6 A7 B0 B1 B2 B3 B4 B5 B6 B7 C0 C1 C2 C3 C4 C5 C6 C7 
 ```
-where A0 ... A7, B0 ... B7, C0 ... C7 are the bytes representing the three messages A = GNSST, B = Lat, C = Long above.
+where A0 ... A7, B0 ... B7, C0 ... C7 are the bytes representing the three messages A = GNSST, B = Lat, C = Lon above.
 
 If message A is 8 bytes, message B is 1 byte and message C is 4 bytes:
 ```
 A0 A1 A2 A3 A4 A5 A6 A7 B0 C0 C1 C2 C3
 ```
 
-
-For full details of the UCOM protocol see **<! INSERT DOCUMENT LINK HERE !>**
+For full details of the UCOM protocol see [the UCOM manual](https://support.oxts.com/hc/en-us/articles/21438957524252-UCOM-Manual).
 
 ### Decoding
 The steps required to decode UCOM are:
@@ -272,14 +348,14 @@ Open a 'Developer Command Prompt for VS'
 
 Navigate to the UCOM_decoder folder and then build 
 
-```
+```powershell
 mkdir build && cd build
 cmake ..
 cmake --build . --config Release
 ```
 
 Start capturing UCOM packets from UDP:
-```
+```powershell
 cd ..
 mkdir test && cd test
 ..\build\ucom_to_csv\Release\ucom_to_csv.exe -u ..\example_data\dbu\oxts.dbu -i any
@@ -287,6 +363,7 @@ mkdir test && cd test
 #### ucom_to_csv arguments
 
 Calling ucom_to_csv.exe with no arguments (or with -h) will display the options:
+
 ```
 Usage: ucom_to_csv [options] -u <.dbu filename>
 Options:
@@ -505,6 +582,12 @@ Represents a UcomSignal. Contains the meta-data required to decode a signal from
 </dl>
 
 ## Examples
+
+> [!WARNING]
+> The example pictures may not reflect the current state of the messages within
+> oxts.dbu file however the code examples should still work and you should see
+> data reflective of the provided DBU file. If you do not, please raise an issue or
+> see [OXTS support](https://support.oxts.com/hc/en-us).
 
 ### C++
 #### 1. Parse DBU and display message info
