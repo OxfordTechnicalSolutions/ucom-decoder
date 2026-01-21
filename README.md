@@ -150,14 +150,14 @@ Options:
 The `example_data` directory contains:
 
 - UCOM file, logged from an OXTS INS
-- .cfg file, showing how UCOM messages are configured
-- oxts.dbu file (in dbu sub-directory) - contains message definitions which are parsed by the decoder. This allows the decoder flexibility to decode new messages when 
+- .cfg file, showing how the unit is configured
+- mobile.dbu file (in dbu sub-directory) - contains message definitions which are parsed by the decoder. This allows the decoder flexibility to decode new messages when 
 provided with updated definitions.
 
 To use this data with the UCOM to CSV tool:
 
 ```sh
-./ucom_to_csv -u ../../example_data/dbu/oxts.dbu -f ../../example_data/input.ucom
+./ucom_to_csv -u ../../example_data/dbu/mobile.dbu -f ../../example_data/input.ucom
 ```
 ## Python
 There is a Python version of the UCOM decoder SDK.
