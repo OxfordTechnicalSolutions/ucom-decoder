@@ -57,7 +57,7 @@ public:
     double get_data_update_offset(raw_data_ptr_t data, OxTS::Enum::BASIC_TYPE type, int& offset, uint8_t& enum_member);
     static const int peek(const uint8_t* data, int max_size, bool& need_more_data);
 
-    const std::string get_csv(const UcomDbu& dbu) const;
+    const std::string get_csv(const UcomDbu& dbu, const bool gnss_offset_available = false, const int64_t gnss_offset = 0) const;
 
     std::string to_string();
 

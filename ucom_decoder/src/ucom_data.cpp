@@ -258,12 +258,21 @@ std::string UcomData::get_str_data_update_offset(const uint8_t* data, int& offse
 
 // @brief Gets the contents of the message (signal values) in CSV format
 // @param dbu The DBU used to decode 
+// @param gnss_offset_available True if GNSS time offset is available
+// @param gnss_offset The GNSS time offset (in nanoseconds)
 // @return A string containing the CSV
-const std::string UcomData::get_csv(const UcomDbu& dbu) const
+const std::string UcomData::get_csv(const UcomDbu& dbu, bool gnss_offset_available, int64_t gnss_offset) const
 {
     std::stringstream ss;
     ss.precision(7);
-    ss << _arbitrary_time;
+    ss << _arbitrary_time << ',';
+    if (gnss_offset_available && _time_frame == 0)
+        // Write the calculated GNSS time
+        ss << _arbitrary_time + gnss_offset;
+    else if (_time_frame == 1) // Arbitrary time is already GNSS
+        ss << _arbitrary_time;
+    // else the column will be empty
+
     if (_message_id == ERROR_MSG_ID)
     {
         ss << "," << std::to_string(_error_no);

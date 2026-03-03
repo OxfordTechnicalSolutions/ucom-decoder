@@ -229,6 +229,8 @@ int UcomDecoderApp::process_file()
         data = input.get_data(data_available, left, offset);
         consumed = 0;
         available = data.size();
+        bool gnss_offset_available = false;     // True if a GNSS offset message has been received
+        int64_t gnss_offset = 0;
         for (auto it = data.begin(); it < data.end();)
         {
             need_more_data = false;
@@ -244,10 +246,27 @@ int UcomDecoderApp::process_file()
                     it += length;
                     consumed += length;
                     _packet_count++;
+
+                    if (d.get_message_id() == 100) // The SDN offset message
+                    {
+                        // Cache the GNSS offset, if available
+                        valueVariant offset_value;
+                        auto offset_message = d.get("SDNOFF", _dbu, offset_value);
+                        if (offset_value.get_type() == UCOM::DATA_TYPE::EnS64)
+                        {
+                            auto enum_data = offset_value.get_value().ens64;
+                            if (enum_data.enum_member == TimeSources::TIME_SOURCE_GNSS)
+                            {
+                                gnss_offset_available = true;
+                                gnss_offset = enum_data.value;
+                            }
+                        }
+                    }
+
                     // Skip unwanted message IDs 
                     uint32_t uid = d.get_message_uid();
                     if (std::find(_message_uids.begin(), _message_uids.end(), uid) != _message_uids.end())
-                        write_csv(_output_files[uid], d.get_csv(_dbu));
+                        write_csv(_output_files[uid], d.get_csv(_dbu, gnss_offset_available, gnss_offset));
                 }
                 else
                 {
@@ -323,6 +342,8 @@ int UcomDecoderApp::process_udp()
     bool skip = false;
     bool packet_count_reached = false;
     bool max_capture_time_reached = false;
+    bool gnss_offset_available = false;     // True if a GNSS offset message has been received
+    int64_t gnss_offset = 0;
     Duration capture_time(_duration);
     uint64_t loop_count = 0;
     while ((len > -1) && 
@@ -379,9 +400,24 @@ int UcomDecoderApp::process_udp()
             }
             else if (!skip && data.get_valid()) {
                 // Write the message data to output
+                if (data.get_message_id() == 100) // The SDN offset message
+                {
+                    // Cache the GNSS offset, if available
+                    valueVariant offset_value;
+                    auto offset_message = data.get("SDNOFF", _dbu, offset_value);
+                    if (offset_value.get_type() == UCOM::DATA_TYPE::EnS64)
+                    {
+                        auto enum_data = offset_value.get_value().ens64;
+                        if (enum_data.enum_member == TimeSources::TIME_SOURCE_GNSS)
+                        {
+                            gnss_offset_available = true;
+                            gnss_offset = enum_data.value;
+                        }
+                    }
+                }
                 if (_dbu.message_uid_exists(data.get_message_uid()))
                 {
-                    write_csv(_output_files[data.get_message_uid()], data.get_csv(_dbu));
+                    write_csv(_output_files[data.get_message_uid()], data.get_csv(_dbu, gnss_offset_available, gnss_offset));
                     _packet_count++;
                 }
             }

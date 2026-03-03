@@ -44,7 +44,7 @@ PYBIND11_MODULE(ucompy, m) {
             int length = UcomData::peek(reinterpret_cast<const uint8_t*>(data), max_size, need_more_data);
             return std::make_tuple(length, need_more_data);
         }, "data"_a, "max_size"_a)
-        .def("get_csv", &UcomData::get_csv, "dbu"_a)
+        .def("get_csv", &UcomData::get_csv, "dbu"_a, "gnss_offset_available"_a, "gnss_offset"_a)
         .def("to_string", &UcomData::to_string)
         .def("get_message_id", &UcomData::get_message_id)
         .def("get_message_uid", &UcomData::get_message_uid)

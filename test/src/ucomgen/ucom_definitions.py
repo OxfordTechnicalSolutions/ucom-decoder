@@ -4,6 +4,11 @@ import struct
 from ucomgen.crc import crc32
 from enum import Enum
 
+class GnssOffset:
+    def __init__(self) -> None:
+        self.is_available: bool = False
+        self.value: int = 0
+
 @dataclass
 class UcomTestSignal:
     id : str
@@ -156,6 +161,10 @@ trigger_descriptions = dict([
         (TriggerTypes.OUT_2 , 'Out 2')
     ])
 
+class TimeFrames(Enum):
+    SDN = 0
+    GNSS = 1
+
 class TimeSources(Enum):
     TIME_SOURCE_NONE = 0
     TIME_SOURCE_GNSS = 1
@@ -186,7 +195,7 @@ class UcomTestMessage:
 
     enum_member : ClassVar[int] = 1
 
-    def generate_packet(self, time : TimeSources, arbitrary_time : int, value : int) -> tuple[bytearray, str]:
+    def generate_packet(self, time : TimeFrames, arbitrary_time : int, value : int, gnss_offset: GnssOffset) -> tuple[bytearray, str]:
         data = bytearray(1500)
         generated_value = None
         line : str = ''
@@ -202,7 +211,7 @@ class UcomTestMessage:
             generated_value = signal.get_value(signal_data)
             data[offset:] = signal_data
             offset = offset + len(signal_data)
-
+            
             # Construct CSV
             if len(line) > 0:
                 line = line + ','
@@ -219,6 +228,11 @@ class UcomTestMessage:
                     line = line + str(f"{generated_value:.15e}")
                 else:
                     line = line + str(generated_value)
+
+            if signal.id == 'SDNOFF' and TimeSources(generated_value[0]) == TimeSources.TIME_SOURCE_GNSS:
+                # print(f'{signal.id} {TimeSources(generated_value[0])} {int(generated_value[1])}')
+                gnss_offset.is_available = True
+                gnss_offset.value = int(generated_value[1])
         
         if self.output_type == OutputTypes.OnTrigger:
             line = line + ',' + trigger_descriptions[self.get_trigger_type()]
@@ -256,4 +270,4 @@ class UcomTestMessage:
             csv = csv + ',' + ('Enum element,' if signal.data_type == 'EnS64' else '') + signal.id
         if self.output_type == OutputTypes.OnTrigger:
             csv = csv + ',Trigger Type'
-        return f"Time ({self.timing}){csv}"
+        return f"Time ({self.timing}),GNSS Time{csv}"

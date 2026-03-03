@@ -59,6 +59,35 @@
             ]
         },
         {
+            "IntroducedInVersion": 1,
+            "MessageDescription": "The time offsets from the SDN time in the header to the time in the message payload described by the enum value: byte 1 of the payload is the enum value and bytes 2-9 are the offset value",
+            "MessageEnabled": true,
+            "MessageID": 100,
+            "MessageName": "The SDN time offsets",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputType": "OnChange",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "SDNOFF",
+                    "SourceID": "TIME",
+                    "DataType": "EnS64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1000000000.0,
+                    "Unit": "s",
+                    "EnumValues": {
+                        "0": "Time Source None",
+                        "1": "Time Source Gnss",
+                        "2": "Time Source Ptp",
+                        "3": "Time Source Ext Gnss",
+                        "4": "Time Source User",
+                        "5": "Time Source Gad"
+                    }
+                }
+            ]
+        },
+        {
             "MessageSchemaVersion": 2,
             "MessageID": 64512,
             "MessageVersion": 1,

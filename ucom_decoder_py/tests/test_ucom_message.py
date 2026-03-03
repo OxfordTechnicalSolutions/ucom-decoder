@@ -36,7 +36,7 @@ class UcomMessageTest(unittest.TestCase):
         Tests get_header()
         """
         header = self.message.get_header()
-        assert(header == "Time (SDN),UCOMVersion,DevID,Wd")
+        assert(header == "Time (SDN),GNSS Time,UCOMVersion,DevID,Wd")
 
     def test_get_signal_count(self):
         """

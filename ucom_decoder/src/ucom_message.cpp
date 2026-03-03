@@ -22,6 +22,8 @@ std::string UcomMessage::create_header()
 {
     std::stringstream ss;
     ss << "Time (" << this->operator[]("MessageTiming").get<std::string>() << ")";
+    ss << ",GNSS Time"; // For GNSS time either from arbitrary or calculated from SDN + offset (if available)
+   
     _signal_count = 1;
     for (auto msg : this->operator[]("SignalsInMessage")) {
         UcomSignal signal(msg);

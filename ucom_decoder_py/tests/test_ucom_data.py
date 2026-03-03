@@ -1,7 +1,7 @@
 import unittest
 import json
 import ucomgen.generator as g
-from ucomgen.ucom_definitions import UcomTestMessage, UcomTestSignal, OutputTypes, TimeSources
+from ucomgen.ucom_definitions import UcomTestMessage, UcomTestSignal, OutputTypes, TimeSources, GnssOffset, TimeFrames
 from oxts.ucompy import UcomMessage, UcomSignal, UcomDbu, UcomData
 import data as test_data
 
@@ -16,7 +16,7 @@ class UcomGeneratorTest(unittest.TestCase):
         self.signals = [UcomTestSignal('UCOMVersion','U32'), UcomTestSignal('DevID','STR'), UcomTestSignal('Wd','F64')]
         # 'id', 'version', 'enabled', 'output_type', 'signals', and 'timing'
         self.test_message = UcomTestMessage(64512, 0, True, OutputTypes.OnTrigger, self.signals, TimeSources.TIME_SOURCE_GNSS)
-        self.packet, c = self.test_message.generate_packet(TimeSources.TIME_SOURCE_GNSS, 999999999, 120)
+        self.packet, c = self.test_message.generate_packet(TimeFrames.SDN, 999999999, 120, GnssOffset())
         self.data = UcomData(self.packet, len(self.packet), self.dbu)
 
         return super().setUp()
@@ -52,7 +52,7 @@ class UcomGeneratorTest(unittest.TestCase):
         """
         Tests get_time_Frame()
         """ 
-        assert(self.data.get_time_frame() == TimeSources.TIME_SOURCE_GNSS.value)
+        assert(self.data.get_time_frame() == TimeFrames.SDN.value)
 
     def test_get_arbitrary_time(self) -> None:
         """

@@ -58,6 +58,170 @@
                 }
             ]
         },
+		{
+            "FrequencyOutputType": "IMU",
+            "IntroducedInVersion": 1,
+            "MessageDescription": "Position, velocity, and attitude in OXTS navigation frame (NED) in the configured output datum",
+            "MessageEnabled": true,
+            "MessageID": 1,
+            "MessageName": "OXTS navigation frame PVA",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 1,
+            "OutputFrequencyDecimation": 1,
+            "OutputType": "FrequencyBased",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "Lat",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Lon",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Alt",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m"
+                },
+                {
+                    "SignalID": "Vn",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Ve",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Vd",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "m/s"
+                },
+                {
+                    "SignalID": "Heading",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Pitch",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                },
+                {
+                    "SignalID": "Roll",
+                    "SourceID": "BNS_SDN",
+                    "DataType": "F64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "deg"
+                }
+            ]
+        },
+		{
+            "IntroducedInVersion": 1,
+            "MessageDescription": "The current INS navigation status from the blended navigation system",
+            "MessageEnabled": true,
+            "MessageID": 54,
+            "MessageName": "INS Status",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputType": "FrequencyBased",
+            "FrequencyOutputType": "IMU",
+            "OutputFrequencyDecimation": 4,
+            "SignalsInMessage": [
+                {
+                    "SignalID": "InsNavMode",
+                    "SourceID": "BNS_STS",
+                    "DataType": "U8",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1.0,
+                    "Unit": "-",
+                    "EnumValues": {
+                        "0": "Navigation Status Invalid",
+                        "1": "Navigation Status RawImu",
+                        "2": "Navigation Status Init",
+                        "3": "Navigation Status Locking",
+                        "4": "Navigation Status Locked",
+                        "5": "Navigation Status Unlocked",
+                        "6": "Navigation Status Expired",
+                        "7": "Navigation Status Blocked",
+                        "8": "Navigation Status Reserved 08",
+                        "9": "Navigation Status Reserved 09",
+                        "10": "Navigation Status Statusonly",
+                        "11": "Navigation Status Extra",
+                        "12": "Navigation Status Locked Survey",
+                        "13": "Navigation Status Reserved 13",
+                        "14": "Navigation Status Reserved 14",
+                        "15": "Navigation Status Reserved 15",
+                        "16": "Navigation Status Reserved 16",
+                        "17": "Navigation Status Reserved 17",
+                        "18": "Navigation Status Reserved 18",
+                        "19": "Navigation Status Reserved 19",
+                        "20": "Navigation Status Triginit",
+                        "21": "Navigation Status Triglocking",
+                        "22": "Navigation Status Triglocked"
+                    }
+                }
+            ]
+        },
+		{
+            "IntroducedInVersion": 1,
+            "MessageDescription": "The time offsets from the SDN time in the header to the time in the message payload described by the enum value: byte 1 of the payload is the enum value and bytes 2-9 are the offset value",
+            "MessageEnabled": true,
+            "MessageID": 100,
+            "MessageName": "The SDN time offsets",
+            "MessageSchemaVersion": 2,
+            "MessageTiming": "SDN",
+            "MessageVersion": 0,
+            "OutputType": "OnChange",
+            "SignalsInMessage": [
+                {
+                    "SignalID": "SDNOFF",
+                    "SourceID": "TIME",
+                    "DataType": "EnS64",
+                    "Offset": 0.0,
+                    "ScaleFactor": 1000000000.0,
+                    "Unit": "s",
+                    "EnumValues": {
+                        "0": "Time Source None",
+                        "1": "Time Source Gnss",
+                        "2": "Time Source Ptp",
+                        "3": "Time Source Ext Gnss",
+                        "4": "Time Source User",
+                        "5": "Time Source Gad"
+                    }
+                }
+            ]
+        },
         {
             "MessageSchemaVersion": 2,
             "MessageID": 64512,
