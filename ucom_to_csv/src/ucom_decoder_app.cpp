@@ -221,6 +221,8 @@ int UcomDecoderApp::process_file()
     int it_offset = 0;
     bool need_more_data = false;
     std::vector<char> data;
+    bool gnss_offset_available = false;     // True if a GNSS offset message has been received
+    int64_t gnss_offset = 0;
     // Repeat until there is no unread data left
     while (left > 0)
     {
@@ -229,8 +231,6 @@ int UcomDecoderApp::process_file()
         data = input.get_data(data_available, left, offset);
         consumed = 0;
         available = data.size();
-        bool gnss_offset_available = false;     // True if a GNSS offset message has been received
-        int64_t gnss_offset = 0;
         for (auto it = data.begin(); it < data.end();)
         {
             need_more_data = false;
