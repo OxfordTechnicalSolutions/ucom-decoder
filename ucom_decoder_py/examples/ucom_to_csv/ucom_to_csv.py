@@ -1,4 +1,4 @@
-from oxts.ucompy import UcomData, UcomDbu, UcomSignal, UcomMessage
+from oxts.ucompy import UcomData, UcomDbu, UcomSignal, UcomMessage, UCOM_DATA_TYPE, UCOM_TIME_SOURCES
 import os
 import time
 import argparse
@@ -88,9 +88,9 @@ class UcomToCsv:
         except:
             return -1
         
-    def write_packet_csv(self, packet) -> bool:
+    def write_packet_csv(self, packet, gnss_offset_available = False, gnss_offset = 0) -> bool:
         if packet.get_message_uid() in self.output_files:
-            self.write_csv(self.output_files[packet.get_message_uid()], packet.get_csv(self.dbu))
+            self.write_csv(self.output_files[packet.get_message_uid()], packet.get_csv(self.dbu, gnss_offset_available, gnss_offset))
             return True
         return False
     
@@ -118,6 +118,8 @@ class UcomToCsv:
         offset = 0
         self.packets = 0
         time_start = time.time()
+        gnss_offset_available = False
+        gnss_offset = 0
         # Read the input file in chunks until the end
         while left > 0:
             start = 0
@@ -134,9 +136,18 @@ class UcomToCsv:
                     # Found a candidate; try to decode the full packet
                     d = UcomData(nibble, length, self.dbu)
                     if d.get_valid():
+                        # Cache the GNSS offset, if available
+                        if d.get_message_id() == 100:
+                            success, value = d.get("SDNOFF", self.dbu)
+                            if value.get_type() == UCOM_DATA_TYPE.EnS64:
+                                enum_data = value.get_value().ens64
+                                if enum_data[0] == UCOM_TIME_SOURCES.TIME_SOURCE_GNSS.value:
+                                    gnss_offset_available = True
+                                    gnss_offset = enum_data[1]
+
                         # Packet is valid, write it to file (if in list of required message UIDs)
                         if len(self.message_uids) == 0 or d.get_message_uid() in self.message_ids:
-                            if self.write_packet_csv(d):
+                            if self.write_packet_csv(d, gnss_offset_available, gnss_offset):
                                 self.packets = self.packets + 1
                         # Adjust the position to start searching for the next packet
                         start = start + length
@@ -179,14 +190,25 @@ class UcomToCsv:
         timer.start()
         old_value = None
         values = {}
+        gnss_offset_available = False
+        gnss_offset = 0
         while self.packets < max_packets or (timer.active() and not timer.is_elapsed()):
             data = udp.read()
             if data is not None:
                 d = UcomData(data, len(data), self.dbu)
                 if d.get_valid():
+                    # Cache the GNSS offset, if available
+                    if d.get_message_id() == 100:
+                        success, value = d.get("SDNOFF", self.dbu)
+                        if value.get_type() == UCOM_DATA_TYPE.EnS64:
+                            enum_data = value.get_value().ens64
+                            if enum_data[0] == UCOM_TIME_SOURCES.TIME_SOURCE_GNSS.value:
+                                gnss_offset_available = True
+                                gnss_offset = enum_data[1] 
+
                     # Packet is valid, write it to file (if in list of required message UIDs)
                     if len(self.message_uids) == 0 or d.get_message_uid() in self.message_uids:
-                        if self.write_packet_csv(d):
+                        if self.write_packet_csv(d, gnss_offset_available, gnss_offset):
                             self.packets = self.packets + 1
                    
         if timer.is_elapsed() and (max_packets == 0 or self.packets < max_packets):
