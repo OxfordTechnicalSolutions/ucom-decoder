@@ -371,3 +371,5 @@ venv/
 /ucom_decoder_py/tests/.vscode
 /ucom_decoder_py/tests/test_data
 /test/.vscode
+/.vscode
+*.csv
