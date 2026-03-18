@@ -420,12 +420,14 @@ This class decodes a UCOM packet and allows read-access to the signal values con
 <ul>
 <li>-1 : if no candidate found or if potential candidate found but more data is needed (need_more_data is true)</li>
 <li>packet length : if candidate found</li></dd>
-<dt>const std::string get_csv() const</dt>
-<dd>Gets the signal values as a comma-separated string</dd>
+<dt>const std::string get_csv(const UcomDbu& dbu, const bool gnss_offset_available = false, const int64_t gnss_offset = 0) const</dt>
+<dd>Gets the signal values as a comma-separated string. Also calculates the GNSS time from SDN (if the GNSS offset from message 100 is available)</dd>
 <dt>std::string to_string()</dt>
 <dd>Gets a string representation of the instance, consisting of message ID, message version and payload length</dd>
 <dt>uint16_t get_message_id()</dt>
 <dd>Gets the message ID</dd>
+<dt>uint32_t get_message_uid()</dt>
+<dd>Gets the message UID</dd>
 <dt>uint16_t get_message_version()</dt>
 <dd>Gets the message version</dd>
 <dt>uint8_t get_time_frame()</dt>
@@ -455,6 +457,8 @@ Represents a UCOM message. Allows read-access to the signals contained within. D
 <dd>Returns true if the UcomMessage is valid; false otherwise</dd>
 <dt>int get_id()</dt>
 <dd>Gets the ID of the message</dd>
+<dt>int get_uid()</dt>
+<dd>Gets the message UID. This unique ID combines the message ID and message version to allow different versions of the same message ID to be differentiated. The UID contains the message version in the most significant 16 bits, with the message ID in the least significant 16 bits. </dd>
 <dt>std::string get_header()</dt>
 <dd>Gets a comma-separated string of the names of the signals contained in the message (mainly intended for use when generating CSV output). The string is prepended with 'Time (&lt<i>MessageTiming</i>&gt)', representing the '<i>Arbitrary Time</i>' time frame, e.g. <i>'Time (SDN)'</i></dd>
 <dt>size_t get_signal_count()</dt>
@@ -465,7 +469,17 @@ Represents a UCOM message. Allows read-access to the signals contained within. D
 <dd>Gets a (smart, shared) pointer to the signal whose ID is &ltid&gt</dd>
 <dt>int get_signal_index(std::string id)</dt>
 <dd>Gets the zero-based index into the signals collection of the signal whose ID is &ltid&gt</dd>
-</dl>
+<dt>uint16_t get_id_from_uid(uint32_t uid)</dt>
+<dd>Gets the message ID from the supplied UID</dd>
+<dt>uint16_t get_version_from_uid(uint32_t uid)</dt>
+<dd>Gets the message version from the supplied UID</dd>
+<dt>uint32_t create_uid(uint16_t message_id, uint16_t message_version)</dt>
+<dd>Creates a UID from a message ID and message version</dd>
+<dt>std::string uid_to_string(const uint32_t uid)</dt>
+<dd>Gets a string representation of the UID in the form &ltID&gtv&ltVERSION&gt, e.g. 100v1</dd>
+<dt>bool uid_from_string(const std::string s, uint32_t& uid)</dt>
+<dd>Gets a string representation of a message UID in the form &ltID&gt&ltVERSION&gt, e.g. 64520v1 for ID 64520, VERSION 1, except for VERSION 0, which is is just the message ID, e.g. 64520.</dd>
+</dl>  
 
 ### class UcomSignal
 #### Description

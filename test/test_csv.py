@@ -1,4 +1,4 @@
-from ucomgen.ucom_definitions import UcomTestMessage
+from ucomgen.ucom_definitions import UcomTestMessage, OutputTypes, UcomTestSignal
 from ucomgen.dbx import DBULoader
 from ucomgen.generator import UcomGenerator
 import argparse
@@ -56,7 +56,7 @@ def compare_csv_files(file1, file2):
         # print("The two CSV files have identical data.")
         return True
     else:
-        # print("Differences found:")
+        print(f"Differences found: {file1} {file2}")
         # Find rows in df1 not in df2
         diff1 = pd.concat([df1, df2]).drop_duplicates(keep=False)
         print(diff1)
@@ -143,6 +143,8 @@ if __name__ == '__main__':
         sys.exit(1)
 
     messages = dbu_loader.get_messages()
+
+    # messages[100] = UcomTestMessage(100, 1, True, OutputTypes.OnChange, [UcomTestSignal("SDNOFF", "EnS64")], "SDN")
 
     if len(messages) == 0:
         print("FAIL: no messages extracted from DBU")

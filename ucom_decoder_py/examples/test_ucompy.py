@@ -1,4 +1,4 @@
-from ucompy import UcomDbu, UcomSignal, UcomMessage, UcomData
+from oxts.ucompy import UcomDbu, UcomSignal, UcomMessage, UcomData
 import sys
 
 """Get all the message and signal information from the .dbu file

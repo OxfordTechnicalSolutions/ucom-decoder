@@ -21,6 +21,7 @@
 #include "ucom/ucom_message.hpp"
 #include "ucom/ucom_signal.hpp"
 #include "ucom/ucom_triggers.hpp"
+#include "ucom/ucom_value.hpp"
 
 #include <tuple>
 
@@ -44,7 +45,7 @@ PYBIND11_MODULE(ucompy, m) {
             int length = UcomData::peek(reinterpret_cast<const uint8_t*>(data), max_size, need_more_data);
             return std::make_tuple(length, need_more_data);
         }, "data"_a, "max_size"_a)
-        .def("get_csv", &UcomData::get_csv, "dbu"_a)
+        .def("get_csv", &UcomData::get_csv, "dbu"_a, "gnss_offset_available"_a=false, "gnss_offset"_a=0)
         .def("to_string", &UcomData::to_string)
         .def("get_message_id", &UcomData::get_message_id)
         .def("get_message_uid", &UcomData::get_message_uid)
@@ -194,5 +195,17 @@ PYBIND11_MODULE(ucompy, m) {
         .export_values()
         .finalize();
 
+    // TimeSources
+#define UCOM_TIME_SOURCE(X) .value(#X, TimeSources::X)
+    py::native_enum<TimeSources>(m, "UCOM_TIME_SOURCES", "enum.Enum")
+        UCOM_TIME_SOURCE(TIME_SOURCE_NONE)
+        UCOM_TIME_SOURCE(TIME_SOURCE_GNSS)
+        UCOM_TIME_SOURCE(TIME_SOURCE_PTP)
+        UCOM_TIME_SOURCE(TIME_SOURCE_EXT_GNSS)
+        UCOM_TIME_SOURCE(TIME_SOURCE_USER)
+        UCOM_TIME_SOURCE(TIME_SOURCE_GAD)
+        UCOM_TIME_SOURCE(TIME_SOURCE_UNKNOWN)
+        .export_values()
+        .finalize();
 }
 

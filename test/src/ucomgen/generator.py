@@ -1,5 +1,5 @@
 import io, os
-from ucomgen.ucom_definitions import UcomTestMessage, OutputTypes, TriggerTypes, TimeSources
+from ucomgen.ucom_definitions import UcomTestMessage, OutputTypes, TriggerTypes, TimeFrames, GnssOffset
 
 class UcomGenerator:
     def __init__(self, output_path: str = 'test_data', filename : str = 'data.ucom') -> None:
@@ -18,11 +18,12 @@ class UcomGenerator:
         csv_files : dict[str, io.TextIOWrapper] = {}
         offset = 0
         message : UcomTestMessage
-        timestamp = 1000000000
+        timestamp: int = 1000000000
         trigger = 1
+        gnss_offset = GnssOffset()
         for i in range(0, 256):
             for _, message in messages.items():
-                line = str(timestamp + i) + ','
+                line = str(timestamp + i) + ',' 
                 if message.enabled:
                     if message.uid() not in csv_files:
                         filename = f"test_data/data_{message.uid()}.csv"
@@ -33,8 +34,9 @@ class UcomGenerator:
                         trigger = trigger + 1
                         if trigger > TriggerTypes.OUT_2.value:
                             trigger = TriggerTypes.IN_1_DOWN.value
-                    packet, data_str = message.generate_packet(TimeSources(1), timestamp + i, i)
-                    line = line + data_str
+                    packet, data_str = message.generate_packet(TimeFrames.SDN, timestamp + i, i, gnss_offset)
+
+                    line = line + (str(gnss_offset.value + timestamp + i) if gnss_offset.is_available else '') + ',' + data_str
                     data[offset:] = packet
                     offset = offset + len(packet)
                     if offset >= 64000:
