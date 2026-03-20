@@ -22,7 +22,7 @@ const char* help_text[] = {
 	"Options:",
 	"  -h                     Help - displays this message",
 	"  -f <input file>        Extract data from a file instead of UDP stream",
-	"  -m <id1 id2 id3 ...>   Message IDs to process, e.g. 0 1 3",
+	"  -m <id1 id2 id3 ...>   Message IDs to process in the format {id}v{version}, e.g. 0 1 3 1v1 3v1 2v1",
 	"  -c <packets>           Number of packets to process (UDP stream only)",
 	"  -t <duration>          Maximum capture duration in seconds (UDP stream only)",
 	"  -i <address>           Source IP address (UDP stream only)", 
